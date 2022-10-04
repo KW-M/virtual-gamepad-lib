@@ -1,0 +1,16 @@
+/.idea/
+/build-scripts/
+/test/
+/.vscode/
+
+/babel.config.js
+/jest.config.cjs
+/yarn.lock
+/*.tgz
+/*.log
+/.yarnclean
+/nodemon.json
+/.editorconfig
+/tsconfig.*
+/.eslintrc.json
+/pagesconfig.json

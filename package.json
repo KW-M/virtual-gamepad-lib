@@ -1,0 +1,58 @@
+{
+  "name": "virtual-gamepad",
+  "private": false,
+  "description": "Emulate and display virtual or real gamepads in web browsers",
+  "version": "0.0.1",
+  "type": "module",
+  "author": "Kyle Worcester-Moore",
+  "license": "MIT",
+  "homepage": "https://github.com/KW-M/virtual-gamepad#readme",
+  "bugs": {
+    "url": "https://github.com/KW-M/virtual-gamepad/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KW-M/virtual-gamepad.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/virtual-gamepad.umd.cjs",
+  "module": "./dist/virtual-gamepad.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/virtual-gamepad.js",
+      "require": "./dist/virtual-gamepad.umd.cjs"
+    }
+  },
+  "keywords": [
+    "gaming",
+    "arcade",
+    "emulator",
+    "joystick",
+    "js api",
+    "gamepad",
+    "touch",
+    "accessability"
+  ],
+  "scripts": {
+    "test:lib": "vitest",
+    "build:lib": "tsc && vite build",
+    "build:docs": "pnpx typedoc src/GamepadEmulator.ts src/GamepadDisplay.ts src/GamepadApiWrapper.ts src/enums.ts",
+    "dev:example": "tsc && vite --config example/vite.config.js --host",
+    "build:example": "vite build --config example/vite.config.js",
+    "preview:example": "vite preview --config example/vite.config.js  --host",
+    "prepublish": "npm run build:lib"
+  },
+  "devDependencies": {
+    "happy-dom": "^6.0.4",
+    "typescript": "^4.6.4",
+    "vite": "^3.1.0",
+    "vite-plugin-dts": "^1.6.1",
+    "vitest": "^0.23.4"
+  },
+  "dependencies": {
+    "typedoc": "^0.23.15"
+  }
+}
