@@ -4,13 +4,6 @@ import { GamepadDisplay, GamepadDisplayJoystick } from "../../src/GamepadDisplay
 import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums";
 import type { GamepadDisplayVariableButton, GamepadDisplayButton } from "../../src/GamepadDisplay";
 
-// the gamepad emulator MUST be created before creating the GamepadApiWrapper, Game or any other library that uses navigator.getGamepads()
-const gamepadEmu = new GamepadEmulator(0.1);
-const gamepadApiWrapper = new GamepadApiWrapper({ buttonConfigs: [], updateDelay: 0 });
-const gamepadDisplaySection = document.getElementById("gamepads");
-const gamepadDisplayTemplate = document.getElementById("gamepad_display_template") as (HTMLTemplateElement | null);
-let Gamepad_Displays: { display: GamepadDisplay, index: number, container: HTMLElement }[] = [];
-
 const BUTTON_DISPLAY_NAMES = [
     "button_1",
     "button_2",
@@ -28,26 +21,32 @@ const BUTTON_DISPLAY_NAMES = [
     "d_pad_down",
     "d_pad_left",
     "d_pad_right",
-    // "vendor" // generally not available to browsers, because it is used by vendors (eg: xbox game bar, steam).
+    /* "vendor" */// generally not available to browsers because it is used by OS vendors (eg: Xbox Game Bar, Steam HUD).
 ];
 
+// !!! IMPORTANT: The gamepad emulator class MUST be created before creating the GamepadApiWrapper, Game or any other library that uses navigator.getGamepads()
+const gamepadEmu = new GamepadEmulator(0.1);
+const gamepadApiWrapper = new GamepadApiWrapper({ buttonConfigs: [], updateDelay: 0 });
+const gamepadDisplaySection = document.getElementById("gamepads");
+const gamepadDisplayTemplate = document.getElementById("gamepad_display_template") as (HTMLTemplateElement | null);
+let Gamepad_Displays: { display: GamepadDisplay, index: number, container: HTMLElement }[] = [];
 
-const dirHighlights = [
-    "r_stick_right_direction_highlight",
-    "r_stick_left_direction_highlight",
-    "r_stick_up_direction_highlight",
-    "r_stick_down_direction_highlight",
-    "l_stick_right_direction_highlight",
-    "l_stick_left_direction_highlight",
-    "l_stick_up_direction_highlight",
-    "l_stick_down_direction_highlight",
-    "shoulder_trigger_back_left_direction_highlight",
-    "shoulder_trigger_back_right_direction_highlight",
-]
-dirHighlights.forEach((highlightId) => {
-    const highlight = gamepadDisplayTemplate?.content.querySelector("#" + highlightId);
-    if (highlight) highlight.classList.add("gpad-direction-highlight");
-})
+// const dirHighlights = [
+//     "r_stick_right_direction_highlight",
+//     "r_stick_left_direction_highlight",
+//     "r_stick_up_direction_highlight",
+//     "r_stick_down_direction_highlight",
+//     "l_stick_right_direction_highlight",
+//     "l_stick_left_direction_highlight",
+//     "l_stick_up_direction_highlight",
+//     "l_stick_down_direction_highlight",
+//     "shoulder_trigger_back_left_direction_highlight",
+//     "shoulder_trigger_back_right_direction_highlight",
+// ]
+// dirHighlights.forEach((highlightId) => {
+//     const highlight = gamepadDisplayTemplate?.content.querySelector("#" + highlightId);
+//     if (highlight) highlight.classList.add("direction_highlight");
+// })
 
 window.addEventListener("gamepadconnected", (e) => {
     const gpad = e.gamepad;
@@ -55,16 +54,6 @@ window.addEventListener("gamepadconnected", (e) => {
     const emulationState = (gpad as EGamepad).emulation;
     console.info(`Gamepad ${index} connected (${emulationState}): ${gpad.id}`)
     updateAllGamepadDisplays();
-
-    // if (Connected_Gamepads[index]) {
-    //     gamepadEmu.ClearDisplayButtonEventListeners(index);
-    //     gamepadEmu.ClearDisplayJoystickEventListeners(index);
-    //     Gamepad_Displays[index].remove();
-    // }
-    // Connected_Gamepads[index] = gpad;
-    // addGamepadDisplay(gpad.index);
-    // if (emulationState === gamepadEmulationState.emulated || emulationState === gamepadEmulationState.overlay) setupGamepadEmulatorInput(index, Gamepad_Displays[index]);
-    showConnectedGamepads();
 });
 
 window.addEventListener("gamepaddisconnected", (e) => {
@@ -73,14 +62,6 @@ window.addEventListener("gamepaddisconnected", (e) => {
     const emulationState = (gpad as EGamepad).emulation;
     console.info(`Gamepad ${index} disconnected (${emulationState}): ${gpad.id}`)
     updateAllGamepadDisplays();
-
-    // if (Connected_Gamepads[index]) {
-    //     gamepadEmu.ClearDisplayButtonEventListeners(index);
-    //     gamepadEmu.ClearDisplayJoystickEventListeners(index);
-    //     Gamepad_Displays[index].remove();
-    // }
-    // delete Connected_Gamepads[index];
-    showConnectedGamepads();
 });
 
 const removeAllGamepadDisplays = () => {
@@ -274,11 +255,11 @@ const addGamepadDisplay = (gpadIndex) => {
             // EG: show extra details about the joysticks in the dom
             if (stickConfig.xAxisIndex === 0) {
                 // show the values of the left joystick on svg label:
-                const l_label = document.getElementById("l_stick_action_help_label")
+                const l_label = clone.querySelector("#l_stick_action_help_label")
                 if (l_label) l_label.innerHTML = "(" + xAxisValue.toFixed(1) + ", " + yAxisValue.toFixed(1) + ")";
             } else if (stickConfig.xAxisIndex === 2) {
                 // show the values of the right joystick on svg label:
-                const r_label = document.getElementById("r_stick_action_help_label")
+                const r_label = clone.querySelector("#r_stick_action_help_label")
                 if (r_label) r_label.innerHTML = "(" + xAxisValue.toFixed(1) + ", " + yAxisValue.toFixed(1) + ")";
             }
 
@@ -299,23 +280,6 @@ const addGamepadDisplay = (gpadIndex) => {
 
     clone.querySelector("#gpad-emulation-btn")!.addEventListener("click", () => { handleGpadEmulationBtnClick(gpadIndex) });
     return { container: clone, display: display }
-}
-
-const showConnectedGamepads = () => {
-    let text = "";
-    navigator.getGamepads().forEach((gpad, i) => {
-        if (gpad) {
-            text += `${gpad.index} = ${(gpad as EGamepad).displayId || gpad.id} (${(gpad as EGamepad).emulation}, ${gpad.mapping}, ${gpad.buttons.length} buttons, ${gpad.axes.length} axes)`;
-        } else {
-            text += `${i} = null`;
-        }
-        text += "              ";
-    });
-    text += text;
-    text += text;
-    text += text;  // add some more text to make "infinite" scrolling
-    document.querySelector("#connected-gamepads")!.innerHTML = text;
-    (document.querySelector("#connected-gamepads") as HTMLElement).style.animationDuration = (30 * text.length) + "ms";
 }
 
 const handleGpadEmulationBtnClick = (gpadIndex) => {

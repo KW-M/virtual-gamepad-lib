@@ -8,8 +8,7 @@ html {
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-  background: linear-gradient(to top right, #20539f, #00b8ff);
-
+  background: linear-gradient(to top right, #9d4fe6, #6c00d0);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -35,7 +34,6 @@ body {
   flex-direction: column;
   align-items: stretch;
   min-height: 100vh;
-  margin-top: 5rem;
 }
 
 h1 {
@@ -68,6 +66,7 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   html {
     color: #213547;
+    background: linear-gradient(to top right, #1e4d93, #4ecdff);
     background-color: #ffffff;
   }
 
@@ -80,27 +79,11 @@ button:focus-visible {
   }
 }
 
-#top-nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  left: 0;
-  z-index: 100;
-}
-
 #controls {
   display: flex;
   padding: 0.4rem;
   text-align: center;
   background-color: #eddb18;
-}
-
-#gamepad-info {
-  background-color: black;
-  color: whitesmoke;
-  white-space: nowrap;
-  padding: 4px;
-  display: flex;
 }
 
 #bottom-controls {
@@ -113,62 +96,40 @@ button:focus-visible {
   flex-basis: fit-content;
 }
 
-.remove-gpad-btn {
-  top: 26%;
-  position: absolute;
-  z-index: 10;
-  transform: translateY(-50%);
-}
-
-
-.marquee {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  overflow: hidden;
-  white-space: nowrap;
-  height: 100%;
-  flex: 1;
-}
-
-.marquee>span {
-  white-space: pre;
-  margin-right: 1rem;
-  animation: marquee 5s linear infinite;
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0%);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-
 /* *********  Gamepad Display Related ********* */
+
+#gpad-emulation-label {
+  text-align: center;
+  padding: 1em;
+}
 
 .gpad-display-container {
   position: relative;
-  width: 100%;
-  aspect-ratio: 13 / 12;
-  max-height: 70vh;
-  max-height: calc(100vh - 112px);
   padding: 20px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 20px 62px #00000070;
+  flex-shrink: 1;
+  box-shadow: 0 0 32px #ffffff;
+  background-color: #0000003f;
+  /* background: linear-gradient(to top right, #9d4fe6, #6c00d0); */
+  max-width: 100%;
+  width: max-content;
+  height: max-content;
+  border-radius: 20px;
+  margin: 2rem auto;
+  padding: 2vmin 1vmin;
 }
 
 .gpad-display {
   position: relative;
   user-select: none;
+  /* aspect-ratio: 13 / 12; */
+  max-height: 100vh;
+  height: 14cm;
 
-  width: 72%;
-  max-width: 47.5vh;
+  /* width: 72%;
+  max-width: 47.5vh; */
   pointer-events: none;
 }
 
@@ -209,11 +170,16 @@ button:focus-visible {
   pointer-events: all;
 }
 
-.gpad-direction-highlight {
+#l_touch_targets>*:focus,
+#r_touch_targets>*:active {
+  cursor: none;
+}
+
+.direction_highlight {
   opacity: 0;
 }
 
-.gpad-direction-highlight.moved {
+.direction_highlight.moved {
   opacity: 0.8;
 }
 

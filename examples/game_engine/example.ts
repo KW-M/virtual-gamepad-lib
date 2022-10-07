@@ -4,6 +4,11 @@ import { GamepadDisplay, GamepadDisplayJoystick } from "../../src/GamepadDisplay
 import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums";
 import type { GamepadDisplayVariableButton, GamepadDisplayButton } from "../../src/GamepadDisplay";
 
+// the gamepad emulator MUST be created before creating the GamepadApiWrapper, Game or any other library that uses navigator.getGamepads()
+const gamepadEmu = new GamepadEmulator(0.1);
+const gamepadDisplayContainer = document.body;// document.getElementById("gpad-display-container") as HTMLElement;
+
+// CONSTS
 
 const BUTTON_DISPLAY_NAMES = [
     "button_1",
@@ -22,28 +27,15 @@ const BUTTON_DISPLAY_NAMES = [
     "d_pad_down",
     "d_pad_left",
     "d_pad_right",
-    // "vendor" // generally not available to browsers, because it is used by vendors (eg: xbox game bar, steam).
+    /* "vendor" */// generally not available to browsers because it is used by OS vendors (eg: Xbox Game Bar, Steam HUD).
 ];
+const START_BUTTON_INDEX = 8;
+const LEFT_X_AXIS_INDEX = 0;
+const LEFT_Y_AXIS_INDEX = 1;
+const RIGHT_X_AXIS_INDEX = 2;
+const RIGHT_Y_AXIS_INDEX = 3;
 
-
-const dirHighlights = [
-    "r_stick_right_direction_highlight",
-    "r_stick_left_direction_highlight",
-    "r_stick_up_direction_highlight",
-    "r_stick_down_direction_highlight",
-    "l_stick_right_direction_highlight",
-    "l_stick_left_direction_highlight",
-    "l_stick_up_direction_highlight",
-    "l_stick_down_direction_highlight",
-    "shoulder_trigger_back_left_direction_highlight",
-    "shoulder_trigger_back_right_direction_highlight",
-]
-dirHighlights.forEach((highlightId) => {
-    const highlight = document.querySelector("#" + highlightId);
-    if (highlight) highlight.classList.add("gpad-direction-highlight");
-})
-
-const setupGamepadEmulatorInput = (gpadIndex: number, display_gpad: HTMLElement) => {
+const setupEmulatedGamepadInput = (gpadIndex: number, display_gpad: HTMLElement) => {
     // setup the touch targets / inputs controlls for interacting with the emulated gamepad  (part of the emulated gamepad module)
     const emulatorButtonConfigs = BUTTON_DISPLAY_NAMES.map((name, i) => {
         if (name.includes("trigger")) {
@@ -79,11 +71,12 @@ const setupGamepadEmulatorInput = (gpadIndex: number, display_gpad: HTMLElement)
         lockTargetWhilePressed: true,
         directions: {
             [gamepadDirection.up]: true,
-            [gamepadDirection.down]: true,
+            [gamepadDirection.down]: false, // disable the down direction so that the joystick can only be dragged up (note that manual calls to moveAxis can still override this).
             [gamepadDirection.left]: true,
             [gamepadDirection.right]: true,
         },
-    }, {
+    },
+    {
         tapTarget: display_gpad.querySelector("#stick_button_right_touch_target")!,
         dragDistance: 30, // pixels that the user must drag the joystic to represent +/- 1.
         xAxisIndex: 2,
@@ -102,17 +95,18 @@ const setupGamepadEmulatorInput = (gpadIndex: number, display_gpad: HTMLElement)
 }
 
 const addGamepadDisplay = (gpadIndex) => {
-    const clone = gamepadDisplayContainer;
+
     // setup the display buttons of the newly created gamepad display in the dom
     const buttons = BUTTON_DISPLAY_NAMES.map((name, i) => {
+        console.log(name);
         if (name.includes("trigger")) {
             // trigger buttons usually take variable pressure so can be represented by a variable button that is dragged down.
             return {
                 type: gamepadButtonType.variable,
-                highlight: clone.querySelector("#" + name + "_highlight"),
-                buttonElement: clone.querySelector("#" + name),
+                highlight: gamepadDisplayContainer.querySelector("#" + name + "_highlight"),
+                buttonElement: gamepadDisplayContainer.querySelector("#" + name),
                 direction: gamepadDirection.down,
-                directionHighlight: clone.querySelector("#" + name + "_direction_highlight"),
+                directionHighlight: gamepadDisplayContainer.querySelector("#" + name + "_direction_highlight"),
                 movementRange: 10, // pixels that the button can move
                 extraData: {
                     myCustomData: "variable btn name is " + name
@@ -122,16 +116,17 @@ const addGamepadDisplay = (gpadIndex) => {
             //  all other buttons are simply on (pressed) or off (not pressed).
             return {
                 type: gamepadButtonType.onOff,
-                highlight: clone.querySelector("#" + name + "_highlight"),
+                highlight: gamepadDisplayContainer.querySelector("#" + name + "_highlight"),
                 extraData: {
                     myCustomData: "onOff btn name is " + name
                 }
             } as GamepadDisplayButton;
         }
     })
+
     // setup the joysticks of the newly created gamepad display in the dom
     const joysticks: GamepadDisplayJoystick[] = [{
-        joystickElement: clone.querySelector("#" + "stick_left") as SVGElement,
+        joystickElement: gamepadDisplayContainer.querySelector("#" + "stick_left") as SVGElement,
         xAxisIndex: 0,
         yAxisIndex: 1,
         movementRange: 10,
@@ -142,14 +137,13 @@ const addGamepadDisplay = (gpadIndex) => {
             [gamepadDirection.right]: true,
         },
         highlights: {
-            [gamepadDirection.up]: clone.querySelector("#" + "l_stick_up_direction_highlight") as SVGElement,
-            [gamepadDirection.down]: clone.querySelector("#" + "l_stick_down_direction_highlight") as SVGElement,
-            [gamepadDirection.left]: clone.querySelector("#" + "l_stick_left_direction_highlight") as SVGElement,
-            [gamepadDirection.right]: clone.querySelector("#" + "l_stick_right_direction_highlight") as SVGElement,
+            [gamepadDirection.up]: gamepadDisplayContainer.querySelector("#" + "l_stick_up_direction_highlight") as SVGElement,
+            [gamepadDirection.down]: gamepadDisplayContainer.querySelector("#" + "l_stick_down_direction_highlight") as SVGElement,
+            [gamepadDirection.left]: gamepadDisplayContainer.querySelector("#" + "l_stick_left_direction_highlight") as SVGElement,
+            [gamepadDirection.right]: gamepadDisplayContainer.querySelector("#" + "l_stick_right_direction_highlight") as SVGElement,
         }
-    },
-    {
-        joystickElement: clone.querySelector("#" + "stick_right") as SVGElement,
+    }, {
+        joystickElement: gamepadDisplayContainer.querySelector("#" + "stick_right") as SVGElement,
         xAxisIndex: 2,
         yAxisIndex: 3,
         movementRange: 10,
@@ -160,16 +154,15 @@ const addGamepadDisplay = (gpadIndex) => {
             [gamepadDirection.right]: true,
         },
         highlights: {
-            [gamepadDirection.up]: clone.querySelector("#" + "r_stick_up_direction_highlight") as SVGElement,
-            [gamepadDirection.down]: clone.querySelector("#" + "r_stick_down_direction_highlight") as SVGElement,
-            [gamepadDirection.left]: clone.querySelector("#" + "r_stick_left_direction_highlight") as SVGElement,
-            [gamepadDirection.right]: clone.querySelector("#" + "r_stick_right_direction_highlight") as SVGElement,
+            [gamepadDirection.up]: gamepadDisplayContainer.querySelector("#" + "r_stick_up_direction_highlight") as SVGElement,
+            [gamepadDirection.down]: gamepadDisplayContainer.querySelector("#" + "r_stick_down_direction_highlight") as SVGElement,
+            [gamepadDirection.left]: gamepadDisplayContainer.querySelector("#" + "r_stick_left_direction_highlight") as SVGElement,
+            [gamepadDirection.right]: gamepadDisplayContainer.querySelector("#" + "r_stick_right_direction_highlight") as SVGElement,
         }
-    }
-    ]
+    }]
 
     // create the gamepad display class instance and pass the config
-    const gDisplay = new GamepadDisplay({
+    new GamepadDisplay({
         gamepadIndex: gpadIndex,
         buttonHighlightClass: "highlight",
         pressedHighlightClass: "pressed",
@@ -177,63 +170,63 @@ const addGamepadDisplay = (gpadIndex) => {
         moveDirectionHighlightClass: "moved",
         buttons: buttons,
         sticks: joysticks,
-    })
-
-
-    return clone
+    });
 }
 
-// the gamepad emulator MUST be created before creating the GamepadApiWrapper, Game or any other library that uses navigator.getGamepads()
-const gamepadEmu = new GamepadEmulator(0.1);
-const gamepadDisplayContainer = document.getElementById("gpad-display-container") as HTMLElement;
+function setupEmulatedGamepad() {
+    const EMULATED_GPAD_INDEX = 0; // in this example we will only add one emulated gamepad at position/index 0 in the navigator.getGamepads() array.
+    gamepadEmu.AddEmulatedGamepad(EMULATED_GPAD_INDEX, true, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT);
+    addGamepadDisplay(EMULATED_GPAD_INDEX); // setup the display buttons to react to the events FROM the gamepad api directly
+    setupEmulatedGamepadInput(EMULATED_GPAD_INDEX, gamepadDisplayContainer); // setup event listeners on the buttons/joysticks to send button/axis updates TO the emulated gamepad.
 
-function addEmulatedGamepad() {
-    gamepadEmu.AddEmulatedGamepad(0, true, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT);
-    addGamepadDisplay(0);
-    setupGamepadEmulatorInput(0, gamepadDisplayContainer);
+    // the game engine expects some BUTTON event to detect that our emulated gamepad has connected (and is ready to use):
+    gamepadEmu.PressButton(EMULATED_GPAD_INDEX, START_BUTTON_INDEX, 1, true); // press the start button
+    setTimeout(() => { gamepadEmu.PressButton(EMULATED_GPAD_INDEX, START_BUTTON_INDEX, 0, false) }, 2); // release the start button after one "frame" (2ms) (if this is less than the rate at which the game engine checks for button presses, the game engine will not detect it)
 
-    // also add keyboard bindings to the gamepad emulator
+    // also add keyboard bindings to the gamepad emulator (NOTE that this is through the gamepad emulator. The game engine thinks it is reciving gamepad events)
     window.onkeydown = (e: KeyboardEvent) => {
-        const GPAD_INDEX = 0, numberKey = parseInt(e.key);
-        console.log(e.key);
+        const numberKey = parseInt(e.key);
         // wasd to move the left stick
-        if (e.key === "a") gamepadEmu.MoveAxis(GPAD_INDEX, 0, -1);
-        else if (e.key === "d") gamepadEmu.MoveAxis(GPAD_INDEX, 0, 1);
-        else if (e.key === "w") gamepadEmu.MoveAxis(GPAD_INDEX, 1, -1);
-        else if (e.key === "s") gamepadEmu.MoveAxis(GPAD_INDEX, 1, 1);
-        // arrow keys to move the right stick
-        else if (e.key === "ArrowLeft") gamepadEmu.MoveAxis(GPAD_INDEX, 2, -1);
-        else if (e.key === "ArrowRight") gamepadEmu.MoveAxis(GPAD_INDEX, 2, 1);
-        else if (e.key === "ArrowUp") gamepadEmu.MoveAxis(GPAD_INDEX, 3, -1);
-        else if (e.key === "ArrowDown") gamepadEmu.MoveAxis(GPAD_INDEX, 3, 1);
+        if (e.key === "a") gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, 0, -1);
+        else if (e.key === "d") gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, 0, 1);
+        else if (e.key === "w") gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, 1, -1);
+        else if (e.key === "s") gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, 1, 1);
+        // arrow keys to move the right stick (prevent default to prevent scrolling)
+        else if (e.key === "ArrowLeft") { gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, 2, -1); e.preventDefault(); }
+        else if (e.key === "ArrowRight") { gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, 2, 1); e.preventDefault(); }
+        else if (e.key === "ArrowUp") { gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, 3, -1); e.preventDefault(); }
+        else if (e.key === "ArrowDown") { gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, 3, 1); e.preventDefault(); }
         // all other gamepad buttons are mapped to the number keys or keycodes for high button numbers
-        else if (!isNaN(numberKey)) {
-            gamepadEmu.PressButton(GPAD_INDEX, numberKey, 0, false);
-            console.log("pressed button " + numberKey);
-        }
-        // else if (e.keyCode) gamepadEmu.PressButton(GPAD_INDEX, e.keyCode - 66 + 10, 0, false); // 66 is the keycode for "B" (A is already used), 10 is the count of number keys on the keyboard (0-9), so "b" is button #10, "c" is button #11, etc.
-        e.preventDefault();
+        else if (!isNaN(numberKey)) gamepadEmu.PressButton(EMULATED_GPAD_INDEX, numberKey, 1, true);
+        else if (e.keyCode) gamepadEmu.PressButton(EMULATED_GPAD_INDEX, e.keyCode - 66 + 10, 1, true); // 66 is the keycode for "B" (A is already used), 10 is the count of number keys on the keyboard (0-9), so "b" is button #10, "c" is button #11, etc.
     };
 
     window.onkeyup = (e: KeyboardEvent) => {
-        const GPAD_INDEX = 0, numberKey = parseInt(e.key);
-        console.log(e.key);
+        const numberKey = parseInt(e.key);
         // wasd to move the left stick
-        if (e.key === "a") gamepadEmu.MoveAxis(GPAD_INDEX, 0, 0);
-        else if (e.key === "d") gamepadEmu.MoveAxis(GPAD_INDEX, 0, 0);
-        else if (e.key === "w") gamepadEmu.MoveAxis(GPAD_INDEX, 1, 0);
-        else if (e.key === "s") gamepadEmu.MoveAxis(GPAD_INDEX, 1, 0);
-        // arrow keys to move the right stick
-        else if (e.key === "ArrowLeft") gamepadEmu.MoveAxis(GPAD_INDEX, 2, 0);
-        else if (e.key === "ArrowRight") gamepadEmu.MoveAxis(GPAD_INDEX, 2, 0);
-        else if (e.key === "ArrowUp") gamepadEmu.MoveAxis(GPAD_INDEX, 3, 0);
-        else if (e.key === "ArrowDown") gamepadEmu.MoveAxis(GPAD_INDEX, 3, 0);
+        if (e.key === "a") gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, LEFT_X_AXIS_INDEX, 0);
+        else if (e.key === "d") gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, LEFT_X_AXIS_INDEX, 0);
+        else if (e.key === "w") gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, LEFT_Y_AXIS_INDEX, 0);
+        else if (e.key === "s") gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, LEFT_Y_AXIS_INDEX, 0);
+        // arrow keys to move the right stick (prevent default to prevent scrolling)
+        else if (e.key === "ArrowLeft") { gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, RIGHT_X_AXIS_INDEX, 0); e.preventDefault(); }
+        else if (e.key === "ArrowRight") { gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, RIGHT_X_AXIS_INDEX, 0); e.preventDefault(); }
+        else if (e.key === "ArrowUp") { gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, RIGHT_Y_AXIS_INDEX, 0); e.preventDefault(); }
+        else if (e.key === "ArrowDown") { gamepadEmu.MoveAxis(EMULATED_GPAD_INDEX, RIGHT_Y_AXIS_INDEX, 0); e.preventDefault(); }
         // all other gamepad buttons are mapped to the number keys or keycodes for high button numbers
-        else if (!isNaN(numberKey)) gamepadEmu.PressButton(GPAD_INDEX, numberKey, 0, false);
-        else if (e.keyCode) gamepadEmu.PressButton(GPAD_INDEX, e.keyCode - 66 + 10, 0, false); // 66 is the keycode for "B" (A is already used), 10 is the count of number keys on the keyboard (0-9), so "b" is button #10, "c" is button #11, etc.
+        else if (!isNaN(numberKey)) gamepadEmu.PressButton(EMULATED_GPAD_INDEX, numberKey, 0, false);
+        else if (e.keyCode) gamepadEmu.PressButton(EMULATED_GPAD_INDEX, e.keyCode - 66 + 10, 0, false); // 66 is the keycode for "B" (A is already used), 10 is the count of number keys on the keyboard (0-9), so "b" is button #10, "c" is button #11, etc.
     };
 
 }
 
-// expose for the page
-globalThis.addEmulatedGamepad = addEmulatedGamepad;
+// expose for the game engine / page to let us know when the game is ready to start
+globalThis.onGameReady = () => {
+    document.querySelector("#loading-msg")?.remove();
+    document.querySelectorAll(".gpad-display").forEach(elem => {
+        elem.classList.remove("hidden");
+    })
+
+    // setup a new emulated gamepad with the existing gamepad emulator:
+    setupEmulatedGamepad();
+}

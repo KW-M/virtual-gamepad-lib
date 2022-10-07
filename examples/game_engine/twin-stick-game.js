@@ -204,18 +204,16 @@ function create() {
 
     xparticles = this.add.particles('explosion');
 
-    /*
-    xparticles.createEmitter({
-        frame: [ 'smoke-puff', 'cloud', 'smoke-puff' ],
-        angle: { min: 240, max: 300 },
-        speed: { min: 200, max: 300 },
-        quantity: 6,
-        lifespan: 2000,
-        alpha: { start: 1, end: 0 },
-        scale: { start: 1.5, end: 0.5 },
-        on: false
-    });
-    */
+    // xparticles.createEmitter({
+    //     frame: ['smoke-puff', 'cloud', 'smoke-puff'],
+    //     angle: { min: 0, max: 359 },
+    //     speed: { min: 200, max: 300 },
+    //     quantity: 6,
+    //     lifespan: 2000,
+    //     alpha: { start: 1, end: 0 },
+    //     scale: { start: 1.5, end: 0.5 },
+    //     on: false
+    // });
 
     xparticles.createEmitter({
         frame: 'red',
@@ -272,6 +270,7 @@ function create() {
     }
 
     // console.log(this.physics.world);
+    globalThis.onGameReady();
 }
 
 function launchEnemy() {

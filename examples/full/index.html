@@ -12,18 +12,6 @@
 
 <body>
 
-  <!--
-Replace:
-id="([^"\.]*)(?:"|(?:.([^"]+)"))
-id="$1" class="$2"
-   -->
-
-  <nav id="top-nav">
-    <section id="gamepad-info">
-      <div class="marquee"><span id="connected-gamepads"></span></div>
-    </section>
-  </nav>
-
   <section id="gamepads"></section>
 
   <section id="bottom-controls">
@@ -34,12 +22,9 @@ id="$1" class="$2"
   <!-- template for making copies of the gamepad display container and svg -->
   <template id="gamepad_display_template">
     <div class="gpad-display-container">
-      <!-- <div> -->
       <b id="gpad-emulation-label">?</b>
       <button id="gpad-emulation-btn">Add Overlay</button>
-      <!-- </div> -->
-      <!-- FULL gamepad -->
-      <!-- class="gpad-display-full gpad-display" -->
+      <!-- FULL gamepad: class="gpad-display-full gpad-display" -->
       <svg class="gpad-display-full gpad-display" width="100%" height="100%" viewBox="0 0 275 232" version="1.1"
         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
         xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;">
@@ -449,8 +434,6 @@ id="$1" class="$2"
           </filter>
         </defs>
       </svg>
-
-      <hr />
     </div>
   </template>
 

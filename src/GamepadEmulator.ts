@@ -82,38 +82,42 @@ export const DEFAULT_GPAD_AXIS_COUNT: number = 4
  * Class to handle emulated gamepads and injecting them into the browser getGamepads() API. */
 export class GamepadEmulator {
 
-    /** the threshold above which a variable button is considered a "pressed" button */
-    buttonPressThreshold: number = 0.1
+
+    /** a static class variable to tell if any other instances of the GamepadEmulator class are active, and throw an error if a new one is created */
+    private static instanceRunning = false;
 
     /** stores a reference to the real, unpatched navigator.getGamepads() function **/
     getNativeGamepads: () => (Gamepad | null)[] = () => []
 
+    /** the threshold above which a variable button is considered a "pressed" button */
+    buttonPressThreshold: number = 0.1;
+
     /** count of real gamepads connected to the browser */
     realGamepadCount: number = 0
 
-
     /** A list of the indecies of all the real gamepads that have ever been conected durring this browser session, where the array index is the "gamepadIndex" returned by the native gamepad api, and the value is the index that gamepad should be exposed at in the emulated getGamepads() array */
-    #realGpadToPatchedIndexMap: number[] = []
+    private realGpadToPatchedIndexMap: number[] = []
+
     /** the reverse mapping array of #realGpadToPatchedIndexMap */
-    #patchedGpadToRealIndexMap: number[] = []
+    private patchedGpadToRealIndexMap: number[] = []
 
     /** A list of all the emulated gamepads, where the index is the "gamepadIndex" passed when AddEmulatedGamepad() was called (Ie: there may be holes in the list),
      * when an emulated gamepad is "connected" ie: call AddEmulatedGamepad(), it is added to this list at the provided index  (or returns false if there is already an emulated gamepad at that index).
      * when an emulated gamepad is "disconnected" ie: call removeEmulatedGamepad(), it is removed from this list provided index (or returns false if there is already an emulated gamepad at that index). */
-    #emulatedGamepads: (EGamepad | null)[] = []
+    private emulatedGamepads: (EGamepad | null)[] = []
 
     /** A list that mirrors the structure of #emulatedGamepads, but contains data internal to this class for keeping track of their state */
-    #emulatedGamepadsMetadata: (EGamepadPrivateData | null)[] = [];
+    private emulatedGamepadsMetadata: (EGamepadPrivateData | null)[] = [];
 
     /** Creates a new GamepadEmulator object and monkey patches the browser getGamepads() API and gamepad events to report emulated gamepads
      * You should create the GamepadEmulator object before any other libraries or function that may use the gamepad api
      * @param buttonPressThreshold - the threshold above which a variable button is considered a "pressed" button */
     constructor(buttonPressThreshold: number) {
         this.buttonPressThreshold = buttonPressThreshold || this.buttonPressThreshold
-        if (navigator.gpadEmulatorActive) throw new Error("Error: creating GamepadEmulator. Only one GamepadEmulator instance may exist in a page!");
-        navigator.gpadEmulatorActive = true;
-        this.#monkeyPatchGamepadEvents();
-        this.#monkeyPatchGetGamepads();
+        if (GamepadEmulator.instanceRunning) throw new Error("Only one GamepadEmulator instance may exist at a time!");
+        GamepadEmulator.instanceRunning = true;
+        this.monkeyPatchGamepadEvents();
+        this.monkeyPatchGetGamepads();
     }
 
     /** creates a new emmulated gamepad at the given index as would be read in navigator.getGamepads
@@ -122,8 +126,8 @@ export class GamepadEmulator {
      * @param {number} buttonCount - normally 18, the number of buttons on the gamepad
      * @param {number} axisCount - normally 4, the number of axes on the gamepad */
     AddEmulatedGamepad(gpadIndex: number, overlayMode: boolean, buttonCount: number = DEFAULT_GPAD_BUTTON_COUNT, axisCount: number = DEFAULT_GPAD_AXIS_COUNT): EGamepad | false {
-        if (gpadIndex === -1 || (!gpadIndex && gpadIndex !== 0)) gpadIndex = this.#nextEmptyEGpadIndex(!overlayMode);
-        if (this.#emulatedGamepads[gpadIndex]) return false;
+        if (gpadIndex === -1 || (!gpadIndex && gpadIndex !== 0)) gpadIndex = this.nextEmptyEGpadIndex(overlayMode);
+        if (this.emulatedGamepads[gpadIndex]) return false;
 
         // create the new gamepad object
         const eGpad: EGamepad = {
@@ -140,8 +144,8 @@ export class GamepadEmulator {
         };
 
         // Add the new gamepad object to the list of emulated gamepads
-        this.#emulatedGamepads[gpadIndex] = eGpad;
-        this.#emulatedGamepadsMetadata[gpadIndex] = { overlayMode: overlayMode }
+        this.emulatedGamepads[gpadIndex] = eGpad;
+        this.emulatedGamepadsMetadata[gpadIndex] = { overlayMode: overlayMode }
 
         // Trigger the (system) gamepad connected event on the window object (this will also trigger the window.ongamepadconnected function)
         const event = new Event('gamepadconnected') as EGamepadEvent;
@@ -155,10 +159,10 @@ export class GamepadEmulator {
     RemoveEmulatedGamepad(gpadIndex: number) {
         this.ClearDisplayButtonEventListeners(gpadIndex);
         this.ClearDisplayJoystickEventListeners(gpadIndex);
-        var e_gpad = this.#emulatedGamepads[gpadIndex];
+        var e_gpad = this.emulatedGamepads[gpadIndex];
         if (e_gpad) {
-            delete this.#emulatedGamepads[gpadIndex];
-            delete this.#emulatedGamepadsMetadata[gpadIndex];
+            delete this.emulatedGamepads[gpadIndex];
+            delete this.emulatedGamepadsMetadata[gpadIndex];
             const gpad: EGamepad = {
                 ...e_gpad,
                 connected: false,
@@ -181,10 +185,10 @@ export class GamepadEmulator {
      * @param {boolean} touched - whether the button is considered "touched" or not, a "pressed" button is always considered "touched"
     */
     PressButton(gpadIndex: number, buttonIndex: number, value: number, touched: boolean) {
-        if (this.#emulatedGamepads[gpadIndex] === undefined) throw new Error("Error: PressButton() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
+        if (this.emulatedGamepads[gpadIndex] === undefined) throw new Error("Error: PressButton() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
         var isPressed = value > this.buttonPressThreshold;
         // console.debug("pressbutton", gpadIndex, buttonIndex, value, isPressed, touched);
-        this.#emulatedGamepads[gpadIndex]!.buttons[buttonIndex] = {
+        this.emulatedGamepads[gpadIndex]!.buttons[buttonIndex] = {
             pressed: isPressed,
             value: value || 0,
             touched: isPressed || touched || false
@@ -194,18 +198,17 @@ export class GamepadEmulator {
     /** emulates moving an axis on the gamepad at the given axis index
      * @param gpadIndex - the index of the emulated gamepad to move the axis on
      * @param axisIndex - the index of the axis to move
-     * @param value - the value to set the axis to between -1 and 1 (0 = center, -1 = left/up, 1 = right/down)
-     */
+     * @param value - the value to set the axis to between -1 and 1 (0 = center, -1 = left/up, 1 = right/down) */
     MoveAxis(gpadIndex: number, axisIndex: number, value: number,) {
-        if (!this.#emulatedGamepads[gpadIndex]) throw new Error("Error: MoveAxis() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
-        this.#emulatedGamepads[gpadIndex]!.axes[axisIndex] = value;
+        if (!this.emulatedGamepads[gpadIndex]) throw new Error("Error: MoveAxis() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
+        this.emulatedGamepads[gpadIndex]!.axes[axisIndex] = value;
     }
 
     /** add event listeners to the html/svg button elements of an onscreen gamepad to emulate gamepad input  when touched, clicked or dragged
     * @param gpadIndex - the index of the emulated gamepad to register events for
     * @param buttonConfigs - an array of config objects that set how each of the buttons on the onscreen gamepad should behave, and how they map to the emulated gamepad buttons. */
     AddDisplayButtonEventListeners(gpadIndex: number, buttonConfigs: (ButtonConfig | VariableButtonConfig)[]) {
-        if (!this.#emulatedGamepads[gpadIndex]) throw new Error("Error: AddDisplayJoystickEventListeners() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
+        if (!this.emulatedGamepads[gpadIndex]) throw new Error("Error: AddDisplayJoystickEventListeners() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
         let removeListenerFuncs: (() => void)[] = [];
         for (var i = 0; i < buttonConfigs.length; i++) {
             const btnConfig = buttonConfigs[i];
@@ -275,7 +278,7 @@ export class GamepadEmulator {
 
                 // Handle the variable (dragged) button
                 const config: JoystickConfig = { ...btnConfig }
-                const removeDragListeners = this.#addDragControlListener(config, (pointerDown: boolean, xValue: number, yValue: number) => {
+                const removeDragListeners = this.AddDragControlListener(config, (pointerDown: boolean, xValue: number, yValue: number) => {
                     let value = pointerDown ? this.buttonPressThreshold + 0.00001 : 0;
                     value += (btnConfig.directions[gamepadDirection.left] || btnConfig.directions[gamepadDirection.right]) ? Math.abs(xValue) : 0
                     value += (btnConfig.directions[gamepadDirection.up] || btnConfig.directions[gamepadDirection.down]) ? Math.abs(yValue) : 0;
@@ -295,7 +298,7 @@ export class GamepadEmulator {
             }
         };
 
-        this.#emulatedGamepadsMetadata[gpadIndex]!.removeButtonListenersFunc = () => {
+        this.emulatedGamepadsMetadata[gpadIndex]!.removeButtonListenersFunc = () => {
             removeListenerFuncs.forEach(func => func());
         }
     }
@@ -304,18 +307,18 @@ export class GamepadEmulator {
     * @param gpadIndex - the index of the emulated gamepad to register events for
     * @param joystickConfigs - an array of config objects that set how each of the joysticks on the onscreen gamepad should behave, and how they map to the emulated gamepad axes. */
     AddDisplayJoystickEventListeners(gpadIndex: number, joystickConfigs: JoystickConfig[]) {
-        if (!this.#emulatedGamepads[gpadIndex]) throw new Error("Error: AddDisplayJoystickEventListeners() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
+        if (!this.emulatedGamepads[gpadIndex]) throw new Error("Error: AddDisplayJoystickEventListeners() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
         let removeListenerFuncs: (() => void)[] = [];
         for (let i = 0; i < joystickConfigs.length; i++) {
             const config = joystickConfigs[i]
-            const removeDragListeners = this.#addDragControlListener(config, (_: boolean, xValue: number, yValue: number) => {
+            const removeDragListeners = this.AddDragControlListener(config, (_: boolean, xValue: number, yValue: number) => {
                 if (config.xAxisIndex !== undefined) this.MoveAxis(gpadIndex, config.xAxisIndex, xValue);
                 if (config.yAxisIndex !== undefined) this.MoveAxis(gpadIndex, config.yAxisIndex, yValue);
             });
             removeListenerFuncs.push(removeDragListeners)
         }
 
-        this.#emulatedGamepadsMetadata[gpadIndex]!.removeJoystickListenersFunc = () => {
+        this.emulatedGamepadsMetadata[gpadIndex]!.removeJoystickListenersFunc = () => {
             removeListenerFuncs.forEach(func => func());
         }
     }
@@ -323,16 +326,17 @@ export class GamepadEmulator {
     /** removes event listeners added with AddDisplayButtonEventListeners()
     * @param gpadIndex - the index of the emulated gamepad to un-register events for */
     ClearDisplayButtonEventListeners(gpadIndex: number) {
-        if (this.#emulatedGamepadsMetadata[gpadIndex] && this.#emulatedGamepadsMetadata[gpadIndex]?.removeButtonListenersFunc) this.#emulatedGamepadsMetadata[gpadIndex]!.removeButtonListenersFunc!();
+        if (this.emulatedGamepadsMetadata[gpadIndex] && this.emulatedGamepadsMetadata[gpadIndex]?.removeButtonListenersFunc) this.emulatedGamepadsMetadata[gpadIndex]!.removeButtonListenersFunc!();
     }
 
     /** removes event listeners added with AddDisplayJoystickEventListeners()
      * @param gpadIndex - the index of the emulated gamepad to un-register events for */
     ClearDisplayJoystickEventListeners(gpadIndex: number) {
-        if (this.#emulatedGamepadsMetadata[gpadIndex] && this.#emulatedGamepadsMetadata[gpadIndex]?.removeJoystickListenersFunc) this.#emulatedGamepadsMetadata[gpadIndex]!.removeJoystickListenersFunc!();
+        if (this.emulatedGamepadsMetadata[gpadIndex] && this.emulatedGamepadsMetadata[gpadIndex]?.removeJoystickListenersFunc) this.emulatedGamepadsMetadata[gpadIndex]!.removeJoystickListenersFunc!();
     }
 
-    #addDragControlListener(config: JoystickConfig, callback: (touched: boolean, xValue: number, yValue: number) => void) {
+
+    private AddDragControlListener(config: JoystickConfig, callback: (touched: boolean, xValue: number, yValue: number) => void) {
         let touchDetails: TouchDetails = {
             startX: 0,
             startY: 0,
@@ -391,7 +395,11 @@ export class GamepadEmulator {
         }
     }
 
-    #cloneGamepad(original: EGamepad | Gamepad | null): EGamepad | null {
+    /** returns copy of the passed Gamepad object
+     * The axies and buttons arrays are deep copied.
+     * Every other property is a shallow copy
+     * @param original - the gamepad object to copy */
+    private cloneGamepad(original: EGamepad | Gamepad | null): EGamepad | null {
         // inspired by @maulingmonkey's gamepad library
         if (!original) return original;
         const axesCount = original.axes ? original.axes.length : 0;
@@ -409,9 +417,12 @@ export class GamepadEmulator {
             } else if (key === "buttons") {
                 const buttons = new Array(buttonsCount);
                 for (let i = 0; i < buttonsCount; i++) {
-                    var _a = original.buttons[i], pressed = _a.pressed, value = _a.value, touched = _a.touched;
-                    touched = touched || false;
-                    buttons[i] = { pressed: pressed, value: value, touched: touched };
+                    const btn = original.buttons[i]
+                    if (btn == undefined) buttons[i] = btn;
+                    else {
+                        const pressed = btn.pressed, value = btn.value, touched = btn.touched || false;
+                        buttons[i] = { pressed: pressed, value: value, touched: touched };
+                    }
                 }
                 Object.defineProperty(clone, "buttons", { value: buttons, enumerable: true });
             } else {
@@ -425,30 +436,36 @@ export class GamepadEmulator {
         return clone;
     }
 
-    #nextEmptyEGpadIndex(overlayMode: boolean): number {
+    /** Searches for the next available index a new emulated gamepad could go and returns that index
+    * this means no emulated gamepad is at that index and either the no real gamepad is at that index, or a real gamepad is at that index, but the @param overlayMode is true. */
+    private nextEmptyEGpadIndex(overlayMode: boolean): number {
         let index = 0;
         if (overlayMode) {
-            while (index < this.#emulatedGamepads.length) {
-                if (!this.#emulatedGamepads[index]) break;
+            do {
+                if (!this.emulatedGamepads[index]) break;
                 index++;
-            }
+            } while (index < this.emulatedGamepads.length)
         } else {
-            const end = Math.max(this.#emulatedGamepads.length, this.#realGpadToPatchedIndexMap.length);
-            while (index < end) {
-                if (!this.#emulatedGamepads[index] && !this.#realGpadToPatchedIndexMap[index] && this.#realGpadToPatchedIndexMap[index] != 0) break;
+            const end = Math.max(this.emulatedGamepads.length, this.patchedGpadToRealIndexMap.length);
+            do {
+                if (!this.emulatedGamepads[index] && this.patchedGpadToRealIndexMap[index] == undefined) break;
+                console.log("nextEmptyEGpadIndex", index, !this.emulatedGamepads[index], this.patchedGpadToRealIndexMap[index] == undefined);
                 index++;
-            }
+            } while (index < end);
         }
         return index;
     }
 
-    #nextEmptyRealGpadIndex(startingIndex: number): number {
+    /** Searches for the next available index a freshly connected real gamepad could go and returns that index
+     * this means no real gamepad is mapped to that index and either no emulated gamepad is at that index, or the emulated gamepad is in overlay mode
+     * @param startingIndex the index to start searching from */
+    private nextEmptyRealGpadIndex(startingIndex: number): number {
         let index = startingIndex;
-        const end = Math.max(this.#emulatedGamepads.length, this.#patchedGpadToRealIndexMap.length);
+        const end = Math.max(this.emulatedGamepads.length, this.patchedGpadToRealIndexMap.length);
         do {
-            const emulatedGpadMetadata = this.#emulatedGamepadsMetadata[index];
-            const realGpadEmptySpot = this.#realGpadToPatchedIndexMap[index] == undefined && this.#patchedGpadToRealIndexMap[index] == undefined;
-            console.log("nextEmptyRealGpadIndex", index, (!!emulatedGpadMetadata && emulatedGpadMetadata.overlayMode), (!emulatedGpadMetadata && realGpadEmptySpot), !!emulatedGpadMetadata, realGpadEmptySpot);
+            const emulatedGpadMetadata = this.emulatedGamepadsMetadata[index];
+            const realGpadEmptySpot = this.realGpadToPatchedIndexMap[index] == undefined && this.patchedGpadToRealIndexMap[index] == undefined;
+
             if ((!!emulatedGpadMetadata && emulatedGpadMetadata.overlayMode) || (!emulatedGpadMetadata && realGpadEmptySpot)) break;
             index++;
         } while (index < end);
@@ -456,7 +473,7 @@ export class GamepadEmulator {
     }
 
     /** Intercepts gamepadconnected & gamepaddisconnected events and re-sends them with the correct gamepad indecies */
-    #monkeyPatchGamepadEvents() {
+    private monkeyPatchGamepadEvents() {
 
         // disable the window.ongamepadconnected event listener:
         let windowOngamepadconnected = window.ongamepadconnected
@@ -495,16 +512,16 @@ export class GamepadEmulator {
                 e.stopImmediatePropagation() // prevent future event listeners from firing
 
                 // fix the gamepad object to be an EGamepad with the correct (mapped) index index
-                const eGpad = this.#cloneGamepad(e.gamepad);
+                const eGpad = this.cloneGamepad(e.gamepad);
                 const gpadIndex = eGpad!.index;
-                const mappedIndex = this.#nextEmptyRealGpadIndex(gpadIndex);
-                this.#realGpadToPatchedIndexMap[gpadIndex] = mappedIndex;
-                this.#patchedGpadToRealIndexMap[mappedIndex] = gpadIndex;
+                const mappedIndex = this.nextEmptyRealGpadIndex(gpadIndex);
+                this.realGpadToPatchedIndexMap[gpadIndex] = mappedIndex;
+                this.patchedGpadToRealIndexMap[mappedIndex] = gpadIndex;
                 Object.defineProperty(eGpad, "index", { get: () => mappedIndex });
                 Object.defineProperty(eGpad, "emulation", { get: () => gamepadEmulationState.real });
                 this.realGamepadCount++;
 
-                console.log(`real gamepad connected ${eGpad!.id} (${gpadIndex}>${mappedIndex})`, this.#realGpadToPatchedIndexMap, this.#emulatedGamepads, this.#emulatedGamepadsMetadata);
+                console.log(`real gamepad connected ${eGpad!.id} (${gpadIndex}>${mappedIndex})`, this.realGpadToPatchedIndexMap, this.emulatedGamepads, this.emulatedGamepadsMetadata);
 
                 // send out the corrected event on the window object
                 const event = new Event('gamepadconnected') as EGamepadEvent;
@@ -523,11 +540,11 @@ export class GamepadEmulator {
                 e.stopImmediatePropagation() // prevent future event listeners from firing
 
                 // fix the gamepad object to be an EGamepad with the correct (mapped) index
-                const clone = this.#cloneGamepad(e.gamepad); // eG
-                const mappedIndex = this.#realGpadToPatchedIndexMap[clone!.index] || clone!.index;
+                const clone = this.cloneGamepad(e.gamepad); // eG
+                const mappedIndex = this.realGpadToPatchedIndexMap[clone!.index] || clone!.index;
                 Object.defineProperty(clone, "index", { get: () => mappedIndex });
-                delete this.#realGpadToPatchedIndexMap[clone!.index];
-                delete this.#patchedGpadToRealIndexMap[mappedIndex];
+                delete this.realGpadToPatchedIndexMap[clone!.index];
+                delete this.patchedGpadToRealIndexMap[mappedIndex];
                 this.realGamepadCount--;
 
                 // send out the corrected event on the window object
@@ -541,11 +558,10 @@ export class GamepadEmulator {
         })
     }
 
-
     /** overwrite the browser gamepad api getGamepads() to return the emulated gamepad data for gamepad indexes corresponding to emulated gamepads
      * if a real gamepad is found with the same index value as an emulated gamepad, the  the navigator.getGamepads() list will either shift the emulated gamepad's index up to make room for the real gamepad when (emulatedGamepad.overlayMode = false),
      * or it will return the emulated gamepad "overlayed" on the real one where buttons pressed or axes moved on both the real gamepad and the emulated one will show up on that gamepad. */
-    #monkeyPatchGetGamepads() {
+    private monkeyPatchGetGamepads() {
         // get a reference to the original getGamepads() function
         const self = this;
         let getNativeGamepads = navigator.getGamepads || navigator.webkitGetGamepads || navigator.mozGetGamepads || navigator.msGetGamepads;
@@ -560,14 +576,14 @@ export class GamepadEmulator {
             for (let i = 0; i < nativeGpadsRaw.length; i++) {
                 const gpad = nativeGpadsRaw[i];
                 if (!gpad) continue;
-                let clone = self.#cloneGamepad(gpad);
-                let mappedIndex = self.#realGpadToPatchedIndexMap[clone!.index] || clone!.index;
+                let clone = self.cloneGamepad(gpad);
+                let mappedIndex = self.realGpadToPatchedIndexMap[clone!.index] || clone!.index;
                 Object.defineProperty(clone, "index", { get: () => mappedIndex });
                 nativeGpads[mappedIndex] = clone;
             }
 
             // apply the emulated gamepad data to the mapped native gamepads array
-            let emulatedGpads = self.#emulatedGamepads;
+            let emulatedGpads = self.emulatedGamepads;
             for (let i = 0; i < emulatedGpads.length; i++) {
                 let n_gpad = nativeGpads[i];
                 let e_gpad = emulatedGpads[i];
@@ -600,7 +616,7 @@ export class GamepadEmulator {
                     // add a property on the gamepad to indicate that it is emulated
                     e_gpad.emulation = gamepadEmulationState.emulated;
                     e_gpad.timestamp = Math.floor(Date.now() / 1000);
-                    nativeGpads[i] = self.#cloneGamepad(e_gpad); // clone the emulated gamepad to prevent it from being modified by the caller and make libraries happy
+                    nativeGpads[i] = self.cloneGamepad(e_gpad); // clone the emulated gamepad to prevent it from being modified by the caller and make libraries happy
                 }
             }
 
@@ -610,8 +626,8 @@ export class GamepadEmulator {
     }
 
     cleanup() {
-        this.#emulatedGamepads = [];
+        this.emulatedGamepads = [];
         navigator.getGamepads = this.getNativeGamepads;
-        navigator.gpadEmulatorActive = false;
+        GamepadEmulator.instanceRunning = false;
     }
 };
