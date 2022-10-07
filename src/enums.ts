@@ -13,5 +13,5 @@ export const enum gamepadButtonType {
 export const enum gamepadEmulationState {
     real = "real",
     emulated = "emulated",
-    mixed = "mixed",
+    overlay = "overlay",
 }

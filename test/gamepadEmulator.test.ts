@@ -62,7 +62,7 @@ test("getGamepads() patch", async () => {
     await new Promise(resolve => setTimeout(resolve, 5));
     expect(addGpadFlag).not.toEqual(false)
 
-    // test axies:
+    // test axes:
     expect(navigator.getGamepads()[1]?.axes).toEqual([0, 0, 0, 0]);
     gamepadEmu.MoveAxis(1, 0, 0.59);
     gamepadEmu.MoveAxis(1, 2, 1);

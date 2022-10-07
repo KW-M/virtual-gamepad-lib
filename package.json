@@ -40,8 +40,8 @@
     "test:lib": "vitest",
     "build:lib": "tsc && vite build",
     "build:docs": "pnpx typedoc src/GamepadEmulator.ts src/GamepadDisplay.ts src/GamepadApiWrapper.ts src/enums.ts",
-    "dev:example": "tsc && vite --config example/vite.config.js --host",
-    "build:example": "vite build --config example/vite.config.js",
+    "dev:example": "vite --config examples/vite.config.js --host",
+    "build:example": "vite build --config examples/vite.config.js",
     "preview:example": "vite preview --config example/vite.config.js  --host",
     "prepublish": "npm run build:lib"
   },

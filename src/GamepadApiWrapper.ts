@@ -103,10 +103,11 @@ export class GamepadApiWrapper {
 
     /** add an event listener for each time a gamepad axis changes.
      * The callback function will be called with the gamepad index, the gamepad object, and a boolean array of the changed axes,
-     * The callback is called separately for each gamepad where axies have changed.
+     * The callback is called separately for each gamepad where axes have changed.
      * @param Listener The calback function to call when a gamepad axis state changes */
     onGamepadAxisChange(Listener: (gpadIndex: number, gpad: Gamepad, axisChangesMask: boolean[]) => void) {
         this.gamepadAxisChangeListeners.push(Listener);
+        return Listener;
     }
 
     /** offGamepadAxisChange: remove an existing event listener for when a gamepad axis changes
@@ -121,6 +122,7 @@ export class GamepadApiWrapper {
      * @param Listener The calback function to call when a gamepad button state changes */
     onGamepadButtonChange(Listener: (gpadIndex: number, gpad: Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => void) {
         this.gamepadButtonChangeListeners.push(Listener);
+        return Listener;
     }
 
     /** offGamepadButtonChange: remove an existing event listener for when a gamepad button changes
@@ -166,23 +168,23 @@ export class GamepadApiWrapper {
 
         const lastGamepadState = this.lastStateOfGamepads[gamepadIndex];
         let lastAxisState = lastGamepadState.axes || [];
-        let axiesChangeMask: boolean[] = [];
+        let axesChangeMask: boolean[] = [];
 
         let i, somethingChanged = false;
         for (i = 0; i < axisState.length; i++) {
             let axisValue = axisState[i] || 0;
             let lastAxisValue = lastAxisState[i] || 0;
             if (axisValue != lastAxisValue) {
-                axiesChangeMask[i] = true;
+                axesChangeMask[i] = true;
                 somethingChanged = true;
             } else {
-                axiesChangeMask[i] = false;
+                axesChangeMask[i] = false;
             }
         }
 
         // send out event if one or more axes changed
         if (somethingChanged) {
-            this.gamepadAxisChangeListeners.forEach(callback => callback(gamepadIndex, gpad, axiesChangeMask));
+            this.gamepadAxisChangeListeners.forEach(callback => callback(gamepadIndex, gpad, axesChangeMask));
         }
     }
 

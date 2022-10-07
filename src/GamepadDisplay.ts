@@ -24,9 +24,6 @@ export interface GamepadDisplayJoystick {
     movementRange: number;
     xAxisIndex?: number;
     yAxisIndex?: number;
-    /** (OPTIONAL) The button number associated with this joystick.
-     Eg: When touching / clicking a thumbstick, that action is exposed as a button, so this allows you to map that button press/touch onto this joystick and recive touch/press events in the update function */
-    joystickButtonNum?: number;
     /** What movment directions does this joystick support */
     directions: {
         [gamepadDirection.up]?: boolean;
@@ -36,10 +33,10 @@ export interface GamepadDisplayJoystick {
     }
     /** When the joystick is moved in a given direction, the corresponding highlight element will be given the moveDirectionHighlightClass from the config */
     highlights?: {
-        [gamepadDirection.up]?: HTMLElement | SVGElement;
-        [gamepadDirection.down]?: HTMLElement | SVGElement;
-        [gamepadDirection.left]?: HTMLElement | SVGElement;
-        [gamepadDirection.right]?: HTMLElement | SVGElement;
+        [gamepadDirection.up]?: HTMLElement | SVGElement | null;
+        [gamepadDirection.down]?: HTMLElement | SVGElement | null;
+        [gamepadDirection.left]?: HTMLElement | SVGElement | null;
+        [gamepadDirection.right]?: HTMLElement | SVGElement | null;
     }
 }
 
@@ -52,40 +49,45 @@ export interface DisplayGamepadConfig {
     pressedHighlightClass?: string;
     moveDirectionHighlightClass?: string;
     buttonDisplayFunction?: (button: GamepadDisplayButton | GamepadDisplayVariableButton, value: number, touched: boolean, pressed: boolean, changes: buttonChangeDetails, btnIndex: number) => void;
-    joystickDisplayFunction?: (stickConfig: GamepadDisplayJoystick, xAxisValue: number, yAxisValue: number, touched: boolean, pressed: boolean) => void;
+    joystickDisplayFunction?: (stickConfig: GamepadDisplayJoystick, xAxisValue: number, yAxisValue: number) => void;
 }
 
 /**
  * Class to handle displaying the state of a gamepad on the screen.
  * This library will not draw anything to the screen, it will only update the classes / transforms of the elements
- * you provide to represent the buttons/axies of the gamepad. See the examples for more information.
+ * you provide to represent the buttons/axes of the gamepad. See the examples for more information.
  * @param {DisplayGamepadConfig} config The config to use for the gamepad display
  * @param {GamepadApiWrapper} config (OPTIONAL) The gamepad api will use this GamepadApiWrapper instance to listen for gamepad events, otherwise it will create a new gamepad wrapper.
  */
 export class GamepadDisplay {
     config: DisplayGamepadConfig;
     apiWrapper: GamepadApiWrapper;
+    #btnChangeListener: (gpadIndex: number, gpadState: Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => void;
+    #axisChangeListener: (gpadIndex: number, gpadState: Gamepad, axisChangesMask: (boolean)[]) => void;
     constructor(config: DisplayGamepadConfig, apiWrapper?: GamepadApiWrapper) {
         this.config = config;
         this.apiWrapper = apiWrapper || new GamepadApiWrapper({ buttonConfigs: [], updateDelay: 0 });
-        this.apiWrapper.onGamepadButtonChange(this.#displayButtonChanges.bind(this));
-        this.apiWrapper.onGamepadAxisChange(this.#displayJoystickChanges.bind(this));
+        this.#btnChangeListener = this.apiWrapper.onGamepadButtonChange(this.#displayButtonChanges.bind(this));
+        this.#axisChangeListener = this.apiWrapper.onGamepadAxisChange(this.#displayJoystickChanges.bind(this));
     };
 
-    defaultJoystickDisplayFunction = (stickConfig: GamepadDisplayJoystick, xValue: number, yValue: number, touched?: boolean, pressed?: boolean) => {
+    defaultJoystickDisplayFunction = (stickConfig: GamepadDisplayJoystick, xValue: number, yValue: number) => {
         const stickRange = stickConfig.movementRange;
-        stickConfig.joystickElement.style.transform = `rotateY(${-xValue * 30}deg) rotateX(${yValue * 30}deg) translate(${xValue * stickRange}px,${yValue * stickRange}px)`;
-        if (touched) stickConfig.joystickElement.classList.add(this.config.touchedHighlightClass || ""); else stickConfig.joystickElement.classList.remove(this.config.touchedHighlightClass || "");
-        if (pressed) stickConfig.joystickElement.classList.add(this.config.pressedHighlightClass || ""); else stickConfig.joystickElement.classList.remove(this.config.pressedHighlightClass || "");
-        if (stickConfig.highlights) {
+        // stickConfig.joystickElement.style.transform = `rotateY(${-xValue * 30}deg) rotateX(${yValue * 30}deg) translate(${xValue * stickRange}px,${yValue * stickRange}px)`;
+        stickConfig.joystickElement.style.transform = `translate(${xValue * stickRange}px,${yValue * stickRange}px)`;
+        if (stickConfig.highlights && this.config.moveDirectionHighlightClass) {
             const upHighlight = stickConfig.highlights[gamepadDirection.up];
             const downHighlight = stickConfig.highlights[gamepadDirection.down];
             const leftHighlight = stickConfig.highlights[gamepadDirection.left];
             const rightHighlight = stickConfig.highlights[gamepadDirection.right];
-            if (upHighlight) upHighlight.style.opacity = Math.max(-yValue, 0).toString();
-            if (downHighlight) downHighlight.style.opacity = Math.max(yValue, 0).toString();
-            if (leftHighlight) leftHighlight.style.opacity = Math.max(-xValue, 0).toString();
-            if (rightHighlight) rightHighlight.style.opacity = Math.max(xValue, 0).toString();
+            if (upHighlight && yValue < -0.1) upHighlight.classList.add(this.config.moveDirectionHighlightClass || ""); else if (upHighlight) upHighlight.classList.remove(this.config.moveDirectionHighlightClass || "");
+            if (downHighlight && yValue > 0.1) downHighlight.classList.add(this.config.moveDirectionHighlightClass || ""); else if (downHighlight) downHighlight.classList.remove(this.config.moveDirectionHighlightClass || "");
+            if (leftHighlight && xValue < -0.1) leftHighlight.classList.add(this.config.moveDirectionHighlightClass || ""); else if (leftHighlight) leftHighlight.classList.remove(this.config.moveDirectionHighlightClass || "");
+            if (rightHighlight && xValue > 0.1) rightHighlight.classList.add(this.config.moveDirectionHighlightClass || ""); else if (rightHighlight) rightHighlight.classList.remove(this.config.moveDirectionHighlightClass || "");
+            // if (upHighlight) upHighlight.style.opacity = Math.max(-yValue, 0).toString();
+            // if (downHighlight) downHighlight.style.opacity = Math.max(yValue, 0).toString();
+            // if (leftHighlight) leftHighlight.style.opacity = Math.max(-xValue, 0).toString();
+            // if (rightHighlight) rightHighlight.style.opacity = Math.max(xValue, 0).toString();
         }
     }
 
@@ -109,11 +111,12 @@ export class GamepadDisplay {
         }
 
         if (buttonConfig.type == gamepadButtonType.variable) {
-            if (this.config.moveDirectionHighlightClass && btnHiglightElem) {
+            const dirHighlightElem = buttonConfig.directionHighlight;
+            if (this.config.moveDirectionHighlightClass && dirHighlightElem) {
                 if (changes.pressed) {
-                    btnHiglightElem.classList.add(this.config.moveDirectionHighlightClass);
+                    dirHighlightElem.classList.add(this.config.moveDirectionHighlightClass);
                 } else if (changes.released) {
-                    btnHiglightElem.classList.remove(this.config.moveDirectionHighlightClass);
+                    dirHighlightElem.classList.remove(this.config.moveDirectionHighlightClass);
                 }
             }
             if (buttonConfig.buttonElement) {
@@ -123,7 +126,6 @@ export class GamepadDisplay {
             }
         }
     }
-
 
     #displayButtonChanges = (gpadIndex: number, gpadState: Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => {
         if (gpadIndex != this.config.gamepadIndex) return;
@@ -159,20 +161,22 @@ export class GamepadDisplay {
 
                 // extract useful values from the config
                 const gpadAxisValues = gpadState.axes;
-                const gpadButtonValues = gpadState.buttons;
                 const xValue = stickConfig.xAxisIndex !== undefined ? (gpadAxisValues[stickConfig.xAxisIndex] || 0) : 0;
                 const yValue = stickConfig.yAxisIndex !== undefined ? (gpadAxisValues[stickConfig.yAxisIndex] || 0) : 0;
-                let touched = false, pressed = false, btnIndex = stickConfig.joystickButtonNum;
-                if (btnIndex != undefined && btnIndex >= 0 && gpadButtonValues[btnIndex]) ({ touched, pressed } = gpadButtonValues[btnIndex]);
 
                 // display the new  joystick state
                 if (this.config.joystickDisplayFunction) {
-                    this.config.joystickDisplayFunction(stickConfig, xValue, yValue, touched, pressed);
+                    this.config.joystickDisplayFunction(stickConfig, xValue, yValue);
                 } else {
-                    this.defaultJoystickDisplayFunction(stickConfig, xValue, yValue, touched, pressed);
+                    this.defaultJoystickDisplayFunction(stickConfig, xValue, yValue);
                 }
             }
         }
+    }
+
+    cleanup() {
+        this.apiWrapper.offGamepadButtonChange(this.#btnChangeListener)
+        this.apiWrapper.offGamepadAxisChange(this.#axisChangeListener)
     }
 
 }

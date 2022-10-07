@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Virtual Gamepad Example</title>
+  <link rel="icon" href="./favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css" />
+  <!-- Code that creates the gamepad emulator instance MUST come before any gamepad libraries are loaded -->
+  <script type="module" src="./example.ts"></script>
+  <!-- Load Phaser.js and the twin stick Phaser 3 gamepad example -->
+  <script src="./phaser.min.js"></script>
+  <script src="./twin-stick-game.js"></script>
+</head>
+
+<body>
+
+
+  <h4>Twin Stick Shooter Example by Phaser.JS</h4>
+  <button onclick="addEmulatedGamepad(); event.target.remove()">Enable Emulated Gpad Events (Outside of
+    phaser.js)</button>
+  <div id="phaser-example">
+  </div>
+
+
+  <!-- FULL gamepad -->
+  <div id="gpad-display-container">
+    <svg width="100%" height="100%" viewBox="0 0 123 232" version="1.1" xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/"
+      style="fill-rule:evenodd;clip-rule:evenodd;">
+      <g id="right_side_of_controller" class="">
+      </g>
+      <g id="left_side_of_controller" class="">
+        <path
+          d="M112.977,140.769c-6,29.375 -13.537,33.424 -35.28,43.583c-35.355,16.519 -33.138,57.105 -56.59,45.51c-14.36,-7.1 -21.13,-19.23 -21.13,-38.4c-0,-24.92 11.42,-65.99 32.4,-119.1c10.625,-22.199 25.844,-16.641 42.794,-16.641c7.93,0 15.744,-1.226 22.454,2.224c14.564,7.511 21.031,55.022 15.352,82.824Z" />
+        <g id="stick_button_left" class="">
+          <text id="l_stick_action_help_label" class="" x="58.522px" y="222.614px"
+            style="font-family:'ArialRoundedMTBold', 'Arial Rounded MT Bold', sans-serif;font-size:11px;">Forward</text>
+          <g id="stick_bg_left" class="">
+            <circle id="shadow10" class="" cx="81.987" cy="176.33" r="26.46" style="fill-opacity:0.5;" />
+            <circle id="Oval5" class="" cx="80.737" cy="175.09" r="25.21"
+              style="fill:#6180b0;stroke:#000;stroke-width:2.49px;" />
+          </g>
+          <g id="l_stick_right_direction_highlight" class="direction_highlight">
+            <path d="M80.737,179.329l0,-8.477l25.442,-0l-0,-7.872l12.11,12.11l-12.11,12.11l-0,-7.871l-25.442,-0Z"
+              style="fill:#ff00bf;" />
+          </g>
+          <g id="l_stick_down_direction_highlight" class="direction_highlight">
+            <path d="M76.499,175.09l8.477,0l0,25.442l7.872,-0l-12.11,12.11l-12.11,-12.11l7.871,-0l0,-25.442Z"
+              style="fill:#ff00bf;" />
+          </g>
+          <g id="l_stick_left_direction_highlight" class="direction_highlight">
+            <path d="M80.737,170.852l-0,8.477l-25.442,-0l0,7.871l-12.11,-12.11l12.11,-12.11l0,7.872l25.442,-0Z"
+              style="fill:#ff00bf;" />
+          </g>
+          <g id="l_stick_up_direction_highlight" class="direction_highlight">
+            <path d="M84.976,175.09l-8.477,-0l-0,-25.442l-7.872,0l12.11,-12.11l12.11,12.11l-7.871,0l-0,25.442Z"
+              style="fill:#ff00bf;" />
+          </g>
+          <g>
+            <g id="stick_left" class="">
+              <circle id="shadow11" class="" cx="82.597" cy="176.96" r="17.12" style="fill-opacity:0.5;" />
+              <g style="filter:url(#_Effect1);">
+                <circle id="stick_button_left_highlight" class="gpad-highlight" cx="80.737" cy="175.09" r="20.575"
+                  style="fill:#59ffec;" />
+              </g>
+              <g id="Group-6" class="">
+                <circle id="Oval-Copy" class="" cx="80.737" cy="175.09" r="15.88"
+                  style="fill:#fff;stroke:#000;stroke-width:2.49px;" />
+                <circle id="Oval-Copy-2" class="" cx="80.737" cy="175.09" r="12.14"
+                  style="fill:#fff;stroke:#000;stroke-width:1.25px;" />
+              </g>
+            </g>
+          </g>
+        </g>
+        <g>
+          <g id="select_button" class="">
+            <g style="filter:url(#_Effect2);">
+              <path id="select_button_highlight" class="gpad-highlight"
+                d="M105.648,130.484c1.985,1.785 3.235,4.372 3.235,7.249c-0,2.878 -1.25,5.465 -3.235,7.25l-13.027,0c-1.985,-1.785 -3.234,-4.372 -3.234,-7.25c0,-2.877 1.249,-5.464 3.234,-7.249l13.027,-0Z"
+                style="fill:#59ffec;" />
+            </g>
+            <path id="select" class=""
+              d="M105.267,133.325c1.532,1.378 2.496,3.375 2.496,5.595c-0,2.221 -0.964,4.218 -2.496,5.596l-10.054,-0c-1.532,-1.378 -2.496,-3.375 -2.496,-5.596c-0,-2.22 0.964,-4.217 2.496,-5.595l10.054,0Z"
+              style="fill:#9a9a9a;fill-opacity:0.5;" />
+            <path id="select1" class="" serif:id="select" class=""
+              d="M104.162,132.138c1.532,1.378 2.496,3.375 2.496,5.595c0,2.221 -0.964,4.218 -2.496,5.596l-10.054,-0c-1.532,-1.378 -2.496,-3.375 -2.496,-5.596c-0,-2.22 0.964,-4.217 2.496,-5.595l10.054,0Z"
+              style="fill:#fff;stroke:#000;stroke-width:1.35px;" />
+            <path id="select_icon" class=""
+              d="M95.732,139.452l6.805,-0c0.465,-0.552 0.476,-1.113 0,-1.687l-6.805,-0c-0.482,-0.564 -0.475,-1.137 0,-1.719l6.805,0"
+              style="fill:none;stroke:#000;stroke-width:0.9px;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;" />
+          </g>
+        </g>
+        <g id="d_pad" class="">
+          <g id="shadow14" class="">
+            <path
+              d="M86.434,71.626c0.913,-0 1.659,0.746 1.659,1.659l0,18.212l18.212,-0c0.913,-0 1.66,0.747 1.66,1.659l-0,14.893c-0,0.913 -0.747,1.66 -1.66,1.66l-18.212,-0l0,18.211c0,0.913 -0.746,1.66 -1.659,1.66l-14.893,-0c-0.911,-0 -1.66,-0.749 -1.66,-1.66l0,-18.211l-18.211,-0c-0.911,-0 -1.66,-0.749 -1.66,-1.66l0,-14.893c0,-0.902 0.747,-1.659 1.66,-1.659l18.211,-0l0,-18.212c0,-0.902 0.747,-1.659 1.66,-1.659l14.893,-0Z"
+              style="fill:#9a9a9a;fill-opacity:0.5;" />
+          </g>
+          <g style="filter:url(#_Effect3);">
+            <rect id="d_pad_up_highlight" class="gpad-highlight" x="65.53" y="66.822" width="23.597" height="27.555"
+              style="fill:#59ffec;" />
+          </g>
+          <g style="filter:url(#_Effect4);">
+            <rect id="d_pad_down_highlight" class="gpad-highlight" x="65.535" y="103.52" width="23.597" height="27.555"
+              style="fill:#59ffec;" />
+          </g>
+          <g style="filter:url(#_Effect5);">
+            <rect id="d_pad_right_highlight" class="gpad-highlight" x="82.182" y="87.143" width="27.242" height="23.61"
+              style="fill:#59ffec;" />
+          </g>
+          <g style="filter:url(#_Effect6);">
+            <rect id="d_pad_left_highlight" class="gpad-highlight" x="45.242" y="87.138" width="27.242" height="23.61"
+              style="fill:#59ffec;" />
+          </g>
+          <g>
+            <path
+              d="M84.774,69.966c0.913,0 1.66,0.747 1.66,1.66l-0,18.211l18.222,0c0.902,0 1.659,0.747 1.659,1.66l0,14.903c0,0.903 -0.757,1.66 -1.659,1.66l-18.222,-0l-0,18.211c-0,0.903 -0.747,1.66 -1.66,1.66l-14.882,-0c-0.911,-0 -1.66,-0.749 -1.66,-1.66l0,-18.222l-18.222,0c-0.91,0 -1.659,-0.749 -1.659,-1.659l-0,-14.893c-0,-0.913 0.747,-1.66 1.659,-1.66l18.212,0l0,-18.211c0,-0.913 0.747,-1.66 1.659,-1.66l14.893,0Z"
+              style="fill:#fff;stroke:#000;stroke-width:1.66px;stroke-linejoin:round;" />
+          </g>
+          <g id="d_pad_right" class="">
+            <path d="M91.827,94.401l9.095,4.542l-9.105,4.564l-0,-9.117l0.01,0.011Z"
+              style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round;" />
+          </g>
+          <g id="d_pad_left" class="">
+            <path d="M62.839,103.496l-9.106,-4.553l9.106,-4.553l0,9.106Z"
+              style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round;" />
+          </g>
+          <g id="d_pad_down" class="">
+            <path d="M81.881,113.432l-4.553,9.106l-4.553,-9.106l9.106,-0Z"
+              style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round;" />
+          </g>
+          <g id="d_pad_up" class="">
+            <path d="M72.775,84.455l4.563,-9.106l4.543,9.106l-9.106,-0Z"
+              style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round;" />
+          </g>
+        </g>
+        <g>
+          <g id="shoulder_trigger_back_left" class="">
+            <g id="shoulder_trigger_back_left_direction_highlight" class="direction_highlight">
+              <path d="M110.415,51.254l-12.269,-16.491l24.538,0l-12.269,16.491Z" style="fill:#ff00bf;" />
+              <path d="M97.161,17.167c2.534,-0 13.254,0.512 13.218,21"
+                style="fill:none;stroke:#ff00bf;stroke-width:8.5px;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;" />
+            </g>
+            <path id="shadow4" class=""
+              d="M54.417,40.591l37.84,0c1.52,0 2.77,-0.618 2.77,-1.36c0,-0.103 -0.02,-0.206 -0.07,-0.309l-10.9,-23.604c-0.7,-1.545 -3.53,-2.648 -6.75,-2.648l-11.8,0c-7.66,0 -13.86,3.05 -13.86,6.811l0,19.761c0,0.741 1.25,1.36 2.77,1.36l0,-0.011Z"
+              style="fill-opacity:0.5;" />
+            <g style="filter:url(#_Effect7);">
+              <path id="shoulder_trigger_back_left_highlight" class="gpad-highlight"
+                d="M46.365,42.087c-0.492,0 -0.945,-0.093 -1.269,-0.253c-0.324,-0.161 -0.519,-0.374 -0.519,-0.628l0,-25.604c0,-2.189 1.814,-4.178 4.73,-5.606c3.605,-1.618 7.508,-2.415 11.44,-2.337l15.277,0c1.632,0 3.213,0.267 4.483,0.775c1.269,0.507 2.163,1.201 2.526,1.975l14.123,30.61c0.039,0.441 -0.168,0.668 -0.492,0.815c-0.337,0.173 -0.778,0.267 -1.27,0.267l-49.029,-0l0,-0.014Z"
+                style="fill:#59ffec;" />
+            </g>
+            <path id="bg" class=""
+              d="M51.957,38.16c-0.38,-0 -0.73,-0.072 -0.98,-0.196c-0.25,-0.124 -0.4,-0.288 -0.4,-0.484l0,-19.761c0,-1.69 1.4,-3.225 3.65,-4.327c2.783,-1.249 5.795,-1.864 8.83,-1.803l11.79,-0c1.26,-0 2.48,0.206 3.46,0.597c0.98,0.392 1.67,0.928 1.95,1.525l10.9,23.625c0.03,0.34 -0.13,0.515 -0.38,0.628c-0.26,0.134 -0.6,0.206 -0.98,0.206l-37.84,0l0,-0.01Z"
+              style="fill:#fff;stroke:#000;stroke-width:2.2px;" />
+          </g>
+        </g>
+        <g>
+          <g id="shoulder_button_front_left" class="">
+            <path id="shadow5" class=""
+              d="M94.279,44.584l-39.992,0c-2.643,0 -4.818,2.591 -4.818,5.74l0,6.9c0.004,1.258 0.875,2.29 1.931,2.29l45.767,0c1.059,0 1.93,-1.038 1.93,-2.3l0,-6.88c0,-3.149 -2.175,-5.74 -4.818,-5.74l0,-0.01Z"
+              style="fill-opacity:0.5;" />
+            <g style="filter:url(#_Effect8);">
+              <path id="shoulder_button_front_left_highlight" class="gpad-highlight"
+                d="M98.679,43.065l0.022,0c2.732,0 4.98,2.679 4.98,5.935l0,8.966c0,0.81 -0.56,1.477 -1.239,1.477l-59.311,-0c-0.686,-0 -1.251,-0.673 -1.251,-1.49l0,-8.94c0,-3.256 2.248,-5.935 4.981,-5.935l51.818,0l-0,-0.013Z"
+                style="fill:#59ffec;" />
+            </g>
+            <path id="bg1" class="" serif:id="bg" class=""
+              d="M92.769,44.934l0.017,0c2.109,0 3.844,2.067 3.844,4.58l-0,6.92c-0,0.625 -0.433,1.14 -0.957,1.14l-45.776,0c-0.529,0 -0.965,-0.519 -0.965,-1.15l0,-6.9c0,-2.513 1.735,-4.58 3.844,-4.58l39.993,0l-0,-0.01Z"
+              style="fill:#fff;stroke:#000;stroke-width:2.12px;" />
+          </g>
+        </g>
+        <g id="l_touch_targets" class="" opacity="0">
+          <path id="stick_button_left_touch_target" class=""
+            d="M103.497,149.101c7.227,6.337 11.792,15.634 11.792,25.989c-0,19.069 -15.482,34.551 -34.552,34.551c-19.069,0 -34.551,-15.482 -34.551,-34.551c-0,-19.07 15.482,-34.552 34.551,-34.552c2.258,-0 4.466,0.217 6.601,0.631c1.548,5.051 6.247,8.728 11.797,8.728c1.535,0 3.005,-0.281 4.362,-0.796Z"
+            style="fill:#419bf3;" />
+          <path id="select_button_touch_target" class=""
+            d="M93.558,126.53c1.675,-0.852 3.57,-1.333 5.577,-1.333c6.809,0 12.336,5.534 12.336,12.35c0,6.816 -5.527,12.35 -12.336,12.35c-6.809,0 -12.337,-5.534 -12.337,-12.35c0,-1.681 0.336,-3.284 0.945,-4.744c2.389,-1.61 4.386,-3.759 5.815,-6.273Z"
+            style="fill:#419bf3;" />
+          <path id="d_pad_left_touch_target" class=""
+            d="M57.9,116.925c-10.093,-0.218 -18.219,-8.48 -18.219,-18.625c-0,-10.281 8.346,-18.628 18.628,-18.628c0.14,-0 0.279,0.002 0.419,0.005l18.205,18.204l-0,0.01l-19.033,19.034Z"
+            style="fill:#419bf3;" />
+          <path id="d_pad_down_touch_target" class=""
+            d="M57.9,116.925l19.042,-19.043l19.033,19.042c0.004,0.14 0.006,0.279 0.006,0.419c-0,10.282 -8.348,18.629 -18.629,18.629c-10.282,-0 -19.452,-8.765 -19.452,-19.047Z"
+            style="fill:#419bf3;" />
+          <path id="d_pad_up_touch_target" class=""
+            d="M67.141,63.678l20.421,0c4.962,3.261 8.277,8.827 8.413,15.17l-19.033,19.034l-0.009,-0.001l-18.205,-18.204c-0.004,-0.14 -0.005,-0.279 -0.005,-0.419c0,-6.512 3.349,-12.249 8.418,-15.58Z"
+            style="fill:#419bf3;" />
+          <path id="d_pad_right_touch_target" class=""
+            d="M76.942,97.882l19.033,-19.034c10.281,0 19.048,9.171 19.048,19.452c0,10.282 -8.348,18.629 -18.629,18.629c-0.14,0 -0.279,-0.002 -0.419,-0.005l-19.033,-19.042Z"
+            style="fill:#419bf3;" />
+          <path id="shoulder_button_front_left_touch_target" class=""
+            d="M99.096,41.101l-51.593,0c-2.766,0 -5.009,2.197 -5.009,4.908l0,15.706c0,1.077 0.905,1.963 2.004,1.963l57.603,0c1.099,0 2.004,-0.886 2.004,-1.963l-0,-15.706c-0,-2.711 -2.243,-4.908 -5.009,-4.908Z"
+            style="fill:#419bf3;" />
+          <path id="shoulder_trigger_back_left_touch_target" class=""
+            d="M47.697,41.101l52.635,0c1.521,0 2.816,-1.579 2.065,-2.955c-2.77,-5.082 -14.508,-29.61 -14.508,-29.61c-0.743,-1.517 -3.545,-2.595 -6.742,-2.595l-22.359,-0c-7.657,-0 -13.864,3.027 -13.864,6.761l0,27.047c0,0.741 1.252,1.352 2.773,1.352Z"
+            style="fill:#419bf3;" />
+        </g>
+      </g>
+      <defs>
+        <filter id="_Effect1" class="" filterUnits="userSpaceOnUse" x="36.1618" y="130.515" width="89.151"
+          height="89.151">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+        </filter>
+        <filter id="_Effect2" class="" filterUnits="userSpaceOnUse" x="65.3871" y="106.484" width="67.4954"
+          height="62.4992">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+        </filter>
+        <filter id="_Effect3" class="" filterUnits="userSpaceOnUse" x="41.5296" y="42.8221" width="71.5968"
+          height="75.5552">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+        </filter>
+        <filter id="_Effect4" class="" filterUnits="userSpaceOnUse" x="41.5348" y="79.5198" width="71.5968"
+          height="75.5552">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+        </filter>
+        <filter id="_Effect5" class="" filterUnits="userSpaceOnUse" x="58.1817" y="63.1434" width="75.2422"
+          height="71.6102">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+        </filter>
+        <filter id="_Effect6" class="" filterUnits="userSpaceOnUse" x="21.2424" y="63.1382" width="75.2422"
+          height="71.6102">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+        </filter>
+        <filter id="_Effect7" class="" filterUnits="userSpaceOnUse" x="20.5773" y="-16.3459" width="100.584"
+          height="82.4466">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+        </filter>
+        <filter id="_Effect8" class="" filterUnits="userSpaceOnUse" x="17.8804" y="19.0655" width="109.801"
+          height="64.3775">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+        </filter>
+      </defs>
+    </svg>
+  </div>
+</body>
+
+</html>

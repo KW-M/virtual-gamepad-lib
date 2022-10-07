@@ -1,0 +1,237 @@
+html {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+  background: linear-gradient(to top right, #20539f, #00b8ff);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 100vh;
+  margin-top: 5rem;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 2px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  margin: 0.4rem;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  html {
+    color: #213547;
+    background-color: #ffffff;
+  }
+
+  a:hover {
+    color: #747bff;
+  }
+
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+#top-nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  left: 0;
+  z-index: 100;
+}
+
+#controls {
+  display: flex;
+  padding: 0.4rem;
+  text-align: center;
+  background-color: #eddb18;
+}
+
+#gamepad-info {
+  background-color: black;
+  color: whitesmoke;
+  white-space: nowrap;
+  padding: 4px;
+  display: flex;
+}
+
+#bottom-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.4rem;
+  flex: 1;
+  flex-shrink: 1;
+  flex-basis: fit-content;
+}
+
+.remove-gpad-btn {
+  top: 26%;
+  position: absolute;
+  z-index: 10;
+  transform: translateY(-50%);
+}
+
+
+.marquee {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 100%;
+  flex: 1;
+}
+
+.marquee>span {
+  white-space: pre;
+  margin-right: 1rem;
+  animation: marquee 5s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+
+/* *********  Gamepad Display Related ********* */
+
+.gpad-display-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 13 / 12;
+  max-height: 70vh;
+  max-height: calc(100vh - 112px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gpad-display {
+  position: relative;
+  user-select: none;
+
+  width: 72%;
+  max-width: 47.5vh;
+  pointer-events: none;
+}
+
+.gpad-display-left {
+  left: 0;
+}
+
+.gpad-display-right {
+  right: 0;
+}
+
+.gpad-display-full {
+  left: 50%;
+  width: 100%;
+  max-width: 100vw;
+
+  transition: transform 0.4s, left 0.4s;
+  transform: translateX(-50%);
+}
+
+.gpad-highlight {
+  opacity: 0;
+}
+
+.gpad-highlight.pressed.touched {
+  opacity: 1;
+}
+
+.gpad-highlight.touched {
+  opacity: .5;
+}
+
+#l_touch_targets>*,
+#r_touch_targets>* {
+  visibility: hidden;
+
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.gpad-direction-highlight {
+  opacity: 0;
+}
+
+.gpad-direction-highlight.moved {
+  opacity: 0.8;
+}
+
+.gamepad-joystick-touch-area {
+  position: fixed;
+  bottom: 0;
+
+  width: 50%;
+  height: 10cm;
+
+  pointer-events: none;
+  background-color: #0c61d860;
+
+  touch-action: none;
+}
+
+.gamepad-joystick-touch-area#gamepad-joystick-touch-area-left {
+  left: 0;
+}
+
+.gamepad-joystick-touch-area#gamepad-joystick-touch-area-right {
+  right: 0;
+}
