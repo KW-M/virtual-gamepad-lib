@@ -5,6 +5,25 @@
 - Make sure your tap zones (eg: around buttons or joysticks) are the only elements that are tapable / clickable, not parent elements or groups. This can be done by setting the css property ```pointer-events: all``` on the tap targets and ```pointer-events: none``` on all other SVG elements. If you don't do this, the browser default drag behaviors will not be correctly disabled on joysticks & buttons.
  - If you want to use a custom cursor, make sure to set the css property ```cursor: none``` on the svg element. This will prevent the browser from displaying the default cursor when hovering over the svg.
 
+If you format your layer names in the format `elementId.elementClass`, you can use the following regular expression to extract the elementId and elementClass from the layer name:
+
+**Example:**
+```html
+<path id="right_highlight.gpad-highlight" />
+becomes
+<path id="right_highlight" class="gpad-highlight" />
+```
+
+
+**Find (Regex):**
+```perl
+/id="([^"\.]*)(?:"|(?:.([^"\.]*)"))/g
+```
+
+**Replace:**
+```perl
+id="$1" class="$2"
+```
 
 
 ### Exporting SVG from Adobe Illustrator: https://www.youtube.com/watch?v=bWcweY66DL8
