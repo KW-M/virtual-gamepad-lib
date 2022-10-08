@@ -88,8 +88,6 @@ export class GamepadEmulator {
     /** stores a reference to the real, unpatched navigator.getGamepads() function **/
     getNativeGamepads: () => (Gamepad | null)[] = () => []
 
-
-
     /** the threshold above which a variable button is considered a "pressed" button */
     buttonPressThreshold: number = 0.1;
 
@@ -483,7 +481,7 @@ export class GamepadEmulator {
         let onGamepadConnectedProps: PropertyDescriptor, onGamepadDisconnectedProps: PropertyDescriptor, windowOngamepadconnected: any, windowOngamepaddisconnected: any;
         if (window.hasOwnProperty("ongamepadconnected")) {
             onGamepadConnectedProps = Object.getOwnPropertyDescriptor(window, "ongamepadconnected")!
-            windowOngamepadconnected = onGamepadConnectedProps.get!();
+            windowOngamepadconnected = window.ongamepadconnected;
             window.ongamepadconnected = null;
             Object.defineProperty(window, "ongamepadconnected", {
                 get: () => function (ev: GamepadEvent) { }, // returns an empty function, so no event is fired
@@ -495,7 +493,7 @@ export class GamepadEmulator {
         // disable the window.ongamepaddisconnected event listener:
         if (window.hasOwnProperty("ongamepaddisconnected")) {
             onGamepadDisconnectedProps = Object.getOwnPropertyDescriptor(window, "ongamepaddisconnected")!
-            windowOngamepaddisconnected = onGamepadDisconnectedProps.get!();
+            windowOngamepaddisconnected = window.ongamepaddisconnected;
             window.ongamepaddisconnected = null;
             Object.defineProperty(window, "ongamepaddisconnected", {
                 get: () => function (ev: GamepadEvent) { }, // returns an empty function, so no event is fired

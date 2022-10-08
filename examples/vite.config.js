@@ -7,9 +7,12 @@ import dts from 'vite-plugin-dts'
 
 export default defineConfig({
     root: 'examples',
+    base: '/virtual-gamepad-lib/',
     build: {
         target: 'es2016',
         outDir: 'dist',
+        // base: 'virtual-gamepad-lib',
+
         emptyOutDir: true,
         rollupOptions: {
             input: {

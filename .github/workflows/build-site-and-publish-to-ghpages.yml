@@ -22,7 +22,7 @@ jobs:
             pnpm install
             pnpm run build:docs
             pnpm run build:examples
-            cp -r docs examples
+            cp -r docs examples/dist
 
         - name: Deploy 🚀
           uses: JamesIves/github-pages-deploy-action@v4.3.4
