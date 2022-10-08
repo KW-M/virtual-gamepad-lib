@@ -1,3 +1,4 @@
+import { gamepadButtonType, gamepadDirection } from "../../src/enums";
 import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator";
 import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
 import { GamepadDisplay } from "../../src/GamepadDisplay";
@@ -84,22 +85,22 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
             // trigger buttons usually take variable pressure so can be represented by a variable button that is dragged down.
             return {
                 buttonIndex: i,
-                type: "variable" /* gamepadButtonType.variable */,
+                type: gamepadButtonType.variable,
                 tapTarget: display_gpad.querySelector("#" + name + "_touch_target"),
                 dragDistance: 50,
                 lockTargetWhilePressed: true,
                 directions: {
-                    ["up" /* gamepadDirection.up */]: false,
-                    ["down" /* gamepadDirection.down */]: true,
-                    ["left" /* gamepadDirection.left */]: false,
-                    ["right" /* gamepadDirection.right */]: false,
+                    [gamepadDirection.up]: false,
+                    [gamepadDirection.down]: true,
+                    [gamepadDirection.left]: false,
+                    [gamepadDirection.right]: false,
                 }
             };
         }
         else {
             return {
                 buttonIndex: i,
-                type: "onOff" /* gamepadButtonType.onOff */,
+                type: gamepadButtonType.onOff,
                 lockTargetWhilePressed: name.includes("stick"),
                 tapTarget: display_gpad.querySelector("#" + name + "_touch_target")
             };
@@ -114,10 +115,10 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
             yAxisIndex: 1,
             lockTargetWhilePressed: true,
             directions: {
-                ["up" /* gamepadDirection.up */]: true,
-                ["down" /* gamepadDirection.down */]: true,
-                ["left" /* gamepadDirection.left */]: true,
-                ["right" /* gamepadDirection.right */]: true,
+                [gamepadDirection.up]: true,
+                [gamepadDirection.down]: true,
+                [gamepadDirection.left]: true,
+                [gamepadDirection.right]: true,
             },
         },
         {
@@ -127,10 +128,10 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
             yAxisIndex: 3,
             lockTargetWhilePressed: true,
             directions: {
-                ["up" /* gamepadDirection.up */]: true,
-                ["down" /* gamepadDirection.down */]: true,
-                ["left" /* gamepadDirection.left */]: true,
-                ["right" /* gamepadDirection.right */]: true,
+                [gamepadDirection.up]: true,
+                [gamepadDirection.down]: true,
+                [gamepadDirection.left]: true,
+                [gamepadDirection.right]: true,
             },
         }];
     gamepadEmu.AddDisplayJoystickEventListeners(gpadIndex, emulatorStickConfigs);
@@ -143,10 +144,10 @@ function setupGamepadDisplay(gpadIndex) {
         if (name.includes("trigger")) {
             // trigger buttons usually take variable pressure so can be represented by a variable button that is dragged down.
             return {
-                type: "variable" /* gamepadButtonType.variable */,
+                type: gamepadButtonType.variable,
                 highlight: GPAD_DISPLAY_CONTAINER.querySelector("#" + name + "_highlight"),
                 buttonElement: GPAD_DISPLAY_CONTAINER.querySelector("#" + name),
-                direction: "down" /* gamepadDirection.down */,
+                direction: gamepadDirection.down,
                 directionHighlight: GPAD_DISPLAY_CONTAINER.querySelector("#" + name + "_direction_highlight"),
                 movementRange: 10,
                 extraData: {
@@ -157,7 +158,7 @@ function setupGamepadDisplay(gpadIndex) {
         else {
             // all other buttons are simply on (pressed) or off (not pressed).
             return {
-                type: "onOff" /* gamepadButtonType.onOff */,
+                type: gamepadButtonType.onOff,
                 highlight: GPAD_DISPLAY_CONTAINER.querySelector("#" + name + "_highlight"),
                 extraData: {
                     myCustomData: "onOff btn name is " + name
@@ -172,16 +173,16 @@ function setupGamepadDisplay(gpadIndex) {
             yAxisIndex: 1,
             movementRange: 10,
             directions: {
-                ["up" /* gamepadDirection.up */]: true,
-                ["down" /* gamepadDirection.down */]: true,
-                ["left" /* gamepadDirection.left */]: true,
-                ["right" /* gamepadDirection.right */]: true,
+                [gamepadDirection.up]: true,
+                [gamepadDirection.down]: true,
+                [gamepadDirection.left]: true,
+                [gamepadDirection.right]: true,
             },
             highlights: {
-                ["up" /* gamepadDirection.up */]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_up_direction_highlight"),
-                ["down" /* gamepadDirection.down */]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_down_direction_highlight"),
-                ["left" /* gamepadDirection.left */]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_left_direction_highlight"),
-                ["right" /* gamepadDirection.right */]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_right_direction_highlight"),
+                [gamepadDirection.up]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_up_direction_highlight"),
+                [gamepadDirection.down]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_down_direction_highlight"),
+                [gamepadDirection.left]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_left_direction_highlight"),
+                [gamepadDirection.right]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_right_direction_highlight"),
             }
         }, {
             joystickElement: GPAD_DISPLAY_CONTAINER.querySelector("#" + "stick_right"),
@@ -189,9 +190,9 @@ function setupGamepadDisplay(gpadIndex) {
             yAxisIndex: 3,
             movementRange: 10,
             directions: {
-                ["up" /* gamepadDirection.up */]: true,
+                [gamepadDirection.up]: true,
                 // [gamepadDirection.down]: true,
-                ["left" /* gamepadDirection.left */]: true,
+                [gamepadDirection.left]: true,
                 // [gamepadDirection.right]: true,
             },
             // highlights: {

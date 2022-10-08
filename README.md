@@ -28,10 +28,10 @@ id="$1" class="$2"
 
 ### Exporting SVG from Adobe Illustrator: https://www.youtube.com/watch?v=bWcweY66DL8
 
-![Adobe SVG Export](./README.assets/Adobe SVG Export.png)
+![Adobe SVG Export](./README.assets/Adobe%20SVG%20Export.png)
 
 ### Exporting SVG from Affinity designer & Affinity photo:
-![Affinity SVG Export](README.assets/Affinity SVG Export.png)
+![Affinity SVG Export](README.assets/Affinity%20SVG%20Export.png)
 ### Recommended [SVGO](https://github.com/svg/svgo) / [SVGOMG](https://jakearchibald.github.io/svgomg/) options:
 - **Disable** `Clean IDs` to keep the `id` attributes of the SVG elements ffrom your editor
 - **Disable** `Remove ViewBox` to keep the `viewBox` attribute, which makes scaling the SVG easier

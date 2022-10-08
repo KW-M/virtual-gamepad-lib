@@ -1,6 +1,7 @@
 import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator";
 import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
 import { GamepadDisplay } from "../../src/GamepadDisplay";
+import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums";
 const BUTTON_ID_NAMES = [
     "button_1",
     "button_2",
@@ -62,7 +63,7 @@ function updateAllGamepadDisplays() {
         Gamepad_Displays.push({ display: display, index: gpad.index, container: container });
         // setup click/drag event listeners from the displayed gamepad as input to the emulated gamepad at this index.
         const emulationState = gpad.emulation;
-        if (emulationState === "emulated" /* gamepadEmulationState.emulated */ || emulationState === "overlay" /* gamepadEmulationState.overlay */) {
+        if (emulationState === gamepadEmulationState.emulated || emulationState === gamepadEmulationState.overlay) {
             setupEmulatedGamepadInput(gpad.index, container);
         }
     }
@@ -85,22 +86,22 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
             // trigger buttons usually take variable pressure so can be represented by a variable button that is dragged down.
             return {
                 buttonIndex: i,
-                type: "variable" /* gamepadButtonType.variable */,
+                type: gamepadButtonType.variable,
                 tapTarget: display_gpad.querySelector("#" + name + "_touch_target"),
                 dragDistance: 50,
                 lockTargetWhilePressed: true,
                 directions: {
-                    ["up" /* gamepadDirection.up */]: false,
-                    ["down" /* gamepadDirection.down */]: true,
-                    ["left" /* gamepadDirection.left */]: false,
-                    ["right" /* gamepadDirection.right */]: false,
+                    [gamepadDirection.up]: false,
+                    [gamepadDirection.down]: true,
+                    [gamepadDirection.left]: false,
+                    [gamepadDirection.right]: false,
                 }
             };
         }
         else {
             return {
                 buttonIndex: i,
-                type: "onOff" /* gamepadButtonType.onOff */,
+                type: gamepadButtonType.onOff,
                 lockTargetWhilePressed: name.includes("stick"),
                 tapTarget: display_gpad.querySelector("#" + name + "_touch_target")
             };
@@ -115,10 +116,10 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
             yAxisIndex: 1,
             lockTargetWhilePressed: true,
             directions: {
-                ["up" /* gamepadDirection.up */]: true,
-                ["down" /* gamepadDirection.down */]: true,
-                ["left" /* gamepadDirection.left */]: true,
-                ["right" /* gamepadDirection.right */]: true,
+                [gamepadDirection.up]: true,
+                [gamepadDirection.down]: true,
+                [gamepadDirection.left]: true,
+                [gamepadDirection.right]: true,
             },
         },
         {
@@ -128,10 +129,10 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
             yAxisIndex: 3,
             lockTargetWhilePressed: true,
             directions: {
-                ["up" /* gamepadDirection.up */]: true,
-                ["down" /* gamepadDirection.down */]: true,
-                ["left" /* gamepadDirection.left */]: true,
-                ["right" /* gamepadDirection.right */]: true,
+                [gamepadDirection.up]: true,
+                [gamepadDirection.down]: true,
+                [gamepadDirection.left]: true,
+                [gamepadDirection.right]: true,
             },
         }];
     gamepadEmu.AddDisplayJoystickEventListeners(gpadIndex, emulatorStickConfigs);
@@ -148,10 +149,10 @@ function addGamepadDisplay(gpadIndex) {
         if (name.includes("trigger")) {
             // trigger buttons usually take variable pressure so can be represented by a variable button that is dragged down.
             return {
-                type: "variable" /* gamepadButtonType.variable */,
+                type: gamepadButtonType.variable,
                 highlight: clone.querySelector("#" + name + "_highlight"),
                 buttonElement: clone.querySelector("#" + name),
-                direction: "down" /* gamepadDirection.down */,
+                direction: gamepadDirection.down,
                 directionHighlight: clone.querySelector("#" + name + "_direction_highlight"),
                 movementRange: 10,
                 extraData: {
@@ -162,7 +163,7 @@ function addGamepadDisplay(gpadIndex) {
         else {
             //  all other buttons are simply on (pressed) or off (not pressed).
             return {
-                type: "onOff" /* gamepadButtonType.onOff */,
+                type: gamepadButtonType.onOff,
                 highlight: clone.querySelector("#" + name + "_highlight"),
                 extraData: {
                     myCustomData: "onOff btn name is " + name
@@ -177,16 +178,16 @@ function addGamepadDisplay(gpadIndex) {
             yAxisIndex: 1,
             movementRange: 10,
             directions: {
-                ["up" /* gamepadDirection.up */]: true,
-                ["down" /* gamepadDirection.down */]: true,
-                ["left" /* gamepadDirection.left */]: true,
-                ["right" /* gamepadDirection.right */]: true,
+                [gamepadDirection.up]: true,
+                [gamepadDirection.down]: true,
+                [gamepadDirection.left]: true,
+                [gamepadDirection.right]: true,
             },
             highlights: {
-                ["up" /* gamepadDirection.up */]: clone.querySelector("#" + "l_stick_up_direction_highlight"),
-                ["down" /* gamepadDirection.down */]: clone.querySelector("#" + "l_stick_down_direction_highlight"),
-                ["left" /* gamepadDirection.left */]: clone.querySelector("#" + "l_stick_left_direction_highlight"),
-                ["right" /* gamepadDirection.right */]: clone.querySelector("#" + "l_stick_right_direction_highlight"),
+                [gamepadDirection.up]: clone.querySelector("#" + "l_stick_up_direction_highlight"),
+                [gamepadDirection.down]: clone.querySelector("#" + "l_stick_down_direction_highlight"),
+                [gamepadDirection.left]: clone.querySelector("#" + "l_stick_left_direction_highlight"),
+                [gamepadDirection.right]: clone.querySelector("#" + "l_stick_right_direction_highlight"),
             }
         },
         {
@@ -195,16 +196,16 @@ function addGamepadDisplay(gpadIndex) {
             yAxisIndex: 3,
             movementRange: 10,
             directions: {
-                ["up" /* gamepadDirection.up */]: true,
-                ["down" /* gamepadDirection.down */]: true,
-                ["left" /* gamepadDirection.left */]: true,
-                ["right" /* gamepadDirection.right */]: true,
+                [gamepadDirection.up]: true,
+                [gamepadDirection.down]: true,
+                [gamepadDirection.left]: true,
+                [gamepadDirection.right]: true,
             },
             highlights: {
-                ["up" /* gamepadDirection.up */]: clone.querySelector("#" + "r_stick_up_direction_highlight"),
-                ["down" /* gamepadDirection.down */]: clone.querySelector("#" + "r_stick_down_direction_highlight"),
-                ["left" /* gamepadDirection.left */]: clone.querySelector("#" + "r_stick_left_direction_highlight"),
-                ["right" /* gamepadDirection.right */]: clone.querySelector("#" + "r_stick_right_direction_highlight"),
+                [gamepadDirection.up]: clone.querySelector("#" + "r_stick_up_direction_highlight"),
+                [gamepadDirection.down]: clone.querySelector("#" + "r_stick_down_direction_highlight"),
+                [gamepadDirection.left]: clone.querySelector("#" + "r_stick_left_direction_highlight"),
+                [gamepadDirection.right]: clone.querySelector("#" + "r_stick_right_direction_highlight"),
             }
         }
     ];
@@ -240,10 +241,10 @@ function addGamepadDisplay(gpadIndex) {
                     r_label.innerHTML = "(" + xAxisValue.toFixed(1) + ", " + yAxisValue.toFixed(1) + ")";
             }
             //   - EG: Fade in the joystick highlights when the joystick is moved
-            const upHighlight = stickConfig.highlights["up" /* gamepadDirection.up */];
-            const downHighlight = stickConfig.highlights["down" /* gamepadDirection.down */];
-            const leftHighlight = stickConfig.highlights["left" /* gamepadDirection.left */];
-            const rightHighlight = stickConfig.highlights["right" /* gamepadDirection.right */];
+            const upHighlight = stickConfig.highlights[gamepadDirection.up];
+            const downHighlight = stickConfig.highlights[gamepadDirection.down];
+            const leftHighlight = stickConfig.highlights[gamepadDirection.left];
+            const rightHighlight = stickConfig.highlights[gamepadDirection.right];
             if (upHighlight)
                 upHighlight.style.opacity = Math.max(-yAxisValue, 0).toString();
             if (downHighlight)
@@ -255,15 +256,15 @@ function addGamepadDisplay(gpadIndex) {
         },
     }, gpadApiWrapper); // use the same gamepadApiWrapper across all gamepad displays
     const gpad = navigator.getGamepads()[gpadIndex];
-    if (gpad.emulation === "emulated" /* gamepadEmulationState.emulated */) {
+    if (gpad.emulation === gamepadEmulationState.emulated) {
         clone.querySelector("#gpad-emulation-label").innerHTML = `#${gpad.index} ${gpad.id} - Emulated`;
         clone.querySelector("#gpad-emulation-btn").innerHTML = "- Emulated Gamepad";
     }
-    else if (gpad.emulation === "overlay" /* gamepadEmulationState.overlay */) {
+    else if (gpad.emulation === gamepadEmulationState.overlay) {
         clone.querySelector("#gpad-emulation-label").innerHTML = `#${gpad.index} ${gpad.id} - Overlay (real + emulated input)`;
         clone.querySelector("#gpad-emulation-btn").innerHTML = "- Emulated Gamepad Overlay";
     }
-    else if (gpad.emulation === "real" /* gamepadEmulationState.real */) {
+    else if (gpad.emulation === gamepadEmulationState.real) {
         clone.querySelector("#gpad-emulation-label").innerHTML = `#${gpad.index} ${gpad.id} - Real (no emulated input)`;
         clone.querySelector("#gpad-emulation-btn").innerHTML = "+ Emulated Gamepad Overlay";
     }
@@ -272,13 +273,13 @@ function addGamepadDisplay(gpadIndex) {
 }
 const handleGpadEmulationBtnClick = (gpadIndex) => {
     const emulationState = navigator.getGamepads()[gpadIndex].emulation;
-    if (emulationState === "emulated" /* gamepadEmulationState.emulated */) {
+    if (emulationState === gamepadEmulationState.emulated) {
         gamepadEmu.RemoveEmulatedGamepad(gpadIndex);
     }
-    else if (emulationState === "overlay" /* gamepadEmulationState.overlay */) {
+    else if (emulationState === gamepadEmulationState.overlay) {
         gamepadEmu.RemoveEmulatedGamepad(gpadIndex);
     }
-    else if (emulationState === "real" /* gamepadEmulationState.real */) {
+    else if (emulationState === gamepadEmulationState.real) {
         addEmulatedGamepad(true, gpadIndex);
     }
 };

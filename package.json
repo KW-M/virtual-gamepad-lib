@@ -40,7 +40,7 @@
   "scripts": {
     "test:lib": "vitest",
     "build:lib": "tsc && vite build",
-    "precompile:examples": "tsc --module esnext --target esnext examples/**/*.ts",
+    "precompile:examples": "tsc --module esnext --target esnext ./examples/**/*.ts --explainFiles",
     "build:docs": "pnpx typedoc src/GamepadEmulator.ts src/GamepadDisplay.ts src/GamepadApiWrapper.ts src/enums.ts",
     "dev:examples": "pnpm run precompile:examples; vite --config examples/vite.config.js --host",
     "build:examples": "pnpm run precompile:examples; vite build --config examples/vite.config.js",

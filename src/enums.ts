@@ -1,16 +1,16 @@
-export const enum gamepadDirection {
+export enum gamepadDirection {
     up = "up",
     down = "down",
     left = "left",
     right = "right",
 }
 
-export const enum gamepadButtonType {
+export enum gamepadButtonType {
     onOff = "onOff",
     variable = "variable",
 }
 
-export const enum gamepadEmulationState {
+export enum gamepadEmulationState {
     real = "real",
     emulated = "emulated",
     overlay = "overlay",
