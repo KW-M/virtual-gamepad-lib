@@ -4,7 +4,7 @@ import { GamepadDisplay, GamepadDisplayJoystick } from "../../src/GamepadDisplay
 import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums";
 import type { GamepadDisplayVariableButton, GamepadDisplayButton } from "../../src/GamepadDisplay";
 
-const BUTTON_DISPLAY_NAMES = [
+const BUTTON_ID_NAMES = [
     "button_1",
     "button_2",
     "button_3",
@@ -26,27 +26,10 @@ const BUTTON_DISPLAY_NAMES = [
 
 // !!! IMPORTANT: The gamepad emulator class MUST be created before creating the GamepadApiWrapper, Game or any other library that uses navigator.getGamepads()
 const gamepadEmu = new GamepadEmulator(0.1);
-const gamepadApiWrapper = new GamepadApiWrapper({ buttonConfigs: [], updateDelay: 0 });
+const gpadApiWrapper = new GamepadApiWrapper({ buttonConfigs: [], updateDelay: 0, });
 const gamepadDisplaySection = document.getElementById("gamepads");
 const gamepadDisplayTemplate = document.getElementById("gamepad_display_template") as (HTMLTemplateElement | null);
 let Gamepad_Displays: { display: GamepadDisplay, index: number, container: HTMLElement }[] = [];
-
-// const dirHighlights = [
-//     "r_stick_right_direction_highlight",
-//     "r_stick_left_direction_highlight",
-//     "r_stick_up_direction_highlight",
-//     "r_stick_down_direction_highlight",
-//     "l_stick_right_direction_highlight",
-//     "l_stick_left_direction_highlight",
-//     "l_stick_up_direction_highlight",
-//     "l_stick_down_direction_highlight",
-//     "shoulder_trigger_back_left_direction_highlight",
-//     "shoulder_trigger_back_right_direction_highlight",
-// ]
-// dirHighlights.forEach((highlightId) => {
-//     const highlight = gamepadDisplayTemplate?.content.querySelector("#" + highlightId);
-//     if (highlight) highlight.classList.add("direction_highlight");
-// })
 
 window.addEventListener("gamepadconnected", (e) => {
     const gpad = e.gamepad;
@@ -64,7 +47,7 @@ window.addEventListener("gamepaddisconnected", (e) => {
     updateAllGamepadDisplays();
 });
 
-const removeAllGamepadDisplays = () => {
+function removeAllGamepadDisplays() {
     for (let i = 0; i < Gamepad_Displays.length; i++) {
         const gDisplay = Gamepad_Displays[i];
         gamepadEmu.ClearDisplayButtonEventListeners(gDisplay.index);
@@ -75,7 +58,7 @@ const removeAllGamepadDisplays = () => {
     Gamepad_Displays = [];
 }
 
-const updateAllGamepadDisplays = () => {
+function updateAllGamepadDisplays() {
     removeAllGamepadDisplays();
     const gamepads = navigator.getGamepads();
     for (let i = 0; i < gamepads.length; i++) {
@@ -89,12 +72,12 @@ const updateAllGamepadDisplays = () => {
         // setup click/drag event listeners from the displayed gamepad as input to the emulated gamepad at this index.
         const emulationState = (gpad as EGamepad).emulation;
         if (emulationState === gamepadEmulationState.emulated || emulationState === gamepadEmulationState.overlay) {
-            setupGamepadEmulatorInput(gpad.index, container);
+            setupEmulatedGamepadInput(gpad.index, container);
         }
     }
 }
 
-const addEmulatedGamepad = (overlay, index) => {
+function addEmulatedGamepad(overlay, index) {
     if (overlay) {
         // add an emulated gamepad at the provided index with overlayMode on.
         gamepadEmu.AddEmulatedGamepad(index, true, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT); // returns the new (emulated) gamepad or false if some error happened.
@@ -104,9 +87,11 @@ const addEmulatedGamepad = (overlay, index) => {
     }
 }
 
-const setupGamepadEmulatorInput = (gpadIndex: number, display_gpad: HTMLElement) => {
-    // setup the touch targets / inputs controlls for interacting with the emulated gamepad  (part of the emulated gamepad module)
-    const emulatorButtonConfigs = BUTTON_DISPLAY_NAMES.map((name, i) => {
+/** setup the touch targets & input parameters for translating onscreen events into events for the emulated gamepad (part of the emulated gamepad module) */
+function setupEmulatedGamepadInput(gpadIndex: number, display_gpad: HTMLElement) {
+
+    /* ----- SETUP BUTTON INPUTS ----- */
+    const emulatorButtonConfigs = BUTTON_ID_NAMES.map((name, i) => {
         if (name.includes("trigger")) {
             // trigger buttons usually take variable pressure so can be represented by a variable button that is dragged down.
             return {
@@ -130,8 +115,10 @@ const setupGamepadEmulatorInput = (gpadIndex: number, display_gpad: HTMLElement)
                 tapTarget: display_gpad.querySelector("#" + name + "_touch_target")
             } as ButtonConfig
         }
-    })
+    }); gamepadEmu.AddDisplayButtonEventListeners(gpadIndex, emulatorButtonConfigs);
 
+
+    /* ----- SETUP JOYSTICK INPUTS ----- */
     const emulatorStickConfigs: JoystickConfig[] = [{
         tapTarget: display_gpad.querySelector("#stick_button_left_touch_target")!,
         dragDistance: 30, // pixels that the user must drag the joystic to represent +/- 1.
@@ -144,7 +131,8 @@ const setupGamepadEmulatorInput = (gpadIndex: number, display_gpad: HTMLElement)
             [gamepadDirection.left]: true,
             [gamepadDirection.right]: true,
         },
-    }, {
+    },
+    {
         tapTarget: display_gpad.querySelector("#stick_button_right_touch_target")!,
         dragDistance: 30, // pixels that the user must drag the joystic to represent +/- 1.
         xAxisIndex: 2,
@@ -156,18 +144,18 @@ const setupGamepadEmulatorInput = (gpadIndex: number, display_gpad: HTMLElement)
             [gamepadDirection.left]: true,
             [gamepadDirection.right]: true,
         },
-    }]
-
-    gamepadEmu.AddDisplayButtonEventListeners(gpadIndex, emulatorButtonConfigs);
-    gamepadEmu.AddDisplayJoystickEventListeners(gpadIndex, emulatorStickConfigs);
+    }]; gamepadEmu.AddDisplayJoystickEventListeners(gpadIndex, emulatorStickConfigs);
 }
 
-const addGamepadDisplay = (gpadIndex) => {
+/** adds a gamepad display from the template element to the page and sets up the display buttons & axes of the onscreen gamepad
+ *  to react to the state of the gamepad from the browser gamepad api (uses the gamepadApiWrapper) */
+function addGamepadDisplay(gpadIndex) {
     if (!gamepadDisplayTemplate || !gamepadDisplaySection || !gamepadDisplayTemplate.content.firstElementChild) throw Error("gamepadDisplayTemplate or gamepadDisplaySection elements not found in DOM");
     const clone = gamepadDisplayTemplate.content.firstElementChild.cloneNode(true) as HTMLElement;
     gamepadDisplaySection.appendChild(clone);
+
     // setup the display buttons of the newly created gamepad display in the dom
-    const buttons = BUTTON_DISPLAY_NAMES.map((name, i) => {
+    const buttons = BUTTON_ID_NAMES.map((name, i) => {
         if (name.includes("trigger")) {
             // trigger buttons usually take variable pressure so can be represented by a variable button that is dragged down.
             return {
@@ -192,6 +180,7 @@ const addGamepadDisplay = (gpadIndex) => {
             } as GamepadDisplayButton;
         }
     })
+
     // setup the joysticks of the newly created gamepad display in the dom
     const joysticks: GamepadDisplayJoystick[] = [{
         joystickElement: clone.querySelector("#" + "stick_left") as SVGElement,
@@ -252,7 +241,7 @@ const addGamepadDisplay = (gpadIndex) => {
             display.defaultJoystickDisplayFunction(stickConfig, xAxisValue, yAxisValue);
 
             // --- do some custom stuff here if you want ---
-            // EG: show extra details about the joysticks in the dom
+            //   - EG: Show extra details about the joysticks in the dom
             if (stickConfig.xAxisIndex === 0) {
                 // show the values of the left joystick on svg label:
                 const l_label = clone.querySelector("#l_stick_action_help_label")
@@ -263,8 +252,18 @@ const addGamepadDisplay = (gpadIndex) => {
                 if (r_label) r_label.innerHTML = "(" + xAxisValue.toFixed(1) + ", " + yAxisValue.toFixed(1) + ")";
             }
 
+            //   - EG: Fade in the joystick highlights when the joystick is moved
+            const upHighlight = stickConfig.highlights![gamepadDirection.up];
+            const downHighlight = stickConfig.highlights![gamepadDirection.down];
+            const leftHighlight = stickConfig.highlights![gamepadDirection.left];
+            const rightHighlight = stickConfig.highlights![gamepadDirection.right];
+            if (upHighlight) upHighlight.style.opacity = Math.max(-yAxisValue, 0).toString();
+            if (downHighlight) downHighlight.style.opacity = Math.max(yAxisValue, 0).toString();
+            if (leftHighlight) leftHighlight.style.opacity = Math.max(-xAxisValue, 0).toString();
+            if (rightHighlight) rightHighlight.style.opacity = Math.max(xAxisValue, 0).toString();
+
         },
-    })
+    }, gpadApiWrapper); // use the same gamepadApiWrapper across all gamepad displays
 
     const gpad = navigator.getGamepads()[gpadIndex] as EGamepad
     if (gpad.emulation === gamepadEmulationState.emulated) {

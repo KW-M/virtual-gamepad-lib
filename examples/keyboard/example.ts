@@ -1,8 +1,5 @@
-import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT, ButtonConfig, VariableButtonConfig, JoystickConfig, EGamepad } from "../../src/GamepadEmulator";
+import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT, EGamepad } from "../../src/GamepadEmulator";
 import { buttonChangeDetails, GamepadApiWrapper, gamepadApiWrapperButtonConfig } from "../../src/GamepadApiWrapper";
-// import { GamepadDisplay, GamepadDisplayJoystick } from "../../src/GamepadDisplay";
-// import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums";
-// import type { GamepadDisplayVariableButton, GamepadDisplayButton } from "../../src/GamepadDisplay";
 
 // CONSTS
 const EMULATED_GPAD_INDEX = 0; // in this example we will only add one emulated gamepad at position/index 0 in the navigator.getGamepads() array.
@@ -10,7 +7,7 @@ const LEFT_X_AXIS_INDEX = 0;
 const LEFT_Y_AXIS_INDEX = 1;
 const RIGHT_X_AXIS_INDEX = 2;
 const RIGHT_Y_AXIS_INDEX = 3;
-const BUTTON_DISPLAY_NAMES = [
+const BUTTON_ID_NAMES = [
     "button_1",
     "button_2",
     "button_3",
@@ -31,11 +28,12 @@ const BUTTON_DISPLAY_NAMES = [
 ];
 
 
-// the gamepad emulator MUST be created before creating the GamepadApiWrapper, a game engine or any other library that uses navigator.getGamepads()
+// the gamepad emulator MUST be created before creating the GamepadApiWrapper, a game engine, or any other library that uses navigator.getGamepads()
 const gamepadEmu = new GamepadEmulator(0.1);
 const gpadApiWrapper = new GamepadApiWrapper({
-    updateDelay: 100, // update the gamepad state every 100ms, set to 0 to update as fast as the framerate of the browser (fastest possible).
-    buttonConfigs: BUTTON_DISPLAY_NAMES.map((name, i) => {
+    updateDelay: 300, // update the gamepad state every 300ms, set to 0 to update as fast as the framerate of the browser (fastest possible).
+    axisDeadZone: 0.05, // set the deadzone for all axes to 0.05 [5%] (to avoid extra events when the joystick is near its neutral point).
+    buttonConfigs: BUTTON_ID_NAMES.map((name, i) => {
         return {
             // d_pad directions and button 0-3 can be held down in this example
             fireWhileHolding: name.includes("d_pad") || i < 4 // keep firing the button press event while this button is held down
@@ -59,7 +57,7 @@ gpadApiWrapper.onGamepadDisconnect((gpad: GamepadEvent) => {
     eventDisplayElem.appendChild(document.createTextNode(`Gamepad disconnected: ${gpad.gamepad.id}\n`));
 })
 
-gpadApiWrapper.onGamepadButtonChange((gpadIndex: number, gpad: (EGamepad | Gamepad), buttonChangesMask: (false | buttonChangeDetails)[]) => {
+gpadApiWrapper.onGamepadButtonChange((gpadIndex: number, gpad: (EGamepad | Gamepad), buttonChangesMask: (buttonChangeDetails | false)[]) => {
     console.log(`Gamepad ${gpadIndex} button change: `, buttonChangesMask);
     let text = `Buttons changed ${gpad.id} (gpad #${gpadIndex}):\n`
     for (let i = 0; i < gpad.buttons.length; i++) {
@@ -74,7 +72,7 @@ gpadApiWrapper.onGamepadButtonChange((gpadIndex: number, gpad: (EGamepad | Gamep
         text += change.valueChanged ? " | value change" : "";
         text += "\n";
         const btnTableRow = buttonTable.children[i]
-        if (btnTableRow) (btnTableRow as HTMLElement).style.backgroundColor = gpad.buttons[i].pressed ? "blueviolet" : "";
+        if (btnTableRow) (btnTableRow.children[1] as HTMLElement).style.backgroundColor = gpad.buttons[i].pressed ? "blueviolet" : (gpad.buttons[i].touched ? "greenyellow" : "");
     }
     eventDisplayElem.appendChild(document.createTextNode(text));
     gamepadEventArea.scrollTo(0, gamepadEventArea.scrollHeight);
@@ -92,6 +90,7 @@ gpadApiWrapper.onGamepadAxisChange((gpadIndex: number, gpad: (EGamepad | Gamepad
     gamepadEventArea.scrollTo(0, gamepadEventArea.scrollHeight);
 });
 
+//
 gamepadEmu.AddEmulatedGamepad(EMULATED_GPAD_INDEX, true, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT);
 
 // also add keyboard bindings to the gamepad emulator (NOTE that this is through the gamepad emulator. The game engine thinks it is reciving gamepad events)

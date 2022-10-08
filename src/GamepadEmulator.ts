@@ -78,8 +78,7 @@ export const DEFAULT_GPAD_BUTTON_COUNT: number = 18
  * standard controls. Any extraneous axes will have larger indexes.*/
 export const DEFAULT_GPAD_AXIS_COUNT: number = 4
 
-/**
- * Class to handle emulated gamepads and injecting them into the browser getGamepads() API. */
+/** Class to handle emulated gamepads and injecting them into the browser getGamepads() and event listener APIs. */
 export class GamepadEmulator {
 
 
@@ -88,6 +87,8 @@ export class GamepadEmulator {
 
     /** stores a reference to the real, unpatched navigator.getGamepads() function **/
     getNativeGamepads: () => (Gamepad | null)[] = () => []
+
+
 
     /** the threshold above which a variable button is considered a "pressed" button */
     buttonPressThreshold: number = 0.1;
@@ -109,6 +110,9 @@ export class GamepadEmulator {
     /** A list that mirrors the structure of #emulatedGamepads, but contains data internal to this class for keeping track of their state */
     private emulatedGamepadsMetadata: (EGamepadPrivateData | null)[] = [];
 
+    /** stores the function returned by monkeyPatchGamepadEvents() to undo the gamepad event monkey patch  **/
+    private undoEventPatch: () => void = () => { }
+
     /** Creates a new GamepadEmulator object and monkey patches the browser getGamepads() API and gamepad events to report emulated gamepads
      * You should create the GamepadEmulator object before any other libraries or function that may use the gamepad api
      * @param buttonPressThreshold - the threshold above which a variable button is considered a "pressed" button */
@@ -116,7 +120,7 @@ export class GamepadEmulator {
         this.buttonPressThreshold = buttonPressThreshold || this.buttonPressThreshold
         if (GamepadEmulator.instanceRunning) throw new Error("Only one GamepadEmulator instance may exist at a time!");
         GamepadEmulator.instanceRunning = true;
-        this.monkeyPatchGamepadEvents();
+        this.undoEventPatch = this.monkeyPatchGamepadEvents();
         this.monkeyPatchGetGamepads();
     }
 
@@ -335,7 +339,6 @@ export class GamepadEmulator {
         if (this.emulatedGamepadsMetadata[gpadIndex] && this.emulatedGamepadsMetadata[gpadIndex]?.removeJoystickListenersFunc) this.emulatedGamepadsMetadata[gpadIndex]!.removeJoystickListenersFunc!();
     }
 
-
     private AddDragControlListener(config: JoystickConfig, callback: (touched: boolean, xValue: number, yValue: number) => void) {
         let touchDetails: TouchDetails = {
             startX: 0,
@@ -401,12 +404,13 @@ export class GamepadEmulator {
      * @param original - the gamepad object to copy */
     private cloneGamepad(original: EGamepad | Gamepad | null): EGamepad | null {
         // inspired by @maulingmonkey's gamepad library
-        if (!original) return original;
+        if (!original) return original as (EGamepad | null);
         const axesCount = original.axes ? original.axes.length : 0;
         const buttonsCount = original.buttons ? original.buttons.length : 0;
 
         // clone the gamepad object
-        const clone: EGamepad = Object.create(Gamepad.prototype)
+        // @ts-ignore
+        const clone: EGamepad = {}; //Object.create(Gamepad.prototype)
         for (let key in original) {
             if (key === "axes") {
                 const axes = new Array(axesCount);
@@ -476,37 +480,32 @@ export class GamepadEmulator {
     private monkeyPatchGamepadEvents() {
 
         // disable the window.ongamepadconnected event listener:
-        let windowOngamepadconnected = window.ongamepadconnected
-        Object.defineProperty(window, "ongamepadconnected", {
-            get: () => {
-                return function (ev: GamepadEvent) {
-                    // @ts-ignore
-                    if (this == window || !windowOngamepadconnected) return; // disable browser called event
-                    windowOngamepadconnected.call(window, ev);
-                };
-            },
-            set: (fn) => {
-                windowOngamepadconnected = fn;
-            }
-        })
+        let onGamepadConnectedProps: PropertyDescriptor, onGamepadDisconnectedProps: PropertyDescriptor, windowOngamepadconnected: any, windowOngamepaddisconnected: any;
+        if (window.hasOwnProperty("ongamepadconnected")) {
+            onGamepadConnectedProps = Object.getOwnPropertyDescriptor(window, "ongamepadconnected")!
+            windowOngamepadconnected = onGamepadConnectedProps.get!();
+            window.ongamepadconnected = null;
+            Object.defineProperty(window, "ongamepadconnected", {
+                get: () => function (ev: GamepadEvent) { }, // returns an empty function, so no event is fired
+                set: (fn) => { windowOngamepadconnected = fn; },
+                configurable: true
+            })
+        }
 
-        // disable the window.ongamepadconnected event listener:
-        let windowOngamepaddisconnected = window.ongamepaddisconnected
-        Object.defineProperty(window, "ongamepaddisconnected", {
-            get: () => {
-                return function (ev: GamepadEvent) {
-                    // @ts-ignore
-                    if (this == window || !windowOngamepaddisconnected) return;// disable browser called event
-                    windowOngamepaddisconnected.call(window, ev);
-                };
-            },
-            set: (fn) => {
-                windowOngamepaddisconnected = fn;
-            }
-        })
+        // disable the window.ongamepaddisconnected event listener:
+        if (window.hasOwnProperty("ongamepaddisconnected")) {
+            onGamepadDisconnectedProps = Object.getOwnPropertyDescriptor(window, "ongamepaddisconnected")!
+            windowOngamepaddisconnected = onGamepadDisconnectedProps.get!();
+            window.ongamepaddisconnected = null;
+            Object.defineProperty(window, "ongamepaddisconnected", {
+                get: () => function (ev: GamepadEvent) { }, // returns an empty function, so no event is fired
+                set: (fn) => { windowOngamepadconnected = fn; },
+                configurable: true
+            })
+        }
 
         // fix the gamepadconnected event listener:
-        window.addEventListener('gamepadconnected', (e: GamepadEvent) => {
+        const gamepadConnectedHandler = (e: GamepadEvent) => {
             const gpad = e.gamepad as EGamepad;
             if (gpad && gpad.emulation === undefined) {
                 e.stopImmediatePropagation() // prevent future event listeners from firing
@@ -529,12 +528,13 @@ export class GamepadEmulator {
                 window.dispatchEvent(event);
 
                 // call the window.ongamepadconnected event listener callback function (since it was disabled)
+                console.log("windowOngamepadconnected", windowOngamepadconnected);
                 if (windowOngamepadconnected) windowOngamepadconnected.call(window, event)
             }
-        })
+        }; window.addEventListener('gamepadconnected', gamepadConnectedHandler)
 
         // fix the gamepaddisconnected event listener:
-        window.addEventListener("gamepaddisconnected", (e: GamepadEvent) => {
+        const gamepadDisconnectedHandler = (e: GamepadEvent) => {
             const raw_gpad = e.gamepad;
             if (raw_gpad && (raw_gpad as EGamepad).emulation === undefined) {
                 e.stopImmediatePropagation() // prevent future event listeners from firing
@@ -555,7 +555,21 @@ export class GamepadEmulator {
                 // call the window.ongamepaddisconnected event listener callback function (since it was disabled)
                 if (windowOngamepaddisconnected) windowOngamepaddisconnected.call(window, event)
             }
-        })
+        }; window.addEventListener("gamepaddisconnected", gamepadDisconnectedHandler)
+
+        // return a cleanup function to enable undoing the monkey patch:
+        return function cleanup() {
+            window.removeEventListener('gamepadconnected', gamepadConnectedHandler)
+            if (window.hasOwnProperty("ongamepadconnected")) {
+                Object.defineProperty(window, "ongamepadconnected", onGamepadConnectedProps)
+                window.ongamepadconnected = windowOngamepadconnected
+            }
+            window.removeEventListener("gamepaddisconnected", gamepadDisconnectedHandler)
+            if (window.hasOwnProperty("ongamepaddisconnected")) {
+                Object.defineProperty(window, "ongamepaddisconnected", onGamepadDisconnectedProps)
+                window.ongamepaddisconnected = windowOngamepaddisconnected
+            }
+        }
     }
 
     /** overwrite the browser gamepad api getGamepads() to return the emulated gamepad data for gamepad indexes corresponding to emulated gamepads
@@ -625,8 +639,14 @@ export class GamepadEmulator {
         }
     }
 
+    /** @destructor cleans up any event listeners made by this class and restores the normal navigator.getGamepad() function and gamepad events */
     cleanup() {
+        for (let i = 0; i < this.emulatedGamepads.length; i++) {
+            this.ClearDisplayButtonEventListeners(i);
+            this.ClearDisplayJoystickEventListeners(i);
+        }
         this.emulatedGamepads = [];
+        this.undoEventPatch();
         navigator.getGamepads = this.getNativeGamepads;
         GamepadEmulator.instanceRunning = false;
     }

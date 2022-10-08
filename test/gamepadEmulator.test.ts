@@ -1,7 +1,11 @@
 
-import { DEFAULT_GPAD_AXIS_COUNT, DEFAULT_GPAD_BUTTON_COUNT, GamepadEmulator } from "../src/gamepadEmulator";
+import { DEFAULT_GPAD_AXIS_COUNT, DEFAULT_GPAD_BUTTON_COUNT, EGamepad, GamepadEmulator } from "../src/gamepadEmulator";
 import { test, expect } from "vitest";
 
+//@ts-ignore
+interface privateGamepadEmulator extends GamepadEmulator {
+    emulatedGamepads: EGamepad[];
+}
 
 test("creation & cleanup", () => {
     // mock getGamepads() since we don't have a real browser environment:
@@ -15,7 +19,7 @@ test("creation & cleanup", () => {
     const gpad = new GamepadEmulator(0.1);
     expect(gpad).toBeDefined();
     expect(navigator.getGamepads).not.toEqual(ref);
-    expect(navigator.getGamepads()).toEqual([null, null, null]);
+    expect(navigator.getGamepads()).toEqual([]); // .toEqual([null, null, null]) would work too
     expect(() => { new GamepadEmulator(0.1) }).toThrowError();
 
     // cleanup and restore the default getGamepads function (mocked in this case):
@@ -26,11 +30,12 @@ test("creation & cleanup", () => {
 
 
 test("add/remove emulated gamepads", () => {
-    const gamepadEmu = new GamepadEmulator(0.1);
+    // @ts-ignore
+    const gamepadEmu = new GamepadEmulator(0.1) as privateGamepadEmulator;
     expect(gamepadEmu.emulatedGamepads).toEqual([]);
-    gamepadEmu.AddEmulatedGamepad(0);
+    gamepadEmu.AddEmulatedGamepad(0, false);
     expect(gamepadEmu.emulatedGamepads.length).toEqual(1);
-    gamepadEmu.AddEmulatedGamepad(2, DEFAULT_GPAD_BUTTON_COUNT + 1, DEFAULT_GPAD_AXIS_COUNT + 3);
+    gamepadEmu.AddEmulatedGamepad(2, false, DEFAULT_GPAD_BUTTON_COUNT + 1, DEFAULT_GPAD_AXIS_COUNT + 3);
     expect(gamepadEmu.emulatedGamepads.length).toEqual(3);
     expect(gamepadEmu.emulatedGamepads[1]).toBeUndefined();
     expect(gamepadEmu.emulatedGamepads[2]).not.toBeUndefined();
@@ -49,18 +54,23 @@ test("getGamepads() patch", async () => {
         return [null, null, null];
     }
 
-    let addGpadFlag: any = false;
-    window.ongamepadconnected = (gpad) => { addGpadFlag = gpad };
-    // window.addEventListener("gamepadconnected", (gpad) => { addGpadFlag = gpad });
-    //
-    const gamepadEmu = new GamepadEmulator(0.1);
-    expect(navigator.getGamepads()).toEqual([null, null, null]);
-    expect(addGpadFlag).toEqual(false);
+    Object.defineProperty(window, "ongamepadconnected", { get: () => { return null; }, set: (v) => { }, configurable: true });
 
-    gamepadEmu.AddEmulatedGamepad(1);
-    expect(navigator.getGamepads()).not.toEqual([null, null, null]);
+    const gamepadEmu = new GamepadEmulator(0.1);
+
+    let addGpadFlagA: any = false;
+    let addGpadFlagB: any = false;
+    window.addEventListener("gamepadconnected", (gpad) => { addGpadFlagA = gpad });
+    window.ongamepadconnected = (gpad) => { addGpadFlagB = gpad };
+    expect(navigator.getGamepads()).toEqual([]);//.toEqual([null, null, null]);
+    expect(addGpadFlagA).toEqual(false);
+    expect(addGpadFlagB).toEqual(false);
+
+    gamepadEmu.AddEmulatedGamepad(1, true);
+    expect(navigator.getGamepads()).not.toEqual([]); //not.toEqual([null, null, null]);
     await new Promise(resolve => setTimeout(resolve, 5));
-    expect(addGpadFlag).not.toEqual(false)
+    expect(addGpadFlagA).not.toEqual(false)
+    expect(addGpadFlagB).not.toEqual(false)
 
     // test axes:
     expect(navigator.getGamepads()[1]?.axes).toEqual([0, 0, 0, 0]);

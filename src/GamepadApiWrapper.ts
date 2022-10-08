@@ -33,12 +33,14 @@ export interface buttonChangeDetails {
 }
 
 export interface gamepadApiWrapperConfig {
-    buttonConfigs?: gamepadApiWrapperButtonConfig[];
     updateDelay?: number,
+    axisDeadZone?: number;
+    buttonConfigs?: gamepadApiWrapperButtonConfig[];
 }
 
 export class GamepadApiWrapper {
     updateDelay: number;
+    axisDeadZone: number;
     buttonConfigs: gamepadApiWrapperButtonConfig[];
     lastStateOfGamepads: Gamepad[];
     changeMaskOfGamepads: boolean[];
@@ -52,6 +54,7 @@ export class GamepadApiWrapper {
      * @param updateDelay The delay between each update of the gamepad state in ms, if zero, the gamepad state will be updated on every animation frame */
     constructor(config: gamepadApiWrapperConfig) {
         this.updateDelay = config.updateDelay || 0;
+        this.axisDeadZone = config.axisDeadZone || 0;
         this.buttonConfigs = config.buttonConfigs || [];
         this.lastStateOfGamepads = [];
         this.changeMaskOfGamepads = [];
@@ -121,14 +124,14 @@ export class GamepadApiWrapper {
      * The callback function will be called with the gamepad index, the gamepad object, and a array of the changed buttons containing details about how the button transitioned
      * or false if the button state didn't change this frame. Callback is called separately for each gamepad where buttons have changed.
      * @param Listener The calback function to call when a gamepad button state changes */
-    onGamepadButtonChange(Listener: (gpadIndex: number, gpad: EGamepad | Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => void) {
+    onGamepadButtonChange(Listener: (gpadIndex: number, gpad: EGamepad | Gamepad, buttonChanges: (buttonChangeDetails | false)[]) => void) {
         this.gamepadButtonChangeListeners.push(Listener);
         return Listener;
     }
 
     /** offGamepadButtonChange: remove an existing event listener for when a gamepad button changes
      * @param Listener The calback function to remove (must be the same function passed to onGamepadButtonChange()) */
-    offGamepadButtonChange(Listener: (gpadIndex: number, gpad: EGamepad | Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => void) {
+    offGamepadButtonChange(Listener: (gpadIndex: number, gpad: EGamepad | Gamepad, buttonChanges: (buttonChangeDetails | false)[]) => void) {
         this.gamepadButtonChangeListeners = this.gamepadButtonChangeListeners.filter((l) => l !== Listener);
     }
 
@@ -175,7 +178,8 @@ export class GamepadApiWrapper {
         for (i = 0; i < axisState.length; i++) {
             let axisValue = axisState[i] || 0;
             let lastAxisValue = lastAxisState[i] || 0;
-            if (axisValue != lastAxisValue) {
+            let inDeadZone = Math.abs(axisValue) < this.axisDeadZone;
+            if (!inDeadZone && axisValue != lastAxisValue) {
                 axesChangeMask[i] = true;
                 somethingChanged = true;
             } else {
@@ -195,7 +199,7 @@ export class GamepadApiWrapper {
 
         const lastGamepadState = this.lastStateOfGamepads[gpadIndex];
         const lastBtnsState: readonly GamepadButton[] = lastGamepadState.buttons || btnState;
-        let buttonChangesMask: (buttonChangeDetails | false)[] = [];
+        let buttonChanges: (buttonChangeDetails | false)[] = [];
 
         let bi, atLeastOneButtonChanged = false;
         for (bi = 0; bi < btnState.length; bi++) {
@@ -203,7 +207,7 @@ export class GamepadApiWrapper {
             let somethingChanged = false;
             const button: GamepadButton = btnState[bi] || { pressed: false, value: 0, touched: false };
             const lastButtonState: GamepadButton = lastBtnsState[bi] || { pressed: false, value: 0, touched: false };
-            const buttonConfig: gamepadApiWrapperButtonConfig = this.buttonConfigs[bi] || {};
+            const buttonConfig: gamepadApiWrapperButtonConfig = this.buttonConfigs[bi] || {} as gamepadApiWrapperButtonConfig;
             const btnChangeMask: buttonChangeDetails = {};
 
             if (button.touched && !lastButtonState.touched) {
@@ -234,15 +238,15 @@ export class GamepadApiWrapper {
 
             if (somethingChanged) {
                 atLeastOneButtonChanged = true;
-                buttonChangesMask[bi] = btnChangeMask
+                buttonChanges[bi] = btnChangeMask
             } else {
-                buttonChangesMask[bi] = false;
+                buttonChanges[bi] = false;
             }
         }
 
         // send out event if one or more buttons changed
         if (atLeastOneButtonChanged) {
-            this.gamepadButtonChangeListeners.forEach(callback => callback(gpadIndex, gpad, buttonChangesMask));
+            this.gamepadButtonChangeListeners.forEach(callback => callback(gpadIndex, gpad, buttonChanges));
         }
     }
 

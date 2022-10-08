@@ -84,10 +84,6 @@ export class GamepadDisplay {
             if (downHighlight && yValue > 0.1) downHighlight.classList.add(this.config.moveDirectionHighlightClass || ""); else if (downHighlight) downHighlight.classList.remove(this.config.moveDirectionHighlightClass || "");
             if (leftHighlight && xValue < -0.1) leftHighlight.classList.add(this.config.moveDirectionHighlightClass || ""); else if (leftHighlight) leftHighlight.classList.remove(this.config.moveDirectionHighlightClass || "");
             if (rightHighlight && xValue > 0.1) rightHighlight.classList.add(this.config.moveDirectionHighlightClass || ""); else if (rightHighlight) rightHighlight.classList.remove(this.config.moveDirectionHighlightClass || "");
-            // if (upHighlight) upHighlight.style.opacity = Math.max(-yValue, 0).toString();
-            // if (downHighlight) downHighlight.style.opacity = Math.max(yValue, 0).toString();
-            // if (leftHighlight) leftHighlight.style.opacity = Math.max(-xValue, 0).toString();
-            // if (rightHighlight) rightHighlight.style.opacity = Math.max(xValue, 0).toString();
         }
     }
 
