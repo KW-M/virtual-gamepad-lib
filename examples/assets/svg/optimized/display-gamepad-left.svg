@@ -7,78 +7,60 @@
         <circle id="shadow10" cx="81.987" cy="176.33" r="26.46" style="fill-opacity:.5"/>
         <circle id="Oval5" cx="80.737" cy="175.09" r="25.21" style="fill:#6180b0;stroke:#000;stroke-width:2.49px"/>
       </g>
-      <g class="direction_highlight" id="l_stick_right_direction_highlight">
-        <path d="M80.737 179.329v-8.477h25.442v-7.872l12.11 12.11-12.11 12.11v-7.871H80.737Z" style="fill:#ff00bf"/>
-      </g>
-      <g class="direction_highlight" id="l_stick_down_direction_highlight">
-        <path d="M76.499 175.09h8.477v25.442h7.872l-12.11 12.11-12.11-12.11h7.871V175.09Z" style="fill:#ff00bf"/>
-      </g>
-      <g class="direction_highlight" id="l_stick_left_direction_highlight">
-        <path d="M80.737 170.852v8.477H55.295v7.871l-12.11-12.11 12.11-12.11v7.872h25.442Z" style="fill:#ff00bf"/>
-      </g>
-      <g class="direction_highlight" id="l_stick_up_direction_highlight">
-        <path d="M84.976 175.09h-8.477v-25.442h-7.872l12.11-12.11 12.11 12.11h-7.871v25.442Z" style="fill:#ff00bf"/>
-      </g>
-      <g>
-        <g id="stick_left">
-          <circle id="shadow11" cx="82.597" cy="176.96" r="17.12" style="fill-opacity:.5"/>
-          <use xlink:href="#2a" x="48" y="143" width="65" height="65" class="gpad-highlight" id="stick_button_left_highlight"/>
-          <g id="Group-6">
-            <circle id="Oval-Copy" cx="80.737" cy="175.09" r="15.88" style="fill:#fff;stroke:#000;stroke-width:2.49px"/>
-            <circle id="Oval-Copy-2" cx="80.737" cy="175.09" r="12.14" style="fill:#fff;stroke:#000;stroke-width:1.25px"/>
-          </g>
+      <path d="M80.737 179.329v-8.477h25.442v-7.872l12.11 12.11-12.11 12.11v-7.871H80.737Z" style="fill:#ff00bf" class="direction_highlight" id="l_stick_right_direction_highlight"/>
+      <path d="M76.499 175.09h8.477v25.442h7.872l-12.11 12.11-12.11-12.11h7.871V175.09Z" style="fill:#ff00bf" class="direction_highlight" id="l_stick_down_direction_highlight"/>
+      <path d="M80.737 170.852v8.477H55.295v7.871l-12.11-12.11 12.11-12.11v7.872h25.442Z" style="fill:#ff00bf" class="direction_highlight" id="l_stick_left_direction_highlight"/>
+      <path d="M84.976 175.09h-8.477v-25.442h-7.872l12.11-12.11 12.11 12.11h-7.871v25.442Z" style="fill:#ff00bf" class="direction_highlight" id="l_stick_up_direction_highlight"/>
+      <g id="stick_left">
+        <circle id="shadow11" cx="82.597" cy="176.96" r="17.12" style="fill-opacity:.5"/>
+        <use xlink:href="#2a" x="48" y="143" width="65" height="65" class="gpad-highlight" id="stick_button_left_highlight"/>
+        <g id="Group-6">
+          <circle id="Oval-Copy" cx="80.737" cy="175.09" r="15.88" style="fill:#fff;stroke:#000;stroke-width:2.49px"/>
+          <circle id="Oval-Copy-2" cx="80.737" cy="175.09" r="12.14" style="fill:#fff;stroke:#000;stroke-width:1.25px"/>
         </g>
       </g>
     </g>
-    <g>
-      <g id="select_button">
-        <use xlink:href="#2b" x="78" y="118" width="43" height="39" class="gpad-highlight" id="select_button_highlight"/>
-        <path id="select" d="M105.267 133.325a7.506 7.506 0 0 1 2.496 5.595 7.507 7.507 0 0 1-2.496 5.596H95.213a7.507 7.507 0 0 1-2.496-5.596c0-2.22.964-4.217 2.496-5.595h10.054Z" style="fill:#9a9a9a;fill-opacity:.5"/>
-        <path id="select1" d="M104.162 132.138a7.506 7.506 0 0 1 2.496 5.595 7.507 7.507 0 0 1-2.496 5.596H94.108a7.507 7.507 0 0 1-2.496-5.596c0-2.22.964-4.217 2.496-5.595h10.054Z" style="fill:#fff;stroke:#000;stroke-width:1.35px"/>
-        <path id="select_icon" d="M95.732 139.452h6.805c.465-.552.476-1.113 0-1.687h-6.805c-.482-.564-.475-1.137 0-1.719h6.805" style="fill:none;stroke:#000;stroke-width:.9px;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5"/>
-      </g>
+    <g id="select_button">
+      <use xlink:href="#2b" x="78" y="118" width="43" height="39" class="gpad-highlight" id="select_button_highlight"/>
+      <path id="select" d="M105.267 133.325a7.506 7.506 0 0 1 2.496 5.595 7.507 7.507 0 0 1-2.496 5.596H95.213a7.507 7.507 0 0 1-2.496-5.596c0-2.22.964-4.217 2.496-5.595h10.054Z" style="fill:#9a9a9a;fill-opacity:.5"/>
+      <path id="select1" d="M104.162 132.138a7.506 7.506 0 0 1 2.496 5.595 7.507 7.507 0 0 1-2.496 5.596H94.108a7.507 7.507 0 0 1-2.496-5.596c0-2.22.964-4.217 2.496-5.595h10.054Z" style="fill:#fff;stroke:#000;stroke-width:1.35px"/>
+      <path id="select_icon" d="M95.732 139.452h6.805c.465-.552.476-1.113 0-1.687h-6.805c-.482-.564-.475-1.137 0-1.719h6.805" style="fill:none;stroke:#000;stroke-width:.9px;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5"/>
     </g>
     <g id="d_pad">
-      <g id="shadow14">
-        <path d="M86.434 71.626c.913 0 1.659.746 1.659 1.659v18.212h18.212c.913 0 1.66.747 1.66 1.659v14.893c0 .913-.747 1.66-1.66 1.66H88.093v18.211c0 .913-.746 1.66-1.659 1.66H71.541c-.911 0-1.66-.749-1.66-1.66v-18.211H51.67c-.911 0-1.66-.749-1.66-1.66V93.156c0-.902.747-1.659 1.66-1.659h18.211V73.285c0-.902.747-1.659 1.66-1.659h14.893Z" style="fill:#9a9a9a;fill-opacity:.5"/>
-      </g>
+      <path d="M86.434 71.626c.913 0 1.659.746 1.659 1.659v18.212h18.212c.913 0 1.66.747 1.66 1.659v14.893c0 .913-.747 1.66-1.66 1.66H88.093v18.211c0 .913-.746 1.66-1.659 1.66H71.541c-.911 0-1.66-.749-1.66-1.66v-18.211H51.67c-.911 0-1.66-.749-1.66-1.66V93.156c0-.902.747-1.659 1.66-1.659h18.211V73.285c0-.902.747-1.659 1.66-1.659h14.893Z" style="fill:#9a9a9a;fill-opacity:.5" id="shadow14"/>
       <use xlink:href="#2c" x="53" y="54" width="48" height="53" class="gpad-highlight" id="d_pad_up_highlight"/>
       <use xlink:href="#2d" x="53" y="91" width="48" height="52" class="gpad-highlight" id="d_pad_down_highlight"/>
       <use xlink:href="#2e" x="70" y="75" width="52" height="48" class="gpad-highlight" id="d_pad_right_highlight"/>
       <use xlink:href="#2f" x="33" y="75" width="52" height="48" class="gpad-highlight" id="d_pad_left_highlight"/>
-      <g>
-        <path d="M84.774 69.966c.913 0 1.66.747 1.66 1.66v18.211h18.222c.902 0 1.659.747 1.659 1.66V106.4c0 .903-.757 1.66-1.659 1.66H86.434v18.211c0 .903-.747 1.66-1.66 1.66H69.892c-.911 0-1.66-.749-1.66-1.66v-18.222H50.01c-.91 0-1.659-.749-1.659-1.659V91.497c0-.913.747-1.66 1.659-1.66h18.212V71.626c0-.913.747-1.66 1.659-1.66h14.893Z" style="fill:#fff;stroke:#000;stroke-width:1.66px;stroke-linejoin:round"/>
-      </g>
-      <g id="d_pad_right">
-        <path d="m91.827 94.401 9.095 4.542-9.105 4.564V94.39l.01.011Z" style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round"/>
-      </g>
-      <g id="d_pad_left">
-        <path d="m62.839 103.496-9.106-4.553 9.106-4.553v9.106Z" style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round"/>
-      </g>
-      <g id="d_pad_down">
-        <path d="m81.881 113.432-4.553 9.106-4.553-9.106h9.106Z" style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round"/>
-      </g>
-      <g id="d_pad_up">
-        <path d="m72.775 84.455 4.563-9.106 4.543 9.106h-9.106Z" style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round"/>
-      </g>
+      <path d="M84.774 69.966c.913 0 1.66.747 1.66 1.66v18.211h18.222c.902 0 1.659.747 1.659 1.66V106.4c0 .903-.757 1.66-1.659 1.66H86.434v18.211c0 .903-.747 1.66-1.66 1.66H69.892c-.911 0-1.66-.749-1.66-1.66v-18.222H50.01c-.91 0-1.659-.749-1.659-1.659V91.497c0-.913.747-1.66 1.659-1.66h18.212V71.626c0-.913.747-1.66 1.659-1.66h14.893Z" style="fill:#fff;stroke:#000;stroke-width:1.66px;stroke-linejoin:round"/>
+      <path d="m91.827 94.401 9.095 4.542-9.105 4.564V94.39l.01.011Z" style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round" id="d_pad_right"/>
+      <path d="m62.839 103.496-9.106-4.553 9.106-4.553v9.106Z" style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round" id="d_pad_left"/>
+      <path d="m81.881 113.432-4.553 9.106-4.553-9.106h9.106Z" style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round" id="d_pad_down"/>
+      <path d="m72.775 84.455 4.563-9.106 4.543 9.106h-9.106Z" style="fill:none;stroke:#000;stroke-width:1.66px;stroke-linejoin:round" id="d_pad_up"/>
     </g>
-    <g>
-      <g id="shoulder_trigger_back_left">
-        <g class="direction_highlight" id="shoulder_trigger_back_left_direction_highlight">
-          <path d="M110.415 51.254 98.146 34.763h24.538l-12.269 16.491Z" style="fill:#ff00bf"/>
-          <path d="M97.161 17.167c2.534 0 13.254.512 13.218 21" style="fill:none;stroke:#ff00bf;stroke-width:8.5px;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5"/>
-        </g>
-        <path id="shadow4" d="M54.417 40.591h37.84c1.52 0 2.77-.618 2.77-1.36a.695.695 0 0 0-.07-.309l-10.9-23.604c-.7-1.545-3.53-2.648-6.75-2.648h-11.8c-7.66 0-13.86 3.05-13.86 6.811v19.761c0 .741 1.25 1.36 2.77 1.36v-.011Z" style="fill-opacity:.5"/>
-        <use xlink:href="#2g" x="32" y="3" width="76" height="56" transform="translate(0 -4.346)" class="gpad-highlight" id="shoulder_trigger_back_left_highlight"/>
-        <path id="bg" d="M51.957 38.16c-.38 0-.73-.072-.98-.196-.25-.124-.4-.288-.4-.484V17.719c0-1.69 1.4-3.225 3.65-4.327a20.546 20.546 0 0 1 8.83-1.803h11.79c1.26 0 2.48.206 3.46.597.98.392 1.67.928 1.95 1.525l10.9 23.625c.03.34-.13.515-.38.628-.26.134-.6.206-.98.206h-37.84v-.01Z" style="fill:#fff;stroke:#000;stroke-width:2.2px"/>
+    <g id="shoulder_trigger_back_left">
+      <g class="direction_highlight" id="shoulder_trigger_back_left_direction_highlight">
+        <path d="M110.415 51.254 98.146 34.763h24.538l-12.269 16.491Z" style="fill:#ff00bf"/>
+        <path d="M97.161 17.167c2.534 0 13.254.512 13.218 21" style="fill:none;stroke:#ff00bf;stroke-width:8.5px;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5"/>
       </g>
+      <path id="shadow4" d="M54.417 40.591h37.84c1.52 0 2.77-.618 2.77-1.36a.695.695 0 0 0-.07-.309l-10.9-23.604c-.7-1.545-3.53-2.648-6.75-2.648h-11.8c-7.66 0-13.86 3.05-13.86 6.811v19.761c0 .741 1.25 1.36 2.77 1.36v-.011Z" style="fill-opacity:.5"/>
+      <use xlink:href="#2g" x="32" y="3" width="76" height="56" transform="translate(0 -4.346)" class="gpad-highlight" id="shoulder_trigger_back_left_highlight"/>
+      <path id="bg" d="M51.957 38.16c-.38 0-.73-.072-.98-.196-.25-.124-.4-.288-.4-.484V17.719c0-1.69 1.4-3.225 3.65-4.327a20.546 20.546 0 0 1 8.83-1.803h11.79c1.26 0 2.48.206 3.46.597.98.392 1.67.928 1.95 1.525l10.9 23.625c.03.34-.13.515-.38.628-.26.134-.6.206-.98.206h-37.84v-.01Z" style="fill:#fff;stroke:#000;stroke-width:2.2px"/>
     </g>
-    <g>
-      <g id="shoulder_button_front_left">
-        <path id="shadow5" d="M94.279 44.584H54.287c-2.643 0-4.818 2.591-4.818 5.74v6.9c.004 1.258.875 2.29 1.931 2.29h45.767c1.059 0 1.93-1.038 1.93-2.3v-6.88c0-3.149-2.175-5.74-4.818-5.74v-.01Z" style="fill-opacity:.5"/>
-        <use xlink:href="#2h" x="30" y="31" width="86" height="41" class="gpad-highlight" id="shoulder_button_front_left_highlight"/>
-        <path id="bg1" d="M92.769 44.934h.017c2.109 0 3.844 2.067 3.844 4.58v6.92c0 .625-.433 1.14-.957 1.14H49.897c-.529 0-.965-.519-.965-1.15v-6.9c0-2.513 1.735-4.58 3.844-4.58h39.993v-.01Z" style="fill:#fff;stroke:#000;stroke-width:2.12px"/>
-      </g>
+    <g id="shoulder_button_front_left">
+      <path id="shadow5" d="M94.279 44.584H54.287c-2.643 0-4.818 2.591-4.818 5.74v6.9c.004 1.258.875 2.29 1.931 2.29h45.767c1.059 0 1.93-1.038 1.93-2.3v-6.88c0-3.149-2.175-5.74-4.818-5.74v-.01Z" style="fill-opacity:.5"/>
+      <use xlink:href="#2h" x="30" y="31" width="86" height="41" class="gpad-highlight" id="shoulder_button_front_left_highlight"/>
+      <path id="bg1" d="M92.769 44.934h.017c2.109 0 3.844 2.067 3.844 4.58v6.92c0 .625-.433 1.14-.957 1.14H49.897c-.529 0-.965-.519-.965-1.15v-6.9c0-2.513 1.735-4.58 3.844-4.58h39.993v-.01Z" style="fill:#fff;stroke:#000;stroke-width:2.12px"/>
+    </g>
+    <g id="l_touch_targets" opacity="0">
+      <path id="stick_button_left_touch_target" d="M103.497 149.101c7.227 6.337 11.792 15.634 11.792 25.989 0 19.069-15.482 34.551-34.552 34.551-19.069 0-34.551-15.482-34.551-34.551 0-19.07 15.482-34.552 34.551-34.552 2.258 0 4.466.217 6.601.631 1.548 5.051 6.247 8.728 11.797 8.728 1.535 0 3.005-.281 4.362-.796Z" style="fill:#419bf3"/>
+      <path id="select_button_touch_target" d="M93.558 126.53a12.266 12.266 0 0 1 5.577-1.333c6.809 0 12.336 5.534 12.336 12.35s-5.527 12.35-12.336 12.35-12.337-5.534-12.337-12.35c0-1.681.336-3.284.945-4.744a18.743 18.743 0 0 0 5.815-6.273Z" style="fill:#419bf3"/>
+      <path id="d_pad_left_touch_target" d="M57.9 116.925c-10.093-.218-18.219-8.48-18.219-18.625 0-10.281 8.346-18.628 18.628-18.628.14 0 .279.002.419.005l18.205 18.204v.01L57.9 116.925Z" style="fill:#419bf3"/>
+      <path id="d_pad_down_touch_target" d="m57.9 116.925 19.042-19.043 19.033 19.042c.004.14.006.279.006.419 0 10.282-8.348 18.629-18.629 18.629-10.282 0-19.452-8.765-19.452-19.047Z" style="fill:#419bf3"/>
+      <path id="d_pad_up_touch_target" d="M67.141 63.678h20.421c4.962 3.261 8.277 8.827 8.413 15.17L76.942 97.882l-.009-.001-18.205-18.204c-.004-.14-.005-.279-.005-.419 0-6.512 3.349-12.249 8.418-15.58Z" style="fill:#419bf3"/>
+      <path id="d_pad_right_touch_target" d="m76.942 97.882 19.033-19.034c10.281 0 19.048 9.171 19.048 19.452 0 10.282-8.348 18.629-18.629 18.629-.14 0-.279-.002-.419-.005L76.942 97.882Z" style="fill:#419bf3"/>
+      <path id="shoulder_button_front_left_touch_target" d="M99.096 41.101H47.503c-2.766 0-5.009 2.197-5.009 4.908v15.706c0 1.077.905 1.963 2.004 1.963h57.603c1.099 0 2.004-.886 2.004-1.963V46.009c0-2.711-2.243-4.908-5.009-4.908Z" style="fill:#419bf3"/>
+      <path id="shoulder_trigger_back_left_touch_target" d="M47.697 41.101h52.635c1.521 0 2.816-1.579 2.065-2.955-2.77-5.082-14.508-29.61-14.508-29.61-.743-1.517-3.545-2.595-6.742-2.595H58.788c-7.657 0-13.864 3.027-13.864 6.761v27.047c0 .741 1.252 1.352 2.773 1.352Z" style="fill:#419bf3"/>
     </g>
   </g>
   <defs>

@@ -178,8 +178,9 @@ export class GamepadApiWrapper {
         for (i = 0; i < axisState.length; i++) {
             let axisValue = axisState[i] || 0;
             let lastAxisValue = lastAxisState[i] || 0;
-            let inDeadZone = Math.abs(axisValue) < this.axisDeadZone;
-            if (!inDeadZone && axisValue != lastAxisValue) {
+            if (axisValue != lastAxisValue) {
+                let inDeadZone = Math.abs(axisValue) < this.axisDeadZone && Math.abs(lastAxisValue) < this.axisDeadZone;
+                if (inDeadZone) continue;
                 axesChangeMask[i] = true;
                 somethingChanged = true;
             } else {

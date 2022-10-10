@@ -3,6 +3,7 @@ import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
 import { GamepadDisplay, GamepadDisplayJoystick } from "../../src/GamepadDisplay";
 import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums";
 import type { GamepadDisplayVariableButton, GamepadDisplayButton } from "../../src/GamepadDisplay";
+import { centerTransformOrigins } from "../../src/utilities";
 
 const BUTTON_ID_NAMES = [
     "button_1",
@@ -26,7 +27,7 @@ const BUTTON_ID_NAMES = [
 
 // !!! IMPORTANT: The gamepad emulator class MUST be created before creating the GamepadApiWrapper, Game or any other library that uses navigator.getGamepads()
 const gamepadEmu = new GamepadEmulator(0.1);
-const gpadApiWrapper = new GamepadApiWrapper({ buttonConfigs: [], updateDelay: 0, });
+const gpadApiWrapper = new GamepadApiWrapper({ buttonConfigs: [], updateDelay: 0, axisDeadZone: 0.05 });
 const gamepadDisplaySection = document.getElementById("gamepads");
 const gamepadDisplayTemplate = document.getElementById("gamepad_display_template") as (HTMLTemplateElement | null);
 let Gamepad_Displays: { display: GamepadDisplay, index: number, container: HTMLElement }[] = [];
@@ -154,6 +155,9 @@ function addGamepadDisplay(gpadIndex) {
     const clone = gamepadDisplayTemplate.content.firstElementChild.cloneNode(true) as HTMLElement;
     gamepadDisplaySection.appendChild(clone);
 
+    centerTransformOrigins("#stick_right, #stick_left"); // useful if you want to visually transform the joystick with rotation and scaling
+    // centerTransformOriginsDebug("#stick_right, #stick_left"); // show debug bounding boxes used in this feature.
+
     // setup the display buttons of the newly created gamepad display in the dom
     const buttons = BUTTON_ID_NAMES.map((name, i) => {
         if (name.includes("trigger")) {
@@ -183,7 +187,7 @@ function addGamepadDisplay(gpadIndex) {
 
     // setup the joysticks of the newly created gamepad display in the dom
     const joysticks: GamepadDisplayJoystick[] = [{
-        joystickElement: clone.querySelector("#" + "stick_left") as SVGElement,
+        joystickElement: clone.querySelector("#stick_left") as SVGElement,
         xAxisIndex: 0,
         yAxisIndex: 1,
         movementRange: 10,
@@ -194,14 +198,14 @@ function addGamepadDisplay(gpadIndex) {
             [gamepadDirection.right]: true,
         },
         highlights: {
-            [gamepadDirection.up]: clone.querySelector("#" + "l_stick_up_direction_highlight") as SVGElement,
-            [gamepadDirection.down]: clone.querySelector("#" + "l_stick_down_direction_highlight") as SVGElement,
-            [gamepadDirection.left]: clone.querySelector("#" + "l_stick_left_direction_highlight") as SVGElement,
-            [gamepadDirection.right]: clone.querySelector("#" + "l_stick_right_direction_highlight") as SVGElement,
+            [gamepadDirection.up]: clone.querySelector("#l_stick_up_direction_highlight") as SVGElement,
+            [gamepadDirection.down]: clone.querySelector("#l_stick_down_direction_highlight") as SVGElement,
+            [gamepadDirection.left]: clone.querySelector("#l_stick_left_direction_highlight") as SVGElement,
+            [gamepadDirection.right]: clone.querySelector("#l_stick_right_direction_highlight") as SVGElement,
         }
     },
     {
-        joystickElement: clone.querySelector("#" + "stick_right") as SVGElement,
+        joystickElement: clone.querySelector("#stick_right") as SVGElement,
         xAxisIndex: 2,
         yAxisIndex: 3,
         movementRange: 10,
@@ -212,10 +216,10 @@ function addGamepadDisplay(gpadIndex) {
             [gamepadDirection.right]: true,
         },
         highlights: {
-            [gamepadDirection.up]: clone.querySelector("#" + "r_stick_up_direction_highlight") as SVGElement,
-            [gamepadDirection.down]: clone.querySelector("#" + "r_stick_down_direction_highlight") as SVGElement,
-            [gamepadDirection.left]: clone.querySelector("#" + "r_stick_left_direction_highlight") as SVGElement,
-            [gamepadDirection.right]: clone.querySelector("#" + "r_stick_right_direction_highlight") as SVGElement,
+            [gamepadDirection.up]: clone.querySelector("#r_stick_up_direction_highlight") as SVGElement,
+            [gamepadDirection.down]: clone.querySelector("#r_stick_down_direction_highlight") as SVGElement,
+            [gamepadDirection.left]: clone.querySelector("#r_stick_left_direction_highlight") as SVGElement,
+            [gamepadDirection.right]: clone.querySelector("#r_stick_right_direction_highlight") as SVGElement,
         }
     }
     ]
@@ -267,21 +271,21 @@ function addGamepadDisplay(gpadIndex) {
 
     const gpad = navigator.getGamepads()[gpadIndex] as EGamepad
     if (gpad.emulation === gamepadEmulationState.emulated) {
-        clone.querySelector("#gpad-emulation-label")!.innerHTML = `#${gpad.index} ${gpad.id} - Emulated`;
-        (clone.querySelector("#gpad-emulation-btn") as HTMLElement).innerHTML = "- Emulated Gamepad";
+        clone.querySelector("#gpad-emulation-label")!.innerHTML = `gpad #${gpad.index} | Emulated | ${gpad.id}`;
+        (clone.querySelector("#gpad-emulation-btn") as HTMLElement).innerHTML = "REMOVE Emulated Gamepad";
     } else if (gpad.emulation === gamepadEmulationState.overlay) {
-        clone.querySelector("#gpad-emulation-label")!.innerHTML = `#${gpad.index} ${gpad.id} - Overlay (real + emulated input)`;
-        (clone.querySelector("#gpad-emulation-btn") as HTMLElement).innerHTML = "- Emulated Gamepad Overlay";
+        clone.querySelector("#gpad-emulation-label")!.innerHTML = `gpad #${gpad.index} | Overlay (real + emulated input) | ${gpad.id}`;
+        (clone.querySelector("#gpad-emulation-btn") as HTMLElement).innerHTML = "REMOVE Emulated Gamepad Overlay";
     } else if (gpad.emulation === gamepadEmulationState.real) {
-        clone.querySelector("#gpad-emulation-label")!.innerHTML = `#${gpad.index} ${gpad.id} - Real (no emulated input)`;
-        (clone.querySelector("#gpad-emulation-btn") as HTMLElement).innerHTML = "+ Emulated Gamepad Overlay";
+        clone.querySelector("#gpad-emulation-label")!.innerHTML = `gpad #${gpad.index} | Real (no emulated input) | ${gpad.id} `;
+        (clone.querySelector("#gpad-emulation-btn") as HTMLElement).innerHTML = "ADD Emulated Gamepad Overlay";
     }
 
     clone.querySelector("#gpad-emulation-btn")!.addEventListener("click", () => { handleGpadEmulationBtnClick(gpadIndex) });
     return { container: clone, display: display }
 }
 
-const handleGpadEmulationBtnClick = (gpadIndex) => {
+function handleGpadEmulationBtnClick(gpadIndex) {
     const emulationState = (navigator.getGamepads()[gpadIndex] as EGamepad).emulation
     if (emulationState === gamepadEmulationState.emulated) {
         gamepadEmu.RemoveEmulatedGamepad(gpadIndex);
@@ -292,52 +296,5 @@ const handleGpadEmulationBtnClick = (gpadIndex) => {
     }
 }
 
-let tickCount = 0;
-let manualGamepadUpdateInterval;
-const toggleProgramaticGamepadUpdates = () => {
-    if (!manualGamepadUpdateInterval) {
-
-        manualGamepadUpdateInterval = setInterval(() => {
-
-            // keep track of time
-            tickCount++;
-
-            // generate some interesting pattern for axes:
-            const x = Math.cos(tickCount / 100) //+ 0.1 * Math.sin(tickCount / 200 + 0.7);;
-            const y = Math.sin(tickCount / 100) //(Math.cos(tickCount / 100) - 0.5) * 2  //+ 0.1 * Math.sin(tickCount / 200 + 0.5);
-            // move axis 0 (left stick x)
-            gamepadEmu.MoveAxis(0, 0, x);
-            // move axis 1 (left stick y)
-            gamepadEmu.MoveAxis(0, 1, y);
-
-            // // move axis 2 (right stick x)
-            gamepadEmu.MoveAxis(0, 2, -x);
-            // // move axis 3 (right stick y)
-            gamepadEmu.MoveAxis(0, 3, -y);
-            // show those values on the label
-            const r_label = document.getElementById("r_stick_action_help_label")
-            if (r_label) r_label.innerHTML = "(" + -x.toFixed(1) + ", " + -y.toFixed(1) + ")";
-
-
-            // generate some random pattern of button presses:
-            const btnIndex = Math.floor(Math.random() * DEFAULT_GPAD_BUTTON_COUNT);
-            const btnValue = Math.max(x * y * 0.5, 0); // the value is between 0 and 1. if it is greater than the value of the button threshold (given in new GamepadEmulator(threshold)), the button is considered "pressed". most buttons only have 0 and 1 states, but some buttons have variable states (like the triggers)
-            // the button will always be "touched" if the button value is above the pressed threshold, but a non-pressed button can either be touched or not:
-            const btnTouched = Math.random() > 0.8;
-            // press (or unpress) the button:
-            gamepadEmu.PressButton(0, btnIndex, btnValue, btnTouched);
-
-        }, 10);
-
-    } else {
-
-        clearInterval(manualGamepadUpdateInterval);
-        manualGamepadUpdateInterval = null;
-
-    }
-}
-
-
-// `export ` these functions to the global scope so they can be used in the html document onclick="" and other event attributes.
+// `export` these functions to the global scope so they can be used in the html document onclick="" and other event attributes.
 globalThis.addEmulatedGamepad = () => { addEmulatedGamepad(false, -1) };
-globalThis.toggleProgramaticGamepadUpdates = toggleProgramaticGamepadUpdates;

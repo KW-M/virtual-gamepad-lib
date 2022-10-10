@@ -2,6 +2,7 @@ import { gamepadButtonType, gamepadDirection } from "../../src/enums";
 import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator";
 import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
 import { GamepadDisplay } from "../../src/GamepadDisplay";
+import { centerTransformOrigins } from "../../src/utilities";
 // CONSTS
 const GPAD_DISPLAY_CONTAINER = document.getElementById("gpad-display-container");
 const AXIS_TABLE_ELEM = document.getElementById('axis-table');
@@ -28,7 +29,7 @@ const BUTTON_ID_NAMES = [
 // the gamepad emulator MUST be created before creating the GamepadApiWrapper, a game engine, or any other library that uses navigator.getGamepads() or listens for gamepad events
 const gamepadEmu = new GamepadEmulator(0.1);
 const gpadApiWrapper = new GamepadApiWrapper({
-    updateDelay: 300,
+    updateDelay: 0,
     axisDeadZone: 0.05,
     buttonConfigs: [] // if we want special behavior for any buttons like HOLD events, we can add them here (see the keyboard example).
 });
@@ -46,7 +47,7 @@ gpadApiWrapper.onGamepadDisconnect((gpad) => {
 });
 // listen for gamepad button change events and log them (you could also check for changes yourself by calling the navigator.getGamepads() function)
 gpadApiWrapper.onGamepadButtonChange((gpadIndex, gpad, buttonChanges) => {
-    console.log(`Gamepad ${gpadIndex} button change: `, buttonChanges);
+    // console.log(`Gamepad ${gpadIndex} button change: `, buttonChanges);
     for (let i = 0; i < gpad.buttons.length; i++) {
         if (!buttonChanges[i])
             continue; // this button did not change, so skip it.
@@ -63,7 +64,7 @@ gpadApiWrapper.onGamepadButtonChange((gpadIndex, gpad, buttonChanges) => {
 });
 // listen for gamepad axis change events and log them (you could also check for changes yourself by calling the navigator.getGamepads() function)
 gpadApiWrapper.onGamepadAxisChange((gpadIndex, gpad, axisChangesMask) => {
-    console.log(`Gamepad ${gpadIndex} axis change: `, gpad.axes, axisChangesMask);
+    // console.log(`Gamepad ${gpadIndex} axis change: `, gpad.axes, axisChangesMask);
     const axisValuesTableRow = AXIS_TABLE_ELEM.children[1];
     for (let i = 0; i < axisChangesMask.length; i++) {
         if (!axisChangesMask[i])
@@ -138,6 +139,8 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
 }
 /** Setup the display buttons & axes of the onscreen gamepad to react to the state of the gamepad from the browser gamepad api (uses the gamepadApiWrapper) */
 function setupGamepadDisplay(gpadIndex) {
+    centerTransformOrigins("#stick_right, #stick_left"); // useful if you want to visually transform the joystick with rotation and scaling
+    // centerTransformOriginsDebug("#stick_right, #stick_left"); // show debug bounding boxes used in this feature.
     /* ----- SETUP BUTTON DISPLAY ----- */
     const buttons = BUTTON_ID_NAMES.map((name, i) => {
         console.log(name);
@@ -168,7 +171,7 @@ function setupGamepadDisplay(gpadIndex) {
     });
     /* ----- SETUP JOYSTICK DISPLAY ----- */
     const joysticks = [{
-            joystickElement: GPAD_DISPLAY_CONTAINER.querySelector("#" + "stick_left"),
+            joystickElement: GPAD_DISPLAY_CONTAINER.querySelector("#stick_left"),
             xAxisIndex: 0,
             yAxisIndex: 1,
             movementRange: 10,
@@ -179,31 +182,31 @@ function setupGamepadDisplay(gpadIndex) {
                 [gamepadDirection.right]: true,
             },
             highlights: {
-                [gamepadDirection.up]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_up_direction_highlight"),
-                [gamepadDirection.down]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_down_direction_highlight"),
-                [gamepadDirection.left]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_left_direction_highlight"),
-                [gamepadDirection.right]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "l_stick_right_direction_highlight"),
+                [gamepadDirection.up]: GPAD_DISPLAY_CONTAINER.querySelector("#l_stick_up_direction_highlight"),
+                [gamepadDirection.down]: GPAD_DISPLAY_CONTAINER.querySelector("#l_stick_down_direction_highlight"),
+                [gamepadDirection.left]: GPAD_DISPLAY_CONTAINER.querySelector("#l_stick_left_direction_highlight"),
+                [gamepadDirection.right]: GPAD_DISPLAY_CONTAINER.querySelector("#l_stick_right_direction_highlight"),
             }
         }, {
-            joystickElement: GPAD_DISPLAY_CONTAINER.querySelector("#" + "stick_right"),
+            joystickElement: GPAD_DISPLAY_CONTAINER.querySelector("#stick_right"),
             xAxisIndex: 2,
             yAxisIndex: 3,
             movementRange: 10,
             directions: {
                 [gamepadDirection.up]: true,
-                // [gamepadDirection.down]: true,
+                [gamepadDirection.down]: true,
                 [gamepadDirection.left]: true,
-                // [gamepadDirection.right]: true,
+                [gamepadDirection.right]: true,
             },
-            // highlights: {
-            //     [gamepadDirection.up]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "r_stick_up_direction_highlight") as SVGElement,
-            //     [gamepadDirection.down]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "r_stick_down_direction_highlight") as SVGElement,
-            //     [gamepadDirection.left]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "r_stick_left_direction_highlight") as SVGElement,
-            //     [gamepadDirection.right]: GPAD_DISPLAY_CONTAINER.querySelector("#" + "r_stick_right_direction_highlight") as SVGElement,
-            // }
+            highlights: {
+                [gamepadDirection.up]: GPAD_DISPLAY_CONTAINER.querySelector("#r_stick_up_direction_highlight"),
+                [gamepadDirection.down]: GPAD_DISPLAY_CONTAINER.querySelector("#r_stick_down_direction_highlight"),
+                [gamepadDirection.left]: GPAD_DISPLAY_CONTAINER.querySelector("#r_stick_left_direction_highlight"),
+                [gamepadDirection.right]: GPAD_DISPLAY_CONTAINER.querySelector("#r_stick_right_direction_highlight"),
+            }
         }];
     // create the gamepad display class instance and pass the config
-    new GamepadDisplay({
+    const display = new GamepadDisplay({
         gamepadIndex: gpadIndex,
         buttonHighlightClass: "highlight",
         pressedHighlightClass: "pressed",
@@ -211,5 +214,14 @@ function setupGamepadDisplay(gpadIndex) {
         moveDirectionHighlightClass: "moved",
         buttons: buttons,
         sticks: joysticks,
+        joystickDisplayFunction: function (stickConfig, xAxisValue, yAxisValue) {
+            // This function will be called for each configured joystick when the gamepad api wrapper reports a change in the axis values.
+            display.defaultJoystickDisplayFunction(stickConfig, xAxisValue, yAxisValue); // (optional) call the default display implementation to add classes to highlights & move the joystick element.
+            // ---- Add your own custom joystick display code here -----
+            // Example: 3d rotate the joystick element by the specified amount rather than just 2d translating it...
+            // Note: for rotations/scaling like this, you should call the centerTransformOrigins("#querySelector") function from utilites (once after page load) on the joystick element to ensure the rotation/scaling is done around the center of the joystick element.
+            stickConfig.joystickElement.style.transform = `rotateY(${(xAxisValue * 30)}deg) rotateX(${(-yAxisValue * 30)}deg) translateZ(17px)`;
+        },
+        // buttonDisplayFunction: same as joystickDisplayFunction but for buttons. see the defaultButtonDisplayFunction in the GamepadDisplay class as a guide.
     }, gpadApiWrapper); // we can pass our existing instance of the gpadApiWrapper to the gamepad display so that it can use it to update the gamepad state efficiently.
 }

@@ -1,4 +1,5 @@
 import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "./enums";
+import { NormalizeClampVector } from "./utilities";
 
 // This Gamepad API interface defines an individual gamepad or other controller, allowing access to information such as button presses, axis positions, and id. Available only in secure contexts.
 export interface EGamepad extends Gamepad {
@@ -12,7 +13,8 @@ export interface EGamepad extends Gamepad {
 }
 
 interface EGamepadPrivateData {
-    overlayMode: boolean; // true if this e-gamepad is in overlay mode and should be
+    /** true if this e-gamepad was created in overlay mode */
+    overlayMode: boolean;
     removeButtonListenersFunc?: (() => void);
     removeJoystickListenersFunc?: (() => void);
 }
@@ -62,12 +64,6 @@ export interface JoystickConfig {
 interface TouchDetails {
     startX: number;
     startY: number;
-}
-
-function NormalizeClampVector(x: number, y: number, max: number) {
-    const length = Math.sqrt(x * x + y * y);
-    if (length > max) return { x: x / length, y: y / length };
-    else return { x: x / max, y: y / max };
 }
 
 /** A number of typical buttons recognized by Gamepad API and mapped to
@@ -218,7 +214,7 @@ export class GamepadEmulator {
             const tapTarget: HTMLElement = btnConfig.tapTarget as HTMLElement;
 
             if (!tapTarget) {
-                console.warn("AddDisplayButtonEventListeners() - no tap target for button index " + gpadButtonIndex + ", skipping");
+                console.warn("AddDisplayButtonEventListeners() - no tap target in button config " + gpadButtonIndex + ", skipping...");
                 continue;
             }
 
@@ -313,6 +309,7 @@ export class GamepadEmulator {
         let removeListenerFuncs: (() => void)[] = [];
         for (let i = 0; i < joystickConfigs.length; i++) {
             const config = joystickConfigs[i]
+            if (config.tapTarget == undefined) { console.warn(`AddDisplayJoystickEventListeners() - no tap target in joystick config ${i}, skipping...`); continue; }
             const removeDragListeners = this.AddDragControlListener(config, (_: boolean, xValue: number, yValue: number) => {
                 if (config.xAxisIndex !== undefined) this.MoveAxis(gpadIndex, config.xAxisIndex, xValue);
                 if (config.yAxisIndex !== undefined) this.MoveAxis(gpadIndex, config.yAxisIndex, yValue);
