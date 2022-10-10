@@ -41,9 +41,9 @@
   "scripts": {
     "test:lib": "vitest",
     "build:lib": "tsc && vite build",
+    "build:docs": "typedoc --options typedoc.json",
     "optimize:svgs": "svgo --folder ./examples/assets/svg/originals --output ./examples/assets/svg/optimized",
-    "precompile:examples": "tsc --module esnext --target esnext ./examples/**/*.ts --explainFiles; rm src/*.js",
-    "build:docs": "pnpx typedoc src/GamepadEmulator.ts src/GamepadDisplay.ts src/GamepadApiWrapper.ts src/enums.ts",
+    "precompile:examples": "tsc --module esnext --target esnext examples/**/*.ts; rm src/*.js;",
     "dev:examples": "pnpm run precompile:examples; vite --config examples/vite.config.js --host",
     "build:examples": "pnpm run precompile:examples; vite build --config examples/vite.config.js",
     "preview:examples": "vite preview --config example/vite.config.js  --host",

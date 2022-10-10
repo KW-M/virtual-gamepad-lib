@@ -1,0 +1,16 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": [
+        "src/GamepadEmulator.ts",
+        "src/GamepadDisplay.ts",
+        "src/GamepadApiWrapper.ts",
+        "src/enums.ts",
+        "src/utilities.ts"
+    ],
+    "readme": "none",
+    "htmlLang": "en",
+    "searchInComments": true,
+    "out": "docs",
+    "darkHighlightTheme": "dark-plus",
+    "lightHighlightTheme": "light-plus",
+}

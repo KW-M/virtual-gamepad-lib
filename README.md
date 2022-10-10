@@ -5,6 +5,23 @@
 - Make sure your tap zones (eg: around buttons or joysticks) are the only elements that are tapable / clickable, not parent elements or groups. This can be done by setting the css property ```pointer-events: all``` on the tap targets and ```pointer-events: none``` on all other SVG elements. If you don't do this, the browser default drag behaviors will not be correctly disabled on joysticks & buttons.
  - If you want to use a custom cursor, make sure to set the css property ```cursor: none``` on the svg element. This will prevent the browser from displaying the default cursor when hovering over the svg.
 
+
+### Exporting SVG from Adobe Illustrator: https://www.youtube.com/watch?v=bWcweY66DL8
+
+![Adobe SVG Export](./README.assets/Adobe%20SVG%20Export.png)
+
+### Exporting SVG from Affinity designer & Affinity photo:
+![Affinity SVG Export](README.assets/Affinity%20SVG%20Export.png)
+### Recommended [SVGO](https://github.com/svg/svgo) / [SVGOMG](https://jakearchibald.github.io/svgomg/) options:
+- **Disable** `Clean IDs` to keep the `id` attributes of the SVG elements ffrom your editor
+- **Disable** `Remove ViewBox` to keep the `viewBox` attribute, which makes scaling the SVG easier
+- **Disable** `Remove Unknowns & Defaults` as this can remove the `id`  and `class` attributes even if `Clean IDs` is off
+- **Disable** `Remove unneeded group attrs` and `collapse useless groups` if you used empty groups to alllow css transforms apply correctly to svg elements.
+- **Disable** `Remove hidden elements` if you used transparent or hidden elements as touch targets or bounding boxes
+- **Disable** `Merge Paths` if you used overlapping paths that should be separate elements on the gamepad, eg: touch targets for the d-pad or buttons
+- **Disable** `Remove title` or `Remove desc` if the title or description is relavant for acessability
+
+
 If you format your layer names in the format `elementId.elementClass`, you can use the following regular expression to extract the elementId and elementClass from the layer name:
 
 **Example:**
@@ -24,19 +41,3 @@ becomes
 ```perl
 id="$1" class="$2"
 ```
-
-
-### Exporting SVG from Adobe Illustrator: https://www.youtube.com/watch?v=bWcweY66DL8
-
-![Adobe SVG Export](./README.assets/Adobe%20SVG%20Export.png)
-
-### Exporting SVG from Affinity designer & Affinity photo:
-![Affinity SVG Export](README.assets/Affinity%20SVG%20Export.png)
-### Recommended [SVGO](https://github.com/svg/svgo) / [SVGOMG](https://jakearchibald.github.io/svgomg/) options:
-- **Disable** `Clean IDs` to keep the `id` attributes of the SVG elements ffrom your editor
-- **Disable** `Remove ViewBox` to keep the `viewBox` attribute, which makes scaling the SVG easier
-- **Disable** `Remove Unknowns & Defaults` as this can remove the `id`  and `class` attributes even if `Clean IDs` is off
-- **Disable** `Remove unneeded group attrs` and `collapse useless groups` if you used empty groups to alllow css transforms apply correctly to svg elements.
-- **Disable** `Remove hidden elements` if you used transparent or hidden elements as touch targets or bounding boxes
-- **Disable** `Merge Paths` if you used overlapping paths that should be separate elements on the gamepad, eg: touch targets for the d-pad or buttons
-- **Disable** `Remove title` or `Remove desc` if the title or description is relavant for acessability
