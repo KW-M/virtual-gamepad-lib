@@ -46,7 +46,7 @@
     "precompile:examples": "tsc --module esnext --target esnext examples/**/*.ts; rm src/*.js;",
     "dev:examples": "pnpm run precompile:examples; vite --config examples/vite.config.js --host",
     "build:examples": "pnpm run precompile:examples; vite build --config examples/vite.config.js",
-    "preview:examples": "vite preview --config example/vite.config.js  --host",
+    "preview:examples": "vite preview --config examples/vite.config.js  --host",
     "prepublish": "npm run build:lib"
   },
   "devDependencies": {

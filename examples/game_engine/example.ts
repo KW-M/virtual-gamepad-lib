@@ -4,8 +4,9 @@ import { GamepadDisplay, GamepadDisplayJoystick } from "../../src/GamepadDisplay
 import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums";
 import type { GamepadDisplayVariableButton, GamepadDisplayButton } from "../../src/GamepadDisplay";
 import { centerTransformOrigins, centerTransformOriginsDebug } from "../../src/utilities";
+// import "./phaser.js";
+// import "./twin-stick-game.js"
 
-// centerTransformOrigins("#button_1")
 
 // the gamepad emulator MUST be created before creating the GamepadApiWrapper, a game engine or any other library that uses navigator.getGamepads()
 const gamepadEmu = new GamepadEmulator(0.1);

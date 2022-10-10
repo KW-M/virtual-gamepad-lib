@@ -3,7 +3,8 @@ import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
 import { GamepadDisplay } from "../../src/GamepadDisplay";
 import { gamepadButtonType, gamepadDirection } from "../../src/enums";
 import { centerTransformOrigins } from "../../src/utilities";
-// centerTransformOrigins("#button_1")
+// import "./phaser.js";
+// import "./twin-stick-game.js"
 // the gamepad emulator MUST be created before creating the GamepadApiWrapper, a game engine or any other library that uses navigator.getGamepads()
 const gamepadEmu = new GamepadEmulator(0.1);
 const gpadApiWrapper = new GamepadApiWrapper({
