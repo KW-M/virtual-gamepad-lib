@@ -4,30 +4,24 @@ import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
 
-
+/** @type {import('vite').UserConfig} */
 export default defineConfig({
     build: {
-        target: 'es2016',
+        target: 'modules',
         lib: {
-            entry: resolve(__dirname, 'src/main.ts'),
+            formats: ['es', 'cjs'],
+            entry: {
+                'enums': resolve(__dirname, 'src/enums.ts'),
+                'utilities': resolve(__dirname, 'src/utilities.ts'),
+                'GamepadApiWrapper': resolve(__dirname, 'src/GamepadApiWrapper.ts'),
+                'GamepadDisplay': resolve(__dirname, 'src/GamepadDisplay.ts'),
+                'GamepadEmulator': resolve(__dirname, 'src/GamepadEmulator.ts'),
+            },
             name: 'VirtualGamepad',
             // the proper extensions will be added
-            fileName: (format) => `virtual-gamepad.${format}.js`
+            fileName: (format, entryName) => `${format != "es" ? format + "/" : ""}${entryName}.js`
         },
-        rollupOptions: {
-            // make sure to externalize deps that shouldn't be bundled
-            // into your library
-            external: [],
-            output: [{
-                dir: 'dist',
-                format: 'es',
-                preserveModules: true,
-                entryFileNames: '[name].js',
-                // Provide global variables to use in the UMD build
-                // for externalized deps
-                globals: {}
-            }],
-        },
+
         sourcemap: true
     },
 
