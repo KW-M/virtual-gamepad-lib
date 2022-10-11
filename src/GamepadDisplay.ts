@@ -3,20 +3,32 @@
 import { GamepadApiWrapper, buttonChangeDetails } from "./GamepadApiWrapper";
 import { gamepadButtonType, gamepadDirection } from "./enums";
 
+export type ButtonDisplayFunction = (buttonConfig: GamepadDisplayButton | GamepadDisplayVariableButton, value: number, touched: boolean, pressed: boolean, changes: buttonChangeDetails, btnIndex: number) => void;
+
+export type JoystickDisplayFunction = (stickConfig: GamepadDisplayJoystick, xAxisValue: number, yAxisValue: number) => void;
+
 export interface GamepadDisplayButton {
     type: gamepadButtonType.onOff,
+    /** The element to add the touch and press classses, to represent touching or pressing on this button */
     highlight: HTMLElement | SVGElement;
-    extraData?: any; // optional, for your own use
+    /** optional, for your own use */
+    extraData?: any;
 }
 
 export interface GamepadDisplayVariableButton {
     type: gamepadButtonType.variable,
+    /** The element to add the touch and press classses, to represent touching or pressing on this button */
     highlight: HTMLElement | SVGElement;
+    /** The element to move to represent pressing on this button */
     buttonElement: HTMLElement | SVGElement;
+    /** How far the {@link GamepadDisplayVariableButton.buttonElement} should move to represent being pressed fully */
     movementRange: number;
+    /** Direction the {@link GamepadDisplayVariableButton.buttonElement} should move to represent being pressed */
     direction: gamepadDirection;
+    /** Drag direction indicator / highlight element for this variable button */
     directionHighlight?: HTMLElement | SVGElement;
-    extraData?: any; // optional, for your own use
+    /** optional, for your own use */
+    extraData?: any;
 }
 
 export interface GamepadDisplayJoystick {
@@ -24,14 +36,7 @@ export interface GamepadDisplayJoystick {
     movementRange: number;
     xAxisIndex?: number;
     yAxisIndex?: number;
-    /** What movment directions does this joystick support */
-    directions: {
-        [gamepadDirection.up]?: boolean;
-        [gamepadDirection.down]?: boolean;
-        [gamepadDirection.left]?: boolean;
-        [gamepadDirection.right]?: boolean;
-    }
-    /** When the joystick is moved in a given direction, the corresponding highlight element will be given the moveDirectionHighlightClass from the config */
+    /** When the joystick is moved in a given direction, the corresponding highlight element will be given the {@link DisplayGamepadConfig.moveDirectionHighlightClass} from the config */
     highlights?: {
         [gamepadDirection.up]?: HTMLElement | SVGElement | null;
         [gamepadDirection.down]?: HTMLElement | SVGElement | null;
@@ -41,37 +46,58 @@ export interface GamepadDisplayJoystick {
 }
 
 export interface DisplayGamepadConfig {
+    /** The index of the gamepad this Gamepad Display should track as returned from {@link navigator.GetGamepads} */
     gamepadIndex: number;
+    /** Configuration for Buttons and Variable Pressure Buttons (eg: triggers) to to represent in the gamepad display */
     buttons: (GamepadDisplayButton | GamepadDisplayVariableButton)[];
+    /** Configuration for Joysticks to represent in the gamepad display (based on gamepad axes) */
     sticks: GamepadDisplayJoystick[];
-    buttonHighlightClass?: string;
+    /** The class to add to the corresponding highlight element when a gamepad button is touched (whether or not its pressed) */
     touchedHighlightClass?: string;
+    /** The class to add to the corresponding highlight element when a gamepad button is pressed */
     pressedHighlightClass?: string;
+    /** The class to add to the corresponding direction indicator element when a gamepad joystick is moved in a direction or a variable button is pressed */
     moveDirectionHighlightClass?: string;
-    buttonDisplayFunction?: (button: GamepadDisplayButton | GamepadDisplayVariableButton, value: number, touched: boolean, pressed: boolean, changes: buttonChangeDetails, btnIndex: number) => void;
-    joystickDisplayFunction?: (stickConfig: GamepadDisplayJoystick, xAxisValue: number, yAxisValue: number) => void;
+    /** If provided, this function will be called for each button with a state change (pressed, touched, released, etc...)
+     * @see {@link GamepadDisplay.buttonChangeDetails} for an example */
+    buttonDisplayFunction?: ButtonDisplayFunction;
+    /** If provided, this function will be called when the gamepad axies change for a joystick instead of the default display function.
+     * @see {@link GamepadDisplay.defaultButtonDisplayFunction} for an example */
+    joystickDisplayFunction?: JoystickDisplayFunction;
 }
 
 /**
  * Class to handle displaying the state of a gamepad on the screen.
- * This library will not draw anything to the screen, it will only update the classes / transforms of the elements
- * you provide to represent the buttons/axes of the gamepad. See the examples for more information.
- * @param {DisplayGamepadConfig} config The config to use for the gamepad display
- * @param {GamepadApiWrapper} config (OPTIONAL) The gamepad api will use this GamepadApiWrapper instance to listen for gamepad events, otherwise it will create a new gamepad wrapper.
+ * This class will not draw anything to the screen. Instead it will update the classes / transforms of the elements
+ * you provide to represent the buttons and axes of the gamepad. See the examples for more information.
  */
 export class GamepadDisplay {
-    config: DisplayGamepadConfig;
-    apiWrapper: GamepadApiWrapper;
-    #btnChangeListener: (gpadIndex: number, gpadState: Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => void;
-    #axisChangeListener: (gpadIndex: number, gpadState: Gamepad, axisChangesMask: (boolean)[]) => void;
+    private config: DisplayGamepadConfig;
+    private apiWrapper: GamepadApiWrapper;
+    private btnChangeListener: (gpadIndex: number, gpadState: Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => void;
+    private axisChangeListener: (gpadIndex: number, gpadState: Gamepad, axisChangesMask: (boolean)[]) => void;
+
+    /** Create a new GamepadDisplay instance
+    * @param config The config to use for the gamepad display
+    * @param apiWrapper(OPTIONAL) The gamepad api will use this GamepadApiWrapper instance to listen for gamepad events, otherwise it will create a new gamepad wrapper.
+    */
     constructor(config: DisplayGamepadConfig, apiWrapper?: GamepadApiWrapper) {
         this.config = config;
         this.apiWrapper = apiWrapper || new GamepadApiWrapper({ buttonConfigs: [], updateDelay: 0 });
-        this.#btnChangeListener = this.apiWrapper.onGamepadButtonChange(this.#displayButtonChanges.bind(this));
-        this.#axisChangeListener = this.apiWrapper.onGamepadAxisChange(this.#displayJoystickChanges.bind(this));
+        this.btnChangeListener = this.apiWrapper.onGamepadButtonChange(this.displayButtonChanges.bind(this));
+        this.axisChangeListener = this.apiWrapper.onGamepadAxisChange(this.displayJoystickChanges.bind(this));
     };
 
-    defaultJoystickDisplayFunction = (stickConfig: GamepadDisplayJoystick, xValue: number, yValue: number) => {
+    /**
+     * Function called by default when the gamepad axies change for a joystick (as configured in this GamepadDisplay)
+     * If you specify your own {@link DisplayGamepadConfig.joystickDisplayFunction} in the config, this function won't get called.
+     * Instead, you can call this function with the same parameters as passed to the {@link DisplayGamepadConfig.joystickDisplayFunction}
+     * if you want to keep the default behaviour (and then you can add your own custom behaviour on top)
+     * @param stickConfig The config for the joystick that has changed (as configured in {@link DisplayGamepadConfig.sticks})
+     * @param xAxisValue The new x axis value
+     * @param yAxisValue The new y axis value
+     */
+    DefaultJoystickDisplayFunction = (stickConfig: GamepadDisplayJoystick, xValue: number, yValue: number) => {
         const stickRange = stickConfig.movementRange;
         // stickConfig.joystickElement.style.transform = `rotateY(${-xValue * 30}deg) rotateX(${yValue * 30}deg) translate(${xValue * stickRange}px,${yValue * stickRange}px)`;
         stickConfig.joystickElement.style.transform = `translate(${xValue * stickRange}px,${yValue * stickRange}px)`;
@@ -87,7 +113,19 @@ export class GamepadDisplay {
         }
     }
 
-    defaultButtonDisplayFunction = (buttonConfig: GamepadDisplayButton | GamepadDisplayVariableButton, value: number, touched: boolean, pressed: boolean, changes: buttonChangeDetails, _: number,) => {
+    /**
+     * Function called by default when any gamepad buttons change (called separately for each button (as configured in this GamepadDisplay))
+     * If you specify your own {@link DisplayGamepadConfig.buttonDisplayFunction} in the config, this function won't get called.
+     * Instead, you can call this function with the same parameters as passed to the {@link DisplayGamepadConfig.buttonDisplayFunction}
+     * if you want to keep the default behaviour (and then you can add your own custom behaviour on top)
+     * @param buttonConfig The config for the button that has changed as configured in {@link DisplayGamepadConfig.buttons}
+     * @param value The new value of the button
+     * @param touched Whether the button is currently being touched (unused, but included for consistency with the {@link ButtonDisplayFunction} signature)
+     * @param pressed Whether the button is currently being pressed (unused, but included for consistency with the {@link ButtonDisplayFunction} signature)
+     * @param changes The changes that have occurred since the last update
+     * @param btnIndex The index of the button that has changed (unused, but included for consistency with the {@link ButtonDisplayFunction} signature)
+     */
+    DefaultButtonDisplayFunction = (buttonConfig: GamepadDisplayButton | GamepadDisplayVariableButton, value: number, touched: boolean, pressed: boolean, changes: buttonChangeDetails, btnIndex: number) => {
         const btnHiglightElem = buttonConfig.highlight;
 
         if (this.config.touchedHighlightClass && btnHiglightElem) {
@@ -123,30 +161,15 @@ export class GamepadDisplay {
         }
     }
 
-    #displayButtonChanges = (gpadIndex: number, gpadState: Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => {
-        if (gpadIndex != this.config.gamepadIndex) return;
-        const buttonConfigs = this.config.buttons;
-        for (let i = 0; i < buttonConfigs.length; i++) {
-            const changes = buttonChangesMask[i]
-            // only update if the joystick has changed
-            if (!changes || Object.keys(changes).length == 0) continue;
-
-            // extract useful values from the config
-            const buttonConfig = buttonConfigs[i];
-            const value = gpadState.buttons[i].value;
-            const touched = gpadState.buttons[i].touched;
-            const pressed = gpadState.buttons[i].pressed;
-
-            // display the new button state
-            if (this.config.buttonDisplayFunction) {
-                this.config.buttonDisplayFunction(buttonConfig, value, touched, pressed, changes, i);
-            } else {
-                this.defaultButtonDisplayFunction(buttonConfig, value, touched, pressed, changes, i);
-            }
-        }
-    }
-
-    #displayJoystickChanges(gpadIndex: number, gpadState: Gamepad, axisChangesMask: (boolean)[]) {
+    /**
+     * This function is registered as the callback for {@link GamepadApiWrapper.onGamepadAxisChange}
+     * it calls the {@link DisplayGamepadConfig.joystickDisplayFunction} (if specified) or the {@link DisplayGamepad.defaultJoystickDisplayFunction} otherwise
+     * for each configured joystick with axies that have changed
+     * @param gpadIndex The index of the gamepad that has changed
+     * @param gpadState The new state of the gamepad as reported by the browser  / {@link GamepadApiWrapper.onGamepadAxisChange}
+     * @param axisChangesMask An array of booleans, where each true indicates that the corresponding axis has changed since the last update
+     */
+    private displayJoystickChanges(gpadIndex: number, gpadState: Gamepad, axisChangesMask: (boolean)[]) {
         if (gpadIndex != this.config.gamepadIndex) return;
         const joystickConfigs = this.config.sticks;
         for (let i = 0; i < joystickConfigs.length; i++) {
@@ -164,15 +187,56 @@ export class GamepadDisplay {
                 if (this.config.joystickDisplayFunction) {
                     this.config.joystickDisplayFunction(stickConfig, xValue, yValue);
                 } else {
-                    this.defaultJoystickDisplayFunction(stickConfig, xValue, yValue);
+                    this.DefaultJoystickDisplayFunction(stickConfig, xValue, yValue);
                 }
             }
         }
     }
 
-    cleanup() {
-        this.apiWrapper.offGamepadButtonChange(this.#btnChangeListener)
-        this.apiWrapper.offGamepadAxisChange(this.#axisChangeListener)
+
+    /**
+     * This function is registered as the callback for {@link GamepadApiWrapper.onGamepadButtonChange}
+     * it calls the {@link DisplayGamepadConfig.buttonDisplayFunction} (if specified) or the {@link DisplayGamepad.defaultButtonDisplayFunction} otherwise
+     * for every button that has changed since the last update
+     * @param gpadIndex The index of the gamepad that has changed
+     * @param gpadState The new state of the gamepad as reported by the browser  / {@link GamepadApiWrapper.onGamepadButtonChange}
+     * @param gpadState
+     * @param buttonChangesMask
+     * @returns
+     */
+    private displayButtonChanges = (gpadIndex: number, gpadState: Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => {
+        if (gpadIndex != this.config.gamepadIndex) return;
+        const buttonConfigs = this.config.buttons;
+        for (let i = 0; i < buttonConfigs.length; i++) {
+            const changes = buttonChangesMask[i]
+            // only update if the joystick has changed
+            if (!changes || Object.keys(changes).length == 0) continue;
+
+            // extract useful values from the config
+            const buttonConfig = buttonConfigs[i];
+            const value = gpadState.buttons[i].value;
+            const touched = gpadState.buttons[i].touched;
+            const pressed = gpadState.buttons[i].pressed;
+
+            // display the new button state
+            if (this.config.buttonDisplayFunction) {
+                this.config.buttonDisplayFunction(buttonConfig, value, touched, pressed, changes, i);
+            } else {
+                this.DefaultButtonDisplayFunction(buttonConfig, value, touched, pressed, changes, i);
+            }
+        }
+    }
+
+
+
+    /**
+     * Cleanup function to remove all event listeners created by the {@link GamepadDisplay}
+     * Call this function before removing the gamepad display from the DOM or deleting
+     * the {@link GamepadDisplay} instance to prevent memory leaks
+     */
+    Cleanup() {
+        this.apiWrapper.offGamepadButtonChange(this.btnChangeListener)
+        this.apiWrapper.offGamepadAxisChange(this.axisChangeListener)
     }
 
 }

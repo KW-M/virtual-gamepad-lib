@@ -41,7 +41,7 @@
   "scripts": {
     "test:lib": "vitest",
     "build:lib": "tsc && vite build",
-    "build:docs": "typedoc --options typedoc.json",
+    "build:docs": "typedoc --options typedoc.json --watch",
     "optimize:svgs": "svgo --folder ./examples/assets/svg/originals --output ./examples/assets/svg/optimized",
     "precompile:examples": "tsc --module esnext --target esnext examples/**/*.ts; rm src/*.js;",
     "dev:examples": "pnpm run precompile:examples; vite --config examples/vite.config.js --host",
@@ -52,10 +52,10 @@
   "devDependencies": {
     "happy-dom": "^7.4.0",
     "svgo": "^2.8.0",
+    "typedoc": "^0.23.15",
     "typescript": "^4.8.4",
     "vite": "^3.2.0-beta.0",
     "vite-plugin-dts": "^1.6.5",
-    "vitest": "^0.24.0",
-    "typedoc": "^0.23.15"
+    "vitest": "^0.24.0"
   }
 }

@@ -1,7 +1,8 @@
 import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "./enums";
 import { NormalizeClampVector } from "./utilities";
 
-// This Gamepad API interface defines an individual gamepad or other controller, allowing access to information such as button presses, axis positions, and id. Available only in secure contexts.
+/** Extends the browser Gamepad interface to include an emulation property that exposes how this gamepad is being emulated (or not)
+ * This Gamepad API interface defines an individual gamepad or other controller, allowing access to information such as button presses, axis positions, and id. Normally Available only in secure contexts. */
 export interface EGamepad extends Gamepad {
     emulation: gamepadEmulationState | undefined;
     displayId: string;
@@ -15,29 +16,42 @@ export interface EGamepad extends Gamepad {
 interface EGamepadPrivateData {
     /** true if this e-gamepad was created in overlay mode */
     overlayMode: boolean;
+    /** stores a refrence to a function to cleanup all event listeners created for controlling buttons on this egamepad */
     removeButtonListenersFunc?: (() => void);
+    /** stores a refrence to a function to cleanup all event listeners created for controlling axes on this egamepad */
     removeJoystickListenersFunc?: (() => void);
 }
 
-// This Gamepad API interface contains references to gamepads connected to the system, which is what the gamepad events Window.gamepadconnected and Window.gamepaddisconnected are fired in response to. Available only in secure contexts.
+/** Extends the browser Gamepad Event interface to use an {@link EGamepad} instead of a Gamepad */
 export interface EGamepadEvent extends GamepadEvent {
     gamepad: EGamepad;
 }
 
 export interface ButtonConfig {
     type: gamepadButtonType.onOff,
+    /** Taps/clicks/hovers on this element will trigger events for this button on the emulated gamepad. */
     tapTarget: (HTMLElement | SVGElement)
+    /** The index of the button this emulated button should controll in the {@link Gamepad.buttons} array */
     buttonIndex: number,
+    /** Should this button lock the cursor once it is preseed (mouse or touch), such that NO pointer/mouse/touch events are fired with that pointer on any other elements on the page unil the finger leaves the screen or mouse lets go.
+     * This option also prevents this button from reacting when a press starts on another button or page element and then the pointer/touch moves over the tap target of this button while being held down. */
     lockTargetWhilePressed?: boolean;
 }
 
 export interface VariableButtonConfig {
     type: gamepadButtonType.variable,
+    /** The element where a tap or mouse click must start to control this variable button.
+     * The pointer does not need to remain within this element while dragging to continue controlling the variable button as long as the mouse / touch / pointer is held down */
     tapTarget: (HTMLElement | SVGElement)
+    /** The index of the button this emulated button should controll in the {@link Gamepad.buttons} array */
     buttonIndex: number,
+    /** The distance drag gesture must go in pixels to appear as a fully pressed button: value = 1 */
     dragDistance: number,
+    /** Should this variable button lock the cursor once a drag gesture has started, such that NO pointer/mouse/touch events are fired with that pointer on any other elements on the page unil the gesture is finished (finger leaves the screen or mouse lets go)
+     * This option also prevents this button from reacting when a press starts on another button or page element and then the pointer/touch moves over the tap target of this button while being held down. */
     lockTargetWhilePressed?: boolean;
-    // what drag directions should result in the gamepad button press value going up
+    /** What drag/movement gesture directions should result in the button value of this varaible button increasing
+     * Typically only one direction will be set to true, but you can set multiple to true if you want to */
     directions: {
         [gamepadDirection.up]?: boolean;
         [gamepadDirection.down]?: boolean;
@@ -47,12 +61,18 @@ export interface VariableButtonConfig {
 }
 
 export interface JoystickConfig {
+    /** The element where a tap or mouse click must start to control this joystick
+     * The pointer does not need to remain within this element while dragging to continue controlling the joystick as long as the mouse / touch / pointer is held down */
     tapTarget: HTMLElement | SVGElement;
+    /** The distance a drag gesture must go in pixels to register as a full 1 or -1 on the x or y axis (Alternatively, the distance from the touch start posisiton that the joystick can be dragged)  */
     dragDistance: number;
+    /** What emulated gamepad axis (the index in {@link Gamepad.axes}) to drive When the virtual joystick is dragged left (-) and right (+) */
     xAxisIndex?: number;
+    /** What emulated gamepad axis (the index in {@link Gamepad.axes}) to drive When the virtual joystick is dragged up (-) and down (+) */
     yAxisIndex?: number;
+    /** Should the joystick lock the cursor once a drag gesture has started, such that NO pointer/mouse/touch events are fired with that pointer on any other elements on the page unil the gesture is finished (finger leaves the screen or mouse lets go) */
     lockTargetWhilePressed?: boolean;
-    // what drag directions does this joystick support
+    /** What drag/movement directions does this joystick support */
     directions: {
         [gamepadDirection.up]?: boolean;
         [gamepadDirection.down]?: boolean;
@@ -85,10 +105,10 @@ export class GamepadEmulator {
     getNativeGamepads: () => (Gamepad | null)[] = () => []
 
     /** the threshold above which a variable button is considered a "pressed" button */
-    buttonPressThreshold: number = 0.1;
+    private buttonPressThreshold: number = 0.1;
 
-    /** count of real gamepads connected to the browser */
-    realGamepadCount: number = 0
+    // /** count of real gamepads connected to the browser */
+    // private realGamepadCount: number = 0
 
     /** A list of the indecies of all the real gamepads that have ever been conected durring this browser session, where the array index is the "gamepadIndex" returned by the native gamepad api, and the value is the index that gamepad should be exposed at in the emulated getGamepads() array */
     private realGpadToPatchedIndexMap: number[] = []
@@ -513,7 +533,7 @@ export class GamepadEmulator {
                 this.patchedGpadToRealIndexMap[mappedIndex] = gpadIndex;
                 Object.defineProperty(eGpad, "index", { get: () => mappedIndex });
                 Object.defineProperty(eGpad, "emulation", { get: () => gamepadEmulationState.real });
-                this.realGamepadCount++;
+                // this.realGamepadCount++;
 
                 console.log(`real gamepad connected ${eGpad!.id} (${gpadIndex}>${mappedIndex})`, this.realGpadToPatchedIndexMap, this.emulatedGamepads, this.emulatedGamepadsMetadata);
 
@@ -540,7 +560,7 @@ export class GamepadEmulator {
                 Object.defineProperty(clone, "index", { get: () => mappedIndex });
                 delete this.realGpadToPatchedIndexMap[clone!.index];
                 delete this.patchedGpadToRealIndexMap[mappedIndex];
-                this.realGamepadCount--;
+                // this.realGamepadCount--;
 
                 // send out the corrected event on the window object
                 const event = new Event('gamepaddisconnected') as EGamepadEvent;

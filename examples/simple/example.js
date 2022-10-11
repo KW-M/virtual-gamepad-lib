@@ -2,7 +2,7 @@ import { gamepadButtonType, gamepadDirection } from "../../src/enums";
 import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator";
 import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
 import { GamepadDisplay } from "../../src/GamepadDisplay";
-import { centerTransformOrigins } from "../../src/utilities";
+import { CenterTransformOrigin } from "../../src/utilities";
 // CONSTS
 const GPAD_DISPLAY_CONTAINER = document.getElementById("gpad-display-container");
 const AXIS_TABLE_ELEM = document.getElementById('axis-table');
@@ -139,8 +139,10 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
 }
 /** Setup the display buttons & axes of the onscreen gamepad to react to the state of the gamepad from the browser gamepad api (uses the gamepadApiWrapper) */
 function setupGamepadDisplay(gpadIndex) {
-    centerTransformOrigins("#stick_right, #stick_left"); // useful if you want to visually transform the joystick with rotation and scaling
-    // centerTransformOriginsDebug("#stick_right, #stick_left"); // show debug bounding boxes used in this feature.
+    document.querySelectorAll("#stick_right, #stick_left").forEach((element) => {
+        CenterTransformOrigin(element); // useful if you want to visually transform the joystick with rotation and scaling
+        // CenterTransformOriginDebug(element as SVGGraphicsElement); // show debug bounding boxes used in this feature.
+    });
     /* ----- SETUP BUTTON DISPLAY ----- */
     const buttons = BUTTON_ID_NAMES.map((name, i) => {
         console.log(name);
@@ -175,12 +177,6 @@ function setupGamepadDisplay(gpadIndex) {
             xAxisIndex: 0,
             yAxisIndex: 1,
             movementRange: 10,
-            directions: {
-                [gamepadDirection.up]: true,
-                [gamepadDirection.down]: true,
-                [gamepadDirection.left]: true,
-                [gamepadDirection.right]: true,
-            },
             highlights: {
                 [gamepadDirection.up]: GPAD_DISPLAY_CONTAINER.querySelector("#l_stick_up_direction_highlight"),
                 [gamepadDirection.down]: GPAD_DISPLAY_CONTAINER.querySelector("#l_stick_down_direction_highlight"),
@@ -192,12 +188,6 @@ function setupGamepadDisplay(gpadIndex) {
             xAxisIndex: 2,
             yAxisIndex: 3,
             movementRange: 10,
-            directions: {
-                [gamepadDirection.up]: true,
-                [gamepadDirection.down]: true,
-                [gamepadDirection.left]: true,
-                [gamepadDirection.right]: true,
-            },
             highlights: {
                 [gamepadDirection.up]: GPAD_DISPLAY_CONTAINER.querySelector("#r_stick_up_direction_highlight"),
                 [gamepadDirection.down]: GPAD_DISPLAY_CONTAINER.querySelector("#r_stick_down_direction_highlight"),
@@ -208,7 +198,6 @@ function setupGamepadDisplay(gpadIndex) {
     // create the gamepad display class instance and pass the config
     const display = new GamepadDisplay({
         gamepadIndex: gpadIndex,
-        buttonHighlightClass: "highlight",
         pressedHighlightClass: "pressed",
         touchedHighlightClass: "touched",
         moveDirectionHighlightClass: "moved",
@@ -216,7 +205,7 @@ function setupGamepadDisplay(gpadIndex) {
         sticks: joysticks,
         joystickDisplayFunction: function (stickConfig, xAxisValue, yAxisValue) {
             // This function will be called for each configured joystick when the gamepad api wrapper reports a change in the axis values.
-            display.defaultJoystickDisplayFunction(stickConfig, xAxisValue, yAxisValue); // (optional) call the default display implementation to add classes to highlights & move the joystick element.
+            display.DefaultJoystickDisplayFunction(stickConfig, xAxisValue, yAxisValue); // (optional) call the default display implementation to add classes to highlights & move the joystick element.
             // ---- Add your own custom joystick display code here -----
             // Example: 3d rotate the joystick element by the specified amount rather than just 2d translating it...
             // Note: for rotations/scaling like this, you should call the centerTransformOrigins("#querySelector") function from utilites (once after page load) on the joystick element to ensure the rotation/scaling is done around the center of the joystick element.

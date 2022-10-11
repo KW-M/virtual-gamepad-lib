@@ -93,6 +93,18 @@ button:focus-visible {
     }
 }
 
+#corner-docs {
+    background-color: #bdfc48;
+    display: block;
+    position: absolute;
+    font-size: x-large;
+    top: 0;
+    right: 0;
+    padding: 0.5em 3em;
+    transform: rotate(45deg) translate(2em, -1em);
+    margin: 0;
+}
+
 .text-block {
     display: block;
     position: relative;

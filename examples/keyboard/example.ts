@@ -1,5 +1,5 @@
 import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT, EGamepad } from "../../src/GamepadEmulator";
-import { buttonChangeDetails, GamepadApiWrapper, gamepadApiWrapperButtonConfig } from "../../src/GamepadApiWrapper";
+import { buttonChangeDetails, GamepadApiWrapper, wrapperButtonConfig } from "../../src/GamepadApiWrapper";
 
 // CONSTS
 const EMULATED_GPAD_INDEX = 0; // in this example we will only add one emulated gamepad at position/index 0 in the navigator.getGamepads() array.
@@ -37,7 +37,7 @@ const gpadApiWrapper = new GamepadApiWrapper({
         return {
             // d_pad directions and button 0-3 can be held down in this example
             fireWhileHolding: name.includes("d_pad") || i < 4 // keep firing the button press event while this button is held down
-        } as gamepadApiWrapperButtonConfig
+        } as wrapperButtonConfig
     })
 });
 const eventDisplayElem = document.getElementById('gamepad-event-display');

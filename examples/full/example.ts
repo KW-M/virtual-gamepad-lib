@@ -3,7 +3,7 @@ import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
 import { GamepadDisplay, GamepadDisplayJoystick } from "../../src/GamepadDisplay";
 import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums";
 import type { GamepadDisplayVariableButton, GamepadDisplayButton } from "../../src/GamepadDisplay";
-import { centerTransformOrigins } from "../../src/utilities";
+import { CenterTransformOrigin, CenterTransformOriginDebug } from "../../src/utilities";
 
 const BUTTON_ID_NAMES = [
     "button_1",
@@ -54,7 +54,7 @@ function removeAllGamepadDisplays() {
         gamepadEmu.ClearDisplayButtonEventListeners(gDisplay.index);
         gamepadEmu.ClearDisplayJoystickEventListeners(gDisplay.index);
         gDisplay.container.remove();
-        gDisplay.display.cleanup();
+        gDisplay.display.Cleanup();
     }
     Gamepad_Displays = [];
 }
@@ -155,8 +155,10 @@ function addGamepadDisplay(gpadIndex) {
     const clone = gamepadDisplayTemplate.content.firstElementChild.cloneNode(true) as HTMLElement;
     gamepadDisplaySection.appendChild(clone);
 
-    centerTransformOrigins("#stick_right, #stick_left"); // useful if you want to visually transform the joystick with rotation and scaling
-    // centerTransformOriginsDebug("#stick_right, #stick_left"); // show debug bounding boxes used in this feature.
+    document.querySelectorAll("#stick_right, #stick_left").forEach((element) => {
+        CenterTransformOrigin(element as SVGGraphicsElement); // useful if you want to visually transform the joystick with rotation and scaling
+        // CenterTransformOriginDebug(element as SVGGraphicsElement); // show debug bounding boxes used in this feature.
+    })
 
     // setup the display buttons of the newly created gamepad display in the dom
     const buttons = BUTTON_ID_NAMES.map((name, i) => {
@@ -191,12 +193,6 @@ function addGamepadDisplay(gpadIndex) {
         xAxisIndex: 0,
         yAxisIndex: 1,
         movementRange: 10,
-        directions: {
-            [gamepadDirection.up]: true,
-            [gamepadDirection.down]: true,
-            [gamepadDirection.left]: true,
-            [gamepadDirection.right]: true,
-        },
         highlights: {
             [gamepadDirection.up]: clone.querySelector("#l_stick_up_direction_highlight") as SVGElement,
             [gamepadDirection.down]: clone.querySelector("#l_stick_down_direction_highlight") as SVGElement,
@@ -209,12 +205,6 @@ function addGamepadDisplay(gpadIndex) {
         xAxisIndex: 2,
         yAxisIndex: 3,
         movementRange: 10,
-        directions: {
-            [gamepadDirection.up]: true,
-            [gamepadDirection.down]: true,
-            [gamepadDirection.left]: true,
-            [gamepadDirection.right]: true,
-        },
         highlights: {
             [gamepadDirection.up]: clone.querySelector("#r_stick_up_direction_highlight") as SVGElement,
             [gamepadDirection.down]: clone.querySelector("#r_stick_down_direction_highlight") as SVGElement,
@@ -227,7 +217,6 @@ function addGamepadDisplay(gpadIndex) {
     // create the gamepad display class instance and pass the config
     const display = new GamepadDisplay({
         gamepadIndex: gpadIndex,
-        buttonHighlightClass: "highlight",
         pressedHighlightClass: "pressed",
         touchedHighlightClass: "touched",
         moveDirectionHighlightClass: "moved",
@@ -235,14 +224,14 @@ function addGamepadDisplay(gpadIndex) {
         sticks: joysticks,
         buttonDisplayFunction: (button, value, touched, pressed, changes, btnIndex) => {
             // (optional) call the default display function, to show the button state w classes:
-            display.defaultButtonDisplayFunction(button, value, touched, pressed, changes, btnIndex);
+            display.DefaultButtonDisplayFunction(button, value, touched, pressed, changes, btnIndex);
 
             // --- do some custom stuff here, if you want ---
 
         },
         joystickDisplayFunction: (stickConfig, xAxisValue, yAxisValue) => {
             // (optional) call the default display function, so show the joystick motion and direction highlights
-            display.defaultJoystickDisplayFunction(stickConfig, xAxisValue, yAxisValue);
+            display.DefaultJoystickDisplayFunction(stickConfig, xAxisValue, yAxisValue);
 
             // --- do some custom stuff here if you want ---
             //   - EG: Show extra details about the joysticks in the dom
