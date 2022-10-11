@@ -1,14 +1,11 @@
 :root {
     /* --light-color-background: #f2f4f8 !important; */
     /* --light-color-background-secondary: #8eccfa !important; */
-    --light-color-accent: #3582c4 !important;
-    --dark-color-accent: #0f4c82 !important;
+    --light-color-accent: #67b3f6 !important;
+    --dark-color-accent: #083862 !important;
     --light-code-background: #e0ebf5 !important;
     /* --color-accent: #3582c4 !important; */
 }
-
-
-
 
 .tsd-page-toolbar {
     padding: .5em 0;
