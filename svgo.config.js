@@ -51,15 +51,15 @@ export default {  //  use module.exports = { ...stuff... }  for commonjs
             name: "preset-default",
             params: {
                 overrides: {
-                    "removeViewBox": false, // if enabled: prevents svgs from scaling responsively - not a good idea! https://github.com/svg/svgo/pull/1461
-                    "cleanupIDs": false, // if enabled: may end up removing id's used in the CSS or JS of your page (but not within the SVG itself)
-                    "removeUnknownsAndDefaults": false, // if enabled: may end up removing id's and classes used in the CSS or JS of your page (but not within the SVG itself)
-                    "mergePaths": false, // if enabled: may accidentally merge paths that should be independent gamepad elements
+                    "removeViewBox": false, // if true: prevents svgs from scaling responsively - not a good idea! https://github.com/svg/svgo/pull/1461
+                    "cleanupIDs": false, // if true: may end up removing id's used in the CSS or JS of your page (but not within the SVG itself)
+                    "removeUnknownsAndDefaults": false, // if true: may end up removing id's and classes used in the CSS or JS of your page (but not within the SVG itself)
+                    "mergePaths": false, // if true: may accidentally merge paths that should be independent gamepad elements
                     "removeTitle": false, // title may be helpful for accessibility
                     "removeDesc": false, // description may be helpful for accessibility
-                    "removeHiddenElems": false, // if enabled: may accidentally remove elements that are visually hidden but might be turned visible by js, or need to be interactable (like tap targets) or be accessible to screen readers.
-                    // "removeEmptyText": false, // if enabled: may accidentally remove text elements that are meant to be filled in using js
-                    // "collapseGroups": false, // if enabled: may accidentally merge groups that should be independent gamepad elements
+                    "removeHiddenElems": false, // if true: may accidentally remove elements that are visually hidden but might be turned visible by js, or need to be interactable (like tap targets) or be accessible to screen readers.
+                    // "removeEmptyText": false, // if true: may accidentally remove text elements that are meant to be filled in using js
+                    // "collapseGroups": false, // if true: may accidentally merge groups that should be independent gamepad elements
                 }
             }
         },
