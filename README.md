@@ -1,8 +1,6 @@
 <p align="center">
-  <imvg src="./README.assets/virtual-gamepad-logo-moshed.webm" alt="logo" width="200" />
-   <video controls="false" width="250" autoplay="true" loop="true"  poster="./README.assets/virtual-gamepad-logo-moshed.jpg" disablepictureinpicture >
-      <source src="./README.assets/virtual-gamepad-logo-moshed.webm" type="video/webm" />
-   </video>
+  <img src="./README.assets/virtual-gamepad-logo-moshed.gif" />
+    <!-- <img src="./README.assets/virtual-gamepad-logo-moshed.jpg" /> -->
   <h1 align="center">Virtual Gamepad Lib</h1>
 </p>
 
