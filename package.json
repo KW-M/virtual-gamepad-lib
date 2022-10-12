@@ -56,7 +56,7 @@
     "accessability"
   ],
   "scripts": {
-    "test:lib": "vitest",
+    "test": "vitest",
     "build:lib": "tsc && vite build",
     "build:docs": "typedoc --options typedoc.json",
     "dev:docs": "typedoc --options typedoc.json --watch",
