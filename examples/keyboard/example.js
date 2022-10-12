@@ -1,5 +1,5 @@
-import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator";
-import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
+import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator.js";
+import { GamepadApiWrapper } from "../../src/GamepadApiWrapper.js";
 // CONSTS
 const EMULATED_GPAD_INDEX = 0; // in this example we will only add one emulated gamepad at position/index 0 in the navigator.getGamepads() array.
 const LEFT_X_AXIS_INDEX = 0;

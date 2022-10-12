@@ -1,8 +1,8 @@
-import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator";
-import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
-import { GamepadDisplay } from "../../src/GamepadDisplay";
-import { gamepadButtonType, gamepadDirection } from "../../src/enums";
-import { CenterTransformOrigin } from "../../src/utilities";
+import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator.js";
+import { GamepadApiWrapper } from "../../src/GamepadApiWrapper.js";
+import { GamepadDisplay } from "../../src/GamepadDisplay.js";
+import { gamepadButtonType, gamepadDirection } from "../../src/enums.js";
+import { CenterTransformOrigin } from "../../src/utilities.js";
 // import "./phaser.js";
 // import "./twin-stick-game.js"
 // the gamepad emulator MUST be created before creating the GamepadApiWrapper, a game engine or any other library that uses navigator.getGamepads()

@@ -60,17 +60,24 @@ test("getGamepads() patch", async () => {
 
     let addGpadFlagA: any = false;
     let addGpadFlagB: any = false;
-    window.addEventListener("gamepadconnected", (gpad) => { addGpadFlagA = gpad });
-    window.ongamepadconnected = (gpad) => { addGpadFlagB = gpad };
+    window.ongamepadconnected = (gpad) => {
+        console.log("gamepadconnected _test2", !!gpad);
+        addGpadFlagB = gpad.gamepad;
+    };
+    window.addEventListener("gamepadconnected", (gpad) => {
+        console.log("gamepadconnected _test", !!gpad);
+        addGpadFlagA = gpad.gamepad;
+    });
+
     expect(navigator.getGamepads()).toEqual([]);//.toEqual([null, null, null]);
     expect(addGpadFlagA).toEqual(false);
     expect(addGpadFlagB).toEqual(false);
 
-    gamepadEmu.AddEmulatedGamepad(1, true);
+    let e_gpad = gamepadEmu.AddEmulatedGamepad(1, true);
     expect(navigator.getGamepads()).not.toEqual([]); //not.toEqual([null, null, null]);
     await new Promise(resolve => setTimeout(resolve, 5));
-    expect(addGpadFlagA).not.toEqual(false)
-    expect(addGpadFlagB).not.toEqual(false)
+    expect(addGpadFlagA).toEqual(e_gpad)
+    expect(addGpadFlagB).toEqual(e_gpad)
 
     // test axes:
     expect(navigator.getGamepads()[1]?.axes).toEqual([0, 0, 0, 0]);

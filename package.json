@@ -2,7 +2,7 @@
   "name": "virtual-gamepad-lib",
   "private": false,
   "description": "Emulate and display virtual or real gamepads in web browsers",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "packageManager": "pnpm@7.13.3",
   "type": "module",
   "author": "Kyle Worcester-Moore",
@@ -65,16 +65,17 @@
     "dev:examples": "pnpm run precompile:examples; vite --config examples/vite.config.js --host",
     "build:examples": "pnpm run precompile:examples; vite build --config examples/vite.config.js",
     "preview:examples": "vite preview --config examples/vite.config.js  --host",
-    "prepublish": "npm run build:lib"
+    "prepublish": "pnpm run build:lib",
+    "publish": "np --no-cleanup"
   },
   "devDependencies": {
     "happy-dom": "^7.4.0",
+    "np": "^7.6.2",
     "svgo": "^2.8.0",
     "typedoc": "^0.23.15",
     "typescript": "^4.8.4",
     "vite": "^3.2.0-beta.0",
     "vite-plugin-dts": "^1.6.5",
     "vitest": "^0.24.0"
-  },
-  "dependencies": {}
+  }
 }

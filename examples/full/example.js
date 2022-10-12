@@ -1,8 +1,8 @@
-import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator";
-import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
-import { GamepadDisplay } from "../../src/GamepadDisplay";
-import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums";
-import { CenterTransformOrigin } from "../../src/utilities";
+import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums.js";
+import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator.js";
+import { GamepadApiWrapper } from "../../src/GamepadApiWrapper.js";
+import { GamepadDisplay } from "../../src/GamepadDisplay.js";
+import { CenterTransformOrigin } from "../../src/utilities.js";
 const BUTTON_ID_NAMES = [
     "button_1",
     "button_2",

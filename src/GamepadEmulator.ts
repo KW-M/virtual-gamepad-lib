@@ -538,14 +538,16 @@ export class GamepadEmulator {
                 console.log(`real gamepad connected ${eGpad!.id} (${gpadIndex}>${mappedIndex})`, this.realGpadToPatchedIndexMap, this.emulatedGamepads, this.emulatedGamepadsMetadata);
 
                 // send out the corrected event on the window object
-                const event = new Event('gamepadconnected') as EGamepadEvent;
-                event.gamepad = eGpad!
-                window.dispatchEvent(event);
-
-                // call the window.ongamepadconnected event listener callback function (since it was disabled)
-                console.log("windowOngamepadconnected", windowOngamepadconnected);
-                if (windowOngamepadconnected) windowOngamepadconnected.call(window, event)
+                e = new Event('gamepadconnected') as EGamepadEvent;
+                (e as EGamepadEvent).gamepad = eGpad!
+                window.dispatchEvent(e);
             }
+
+            // call the window.ongamepadconnected event listener callback function (since it was disabled)
+            console.log("windowOngamepadconnected", windowOngamepadconnected);
+            if (windowOngamepadconnected) windowOngamepadconnected.call(window, e)
+
+
         }; window.addEventListener('gamepadconnected', gamepadConnectedHandler)
 
         // fix the gamepaddisconnected event listener:
@@ -563,13 +565,14 @@ export class GamepadEmulator {
                 // this.realGamepadCount--;
 
                 // send out the corrected event on the window object
-                const event = new Event('gamepaddisconnected') as EGamepadEvent;
-                event.gamepad = clone!
-                window.dispatchEvent(event);
-
-                // call the window.ongamepaddisconnected event listener callback function (since it was disabled)
-                if (windowOngamepaddisconnected) windowOngamepaddisconnected.call(window, event)
+                e = new Event('gamepaddisconnected') as EGamepadEvent;
+                (e as EGamepadEvent).gamepad = clone!
+                window.dispatchEvent(e);
             }
+
+            // call the window.ongamepaddisconnected event listener callback function (since it was disabled)
+            if (windowOngamepaddisconnected) windowOngamepaddisconnected.call(window, e)
+
         }; window.addEventListener("gamepaddisconnected", gamepadDisconnectedHandler)
 
         // return a cleanup function to enable undoing the monkey patch:
