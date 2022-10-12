@@ -56,7 +56,8 @@
     "accessability"
   ],
   "scripts": {
-    "test": "vitest",
+    "test": "vitest --run",
+    "dev:test": "vitest --browser",
     "build:lib": "tsc && vite build",
     "build:docs": "typedoc --options typedoc.json",
     "dev:docs": "typedoc --options typedoc.json --watch",
@@ -69,6 +70,7 @@
     "publish": "np --no-cleanup"
   },
   "devDependencies": {
+    "@vitest/ui": "^0.24.1",
     "happy-dom": "^7.4.0",
     "np": "^7.6.2",
     "svgo": "^2.8.0",
