@@ -57,14 +57,14 @@ export type GamepadEventCallback = (e: GamepadEvent) => void;
 /** Wrapper for the Gamepad API that smooths out browser inconsistancies.
  *  Exposes changes to gamepads, buttons and axes as events. */
 export class GamepadApiWrapper {
-    private updateDelay: number;
-    private axisDeadZone: number;
-    private buttonConfigs: wrapperButtonConfig[];
-    private currentStateOfGamepads: Gamepad[];
-    private gamepadConnectListeners: GamepadEventCallback[];
-    private gamepadDisconnectListeners: GamepadEventCallback[];
-    private gamepadButtonChangeListeners: ButtonChangeCallback[];
-    private gamepadAxisChangeListeners: AxisChangeCallback[];
+    protected updateDelay: number;
+    protected axisDeadZone: number;
+    protected buttonConfigs: wrapperButtonConfig[];
+    protected currentStateOfGamepads: Gamepad[];
+    protected gamepadConnectListeners: GamepadEventCallback[];
+    protected gamepadDisconnectListeners: GamepadEventCallback[];
+    protected gamepadButtonChangeListeners: ButtonChangeCallback[];
+    protected gamepadAxisChangeListeners: AxisChangeCallback[];
 
     /** Create a new GamepadApiWrapper
      * @param config The configuration options for this wrapper @see {@link wrapperConfig} */
@@ -165,7 +165,7 @@ export class GamepadApiWrapper {
         return this.currentStateOfGamepads;
     }
 
-    private tickLoop() {
+    protected tickLoop() {
         this.checkForGamepadChanges();
         if (this.updateDelay == 0) {
             requestAnimationFrame(this.tickLoop.bind(this));
@@ -176,7 +176,7 @@ export class GamepadApiWrapper {
         }
     }
 
-    private checkForGamepadChanges() {
+    protected checkForGamepadChanges() {
         let gamepads = navigator.getGamepads();
         for (var gi = 0; gi < gamepads.length; gi++) {
             let gamepad = gamepads[gi];
@@ -191,7 +191,7 @@ export class GamepadApiWrapper {
         }
     }
 
-    private checkForAxisChanges(gamepadIndex: number, gpad: EGamepad | Gamepad) {
+    protected checkForAxisChanges(gamepadIndex: number, gpad: EGamepad | Gamepad) {
         let axisState = gpad.axes;
         if (axisState.length == 0) return;
 
@@ -219,7 +219,7 @@ export class GamepadApiWrapper {
         }
     }
 
-    private checkForButtonChanges(gpadIndex: number, gpad: EGamepad | Gamepad) {
+    protected checkForButtonChanges(gpadIndex: number, gpad: EGamepad | Gamepad) {
         let btnState: readonly GamepadButton[] = gpad.buttons;
         if (btnState.length == 0) return;
 

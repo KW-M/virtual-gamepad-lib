@@ -72,10 +72,10 @@ export interface DisplayGamepadConfig {
  * you provide to represent the buttons and axes of the gamepad. See the examples for more information.
  */
 export class GamepadDisplay {
-    private config: DisplayGamepadConfig;
-    private apiWrapper: GamepadApiWrapper;
-    private btnChangeListener: (gpadIndex: number, gpadState: Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => void;
-    private axisChangeListener: (gpadIndex: number, gpadState: Gamepad, axisChangesMask: (boolean)[]) => void;
+    protected config: DisplayGamepadConfig;
+    protected apiWrapper: GamepadApiWrapper;
+    protected btnChangeListener: (gpadIndex: number, gpadState: Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => void;
+    protected axisChangeListener: (gpadIndex: number, gpadState: Gamepad, axisChangesMask: (boolean)[]) => void;
 
     /** Create a new GamepadDisplay instance
     * @param config The config to use for the gamepad display
@@ -169,7 +169,7 @@ export class GamepadDisplay {
      * @param gpadState The new state of the gamepad as reported by the browser  / {@link GamepadApiWrapper.onGamepadAxisChange}
      * @param axisChangesMask An array of booleans, where each true indicates that the corresponding axis has changed since the last update
      */
-    private displayJoystickChanges(gpadIndex: number, gpadState: Gamepad, axisChangesMask: (boolean)[]) {
+    protected displayJoystickChanges(gpadIndex: number, gpadState: Gamepad, axisChangesMask: (boolean)[]) {
         if (gpadIndex != this.config.gamepadIndex) return;
         const joystickConfigs = this.config.sticks;
         for (let i = 0; i < joystickConfigs.length; i++) {
@@ -204,7 +204,7 @@ export class GamepadDisplay {
      * @param buttonChangesMask
      * @returns
      */
-    private displayButtonChanges = (gpadIndex: number, gpadState: Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => {
+    protected displayButtonChanges = (gpadIndex: number, gpadState: Gamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => {
         if (gpadIndex != this.config.gamepadIndex) return;
         const buttonConfigs = this.config.buttons;
         for (let i = 0; i < buttonConfigs.length; i++) {
