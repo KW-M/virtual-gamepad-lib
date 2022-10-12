@@ -4,7 +4,8 @@
   <h1 align="center">Virtual Gamepad Lib</h1>
 </p>
 
-![Licence](https://img.shields.io/github/license/kw-m/virtual-gamepad-lib) ![NPM Download Count](https://img.shields.io/npm/dt/virtual-gamepad-lib) ![NPM Download Count](https://img.shields.io/github/v/release/kw-m/virtual-gamepad-lib)
+![Licence](https://img.shields.io/github/license/kw-m/virtual-gamepad-lib) ![NPM Download Count](https://img.shields.io/npm/dt/virtual-gamepad-lib) ![Latest Version](https://img.shields.io/github/package-json/v/kw-m/virtual-gamepad-lib)
+
 [EXAMPLES & DEMOS](https://kw-m.github.io/virtual-gamepad-lib/) | [DOCS](https://kw-m.github.io/virtual-gamepad-lib/docs/) | [GETTING STARTED](#getting-started) | [CHANGELOG](./changes.md)
 
 All the parts needed to use and display interactive virtual gamepads in browser evironments for multi-touch, mouse or keyboard interaction. Each module can be used separately, but they work best together.
