@@ -11,6 +11,7 @@ export default defineConfig({
         lib: {
             formats: ['es', 'cjs'],
             entry: {
+                'index': resolve(__dirname, 'src/index.ts'),
                 'enums': resolve(__dirname, 'src/enums.ts'),
                 'utilities': resolve(__dirname, 'src/utilities.ts'),
                 'GamepadApiWrapper': resolve(__dirname, 'src/GamepadApiWrapper.ts'),

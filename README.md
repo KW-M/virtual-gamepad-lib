@@ -32,14 +32,35 @@ npm install virtual-gamepad-lib
 ```
 ### Importing
 
+If using a bundler with "moduleResolution" set to "NodeNext" or "Node16" or greater in jsconfig.json or tsconfig.json, you can import the modules like this:
+
 ```typescript
 import { GamepadEmulator } from 'virtual-gamepad-lib/GamepadEmulator';
 import { GamepadDisplay } from 'virtual-gamepad-lib/GamepadDisplay';
 import { GamepadApiWrapper } from 'virtual-gamepad-lib/GamepadApiWrapper';
+import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "virtual-gamepad-lib/enums";
+import { CenterTransformOrigin, CenterTransformOriginDebug } from "virtual-gamepad-lib/utilities";
 
-// OR if using common.js...
+/* ------ OR if using common.js ------- */
 const { GamepadEmulator } = require('virtual-gamepad-lib/GamepadEmulator');
-...
+/* etc... */
+```
+
+Otherwise, you can import the modules like this:
+
+```typescript
+import { GamepadApiWrapper, GamepadEmulator, GamepadDisplay /* or any other exported property */ } from "virtual-gamepad-lib";
+
+/* ----- OR ------ */
+import { GamepadApiWrapper } from "virtual-gamepad-lib/dist/GamepadApiWrapper";
+import { GamepadEmulator } from "virtual-gamepad-lib/dist/GamepadEmulator";
+import { GamepadDisplay } from "virtual-gamepad-lib/dist/GamepadDisplay";
+import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "virtual-gamepad-lib/dist/enums";
+import { CenterTransformOrigin, CenterTransformOriginDebug } from "virtual-gamepad-lib/dist/utilities";
+
+/* ------ OR if using common.js ------- */
+const { GamepadEmulator } = require('virtual-gamepad-lib/dist/cjs/GamepadEmulator');
+/* etc... */
 ```
 ###  [examples](https://kw-m.github.io/virtual-gamepad-lib/examples) of usage.
 
