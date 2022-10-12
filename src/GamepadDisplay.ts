@@ -1,7 +1,7 @@
 
 
-import { GamepadApiWrapper, buttonChangeDetails } from "./GamepadApiWrapper";
-import { gamepadButtonType, gamepadDirection } from "./enums";
+import { GamepadApiWrapper, buttonChangeDetails } from "./GamepadApiWrapper.js";
+import { gamepadButtonType, gamepadDirection } from "./enums.js";
 
 export type ButtonDisplayFunction = (buttonConfig: GamepadDisplayButton | GamepadDisplayVariableButton, value: number, touched: boolean, pressed: boolean, changes: buttonChangeDetails, btnIndex: number) => void;
 

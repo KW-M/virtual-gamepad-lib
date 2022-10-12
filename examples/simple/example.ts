@@ -1,12 +1,11 @@
-import { gamepadButtonType, gamepadDirection } from "../../src/enums";
-import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator";
+import { gamepadButtonType, gamepadDirection } from "../../src/enums.js";
+import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "../../src/GamepadEmulator.js";
 import type { ButtonConfig, VariableButtonConfig, JoystickConfig, EGamepad } from "../../src/GamepadEmulator";
-import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
+import { GamepadApiWrapper } from "../../src/GamepadApiWrapper.js";
 import type { buttonChangeDetails } from "../../src/GamepadApiWrapper";
-import { GamepadDisplay } from "../../src/GamepadDisplay";
-import type { GamepadDisplayJoystick } from "../../src/GamepadDisplay";
-import type { GamepadDisplayVariableButton, GamepadDisplayButton } from "../../src/GamepadDisplay";
-import { CenterTransformOrigin, CenterTransformOriginDebug } from "../../src/utilities";
+import { GamepadDisplay } from "../../src/GamepadDisplay.js";
+import type { GamepadDisplayJoystick, GamepadDisplayVariableButton, GamepadDisplayButton } from "../../src/GamepadDisplay";
+import { CenterTransformOrigin, CenterTransformOriginDebug } from "../../src/utilities.js";
 
 // CONSTS
 const GPAD_DISPLAY_CONTAINER = document.getElementById("gpad-display-container")!;

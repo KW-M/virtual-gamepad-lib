@@ -1,9 +1,9 @@
-import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT, ButtonConfig, VariableButtonConfig, JoystickConfig, EGamepad } from "../../src/GamepadEmulator";
-import { GamepadApiWrapper } from "../../src/GamepadApiWrapper";
-import { GamepadDisplay, GamepadDisplayJoystick } from "../../src/GamepadDisplay";
-import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums";
+import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT, ButtonConfig, VariableButtonConfig, JoystickConfig, EGamepad } from "../../src/GamepadEmulator.js";
+import { GamepadApiWrapper } from "../../src/GamepadApiWrapper.js";
+import { GamepadDisplay, GamepadDisplayJoystick } from "../../src/GamepadDisplay.js";
+import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "../../src/enums.js";
 import type { GamepadDisplayVariableButton, GamepadDisplayButton } from "../../src/GamepadDisplay";
-import { CenterTransformOrigin, CenterTransformOriginDebug } from "../../src/utilities";
+import { CenterTransformOrigin, CenterTransformOriginDebug } from "../../src/utilities.js";
 // import "./phaser.js";
 // import "./twin-stick-game.js"
 

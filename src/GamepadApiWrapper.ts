@@ -1,4 +1,4 @@
-import { EGamepad } from "./GamepadEmulator";
+import { EGamepad } from "./GamepadEmulator.js";
 
 declare global {
     interface Window {

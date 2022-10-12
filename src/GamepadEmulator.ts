@@ -1,5 +1,5 @@
-import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "./enums";
-import { NormalizeClampVector } from "./utilities";
+import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "./enums.js";
+import { NormalizeClampVector } from "./utilities.js";
 
 /** Extends the browser Gamepad interface to include an emulation property that exposes how this gamepad is being emulated (or not)
  * This Gamepad API interface defines an individual gamepad or other controller, allowing access to information such as button presses, axis positions, and id. Normally Available only in secure contexts. */
