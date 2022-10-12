@@ -8,7 +8,7 @@
       "ESNext",
       "DOM"
     ],
-    "moduleResolution": "Node",
+    "moduleResolution": "Node16",
     "strict": true,
     "allowJs": true,
     "checkJs": true,

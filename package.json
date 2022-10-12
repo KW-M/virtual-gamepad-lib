@@ -1,5 +1,5 @@
 {
-  "name": "virtual-gamepad",
+  "name": "virtual-gamepad-lib",
   "private": false,
   "description": "Emulate and display virtual or real gamepads in web browsers",
   "version": "0.1.0",
@@ -7,24 +7,42 @@
   "type": "module",
   "author": "Kyle Worcester-Moore",
   "license": "MIT",
-  "homepage": "https://github.com/KW-M/virtual-gamepad#readme",
+  "homepage": "https://github.com/KW-M/virtual-gamepad-lib#readme",
   "bugs": {
-    "url": "https://github.com/KW-M/virtual-gamepad/issues"
+    "url": "https://github.com/KW-M/virtual-gamepad-lib/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KW-M/virtual-gamepad.git"
+    "url": "git+https://github.com/KW-M/virtual-gamepad-lib.git"
   },
   "files": [
     "dist"
   ],
-  "main": "./dist/virtual-gamepad.umd.cjs",
-  "module": "./dist/virtual-gamepad.js",
-  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./dist/virtual-gamepad.js",
-      "require": "./dist/virtual-gamepad.umd.cjs"
+    "./enums": {
+      "types": "./dist/enums.d.ts",
+      "import": "./dist/enums.js",
+      "require": "./dist/cjs/enums.cjs"
+    },
+    "./GamepadApiWrapper": {
+      "types": "./dist/GamepadApiWrapper.d.ts",
+      "import": "./dist/GamepadApiWrapper.js",
+      "require": "./dist/cjs/GamepadApiWrapper.cjs"
+    },
+    "./GamepadDisplay": {
+      "types": "./dist/GamepadDisplay.d.ts",
+      "import": "./dist/GamepadDisplay.js",
+      "require": "./dist/cjs/GamepadDisplay.cjs"
+    },
+    "./GamepadEmulator": {
+      "types": "./dist/GamepadEmulator.d.ts",
+      "import": "./dist/GamepadEmulator.js",
+      "require": "./dist/cjs/GamepadEmulator.cjs"
+    },
+    "./utilities": {
+      "types": "./dist/utilities.d.ts",
+      "import": "./dist/utilities.js",
+      "require": "./dist/cjs/utilities.cjs"
     }
   },
   "keywords": [
@@ -32,7 +50,6 @@
     "arcade",
     "emulator",
     "joystick",
-    "js api",
     "typescript",
     "gamepad",
     "touch",

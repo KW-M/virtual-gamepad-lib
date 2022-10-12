@@ -6,10 +6,7 @@
 
 [EXAMPLES & DEMOS](https://kw-m.github.io/virtual-gamepad-lib/) | [DOCS](https://kw-m.github.io/virtual-gamepad-lib/docs/) | [GETTING STARTED](#getting-started) | [CHANGELOG](./changes.md)
 
-All the parts needed to use and display interactive virtual gamepads in browser evironments for multi-touch, mouse or keyboard interaction.
-
-
-Each module can be used separately, but they work best together.
+All the parts needed to use and display interactive virtual gamepads in browser evironments for multi-touch, mouse or keyboard interaction. Each module can be used separately, but they work best together.
 
 ### [GamepadEmulator](https://kw-m.github.io/virtual-gamepad-lib/docs/modules/GamepadEmulator.html) - *[Source](./src/GamepadEmulator.ts)*
     Add emulated gamepads to the browser Gamepad API using a gamepad displayed on the screen, keyboard events or any other source (eg: multiplayer game events).
@@ -82,7 +79,7 @@ See the optimize:svg npm script in the [package.json](./package.json) for an exa
 - **Disable** `Merge Paths` if you used overlapping paths that should be separate elements on the gamepad, eg: touch targets for the d-pad or buttons
 - **Disable** `Remove title` or `Remove desc` if the title or description is relavant for acessability
 
-If you format your layer names in the format `elementId.elementClass`, you can use the following regular expression to extract the elementId and elementClass from the layer name (The pre-configured SVGO config has a improved version of this inbuilt, but you can do this manually with find and relace):
+If you format your layer names in the format `elementId.elementClass`, you can use the following regular expression to extract the elementId and elementClass from the layer name (The pre-configured SVGO config has a improved version of this inbuilt, but you can do this manually with find and replace):
 
 **Example:**
 ```html
