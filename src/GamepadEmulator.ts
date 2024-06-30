@@ -151,7 +151,7 @@ export class GamepadEmulator {
         const eGpad: EGamepad = {
             emulation: gamepadEmulationState.emulated,
             connected: true,
-            timestamp: Math.floor(Date.now() / 1000),
+            timestamp: performance.now(),
             displayId: "Emulated Gamepad " + gpadIndex,
             id: "Emulated Gamepad " + gpadIndex + " (Xinput STANDARD GAMEPAD)",
             mapping: "standard",
@@ -184,7 +184,7 @@ export class GamepadEmulator {
             const gpad: EGamepad = {
                 ...e_gpad,
                 connected: false,
-                timestamp: Math.floor(Date.now() / 1000),
+                timestamp: performance.now(),
             }
 
             // Trigger the (system) gamepad disconnected event on the window object (this will also trigger the window.ongamepaddisconnected function)
@@ -647,7 +647,7 @@ export class GamepadEmulator {
                     // if only the emulated gamepad is available, use it
                     // add a property on the gamepad to indicate that it is emulated
                     e_gpad.emulation = gamepadEmulationState.emulated;
-                    e_gpad.timestamp = Math.floor(Date.now() / 1000);
+                    e_gpad.timestamp = performance.now();
                     nativeGpads[i] = self.cloneGamepad(e_gpad); // clone the emulated gamepad to prevent it from being modified by the caller and make libraries happy
                 }
             }
