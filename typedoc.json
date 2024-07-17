@@ -8,7 +8,11 @@
         "src/enums.ts",
         "src/utilities.ts"
     ],
-    "customCss": "./typedoc-theme.css",
+    "plugin": [
+        "typedoc-material-theme"
+    ],
+    "themeColor": "#B530FF",
+    // ... other options
     "readme": "README.md",
     "lang": "en",
     "highlightLanguages": [

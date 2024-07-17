@@ -23,6 +23,9 @@ importers:
       typedoc:
         specifier: ^0.26.4
         version: 0.26.4(typescript@5.5.3)
+      typedoc-material-theme:
+        specifier: ^1.1.0
+        version: 1.1.0(typedoc@0.26.4(typescript@5.5.3))
       typescript:
         specifier: ^5.4.0
         version: 5.5.3
@@ -252,6 +255,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@material/material-color-utilities@0.2.7':
+    resolution: {integrity: sha512-0FCeqG6WvK4/Cc06F/xXMd/pv4FeisI0c1tUpBbfhA2n9Y8eZEv4Karjbmf2ZqQCPUWMrGp8A571tCjizxoTiQ==}
 
   '@microsoft/api-extractor-model@7.28.13':
     resolution: {integrity: sha512-39v/JyldX4MS9uzHcdfmjjfS6cYGAoXV+io8B5a338pkHiSt+gy2eXQ0Q7cGFJ7quSa1VqqlMdlPrB6sLR/cAw==}
@@ -2641,6 +2647,12 @@ packages:
   typedarray-to-buffer@3.1.5:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
 
+  typedoc-material-theme@1.1.0:
+    resolution: {integrity: sha512-LLWGVb8w+i+QGnsu/a0JKjcuzndFQt/UeGVOQz0HFFGGocROEHv5QYudIACrj+phL2LDwH05tJx0Ob3pYYH2UA==}
+    engines: {node: '>=18.0.0', npm: '>=8.6.0'}
+    peerDependencies:
+      typedoc: ^0.25.13 || ^0.26.3
+
   typedoc@0.26.4:
     resolution: {integrity: sha512-FlW6HpvULDKgc3rK04V+nbFyXogPV88hurarDPOjuuB5HAwuAlrCMQ5NeH7Zt68a/ikOKu6Z/0hFXAeC9xPccQ==}
     engines: {node: '>= 18'}
@@ -3092,6 +3104,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  '@material/material-color-utilities@0.2.7': {}
 
   '@microsoft/api-extractor-model@7.28.13(@types/node@20.14.10)':
     dependencies:
@@ -5734,6 +5748,11 @@ snapshots:
   typedarray-to-buffer@3.1.5:
     dependencies:
       is-typedarray: 1.0.0
+
+  typedoc-material-theme@1.1.0(typedoc@0.26.4(typescript@5.5.3)):
+    dependencies:
+      '@material/material-color-utilities': 0.2.7
+      typedoc: 0.26.4(typescript@5.5.3)
 
   typedoc@0.26.4(typescript@5.5.3):
     dependencies:
