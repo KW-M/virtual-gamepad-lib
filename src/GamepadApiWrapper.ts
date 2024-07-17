@@ -1,4 +1,4 @@
-import { EGamepad } from "./GamepadEmulator.js";
+import { type EGamepad } from "./GamepadEmulator.js";
 
 declare global {
     interface Window {
@@ -11,7 +11,7 @@ declare global {
         webkitGetGamepads?: () => Gamepad[];
         msGetGamepads?: () => Gamepad[];
         gamepadInputEmulation?: string;
-        gpadEmulatorActive?: boolean;
+        getNativeGamepads?: () => (Gamepad | null)[] | undefined;
     }
 }
 
@@ -43,7 +43,7 @@ export interface buttonChangeDetails {
     /** This button was pressed last update and is still pressed
      * (only present if {@link wrapperButtonConfig.fireWhileHolding} was set to true on this button when the {@link GamepadApiWrapper} was initilized)*/
     heldDown?: boolean;
-    /** The value of the button changed (eg for variable pressure buttons like shoulder triggers) */
+    /** The value of the button changed (e.g. for variable pressure buttons like shoulder triggers) */
     valueChanged?: boolean;
 }
 
@@ -60,7 +60,7 @@ export class GamepadApiWrapper {
     protected updateDelay: number;
     protected axisDeadZone: number;
     protected buttonConfigs: wrapperButtonConfig[];
-    protected currentStateOfGamepads: Gamepad[];
+    protected currentStateOfGamepads: (Gamepad | EGamepad)[];
     protected gamepadConnectListeners: GamepadEventCallback[];
     protected gamepadDisconnectListeners: GamepadEventCallback[];
     protected gamepadButtonChangeListeners: ButtonChangeCallback[];
@@ -87,12 +87,18 @@ export class GamepadApiWrapper {
         }
     }
 
-    /** Changes the button configs used by the wrapper (will only take effect after the next gamepad update) */
+    /** Changes the button configs used by the wrapper (takes effect after the next gamepad update) */
     setButtonsConfig(buttonConfigs: wrapperButtonConfig[]) {
         this.buttonConfigs = buttonConfigs;
     }
 
-    /** add an event listener for when a gamepad (either real or emulated) is connected
+    /** Changes the update delay between browser gamepad api checks (takes effect after the next gamepad update)
+     * @param delay The new delay between gamepad updates in ms */
+    setUpdateDelay(delay: number) {
+        this.updateDelay = delay;
+    }
+
+    /** Add an event listener for when a gamepad (either real or emulated) is connected
      * @param Callback The calback function to call when a gamepad is connected */
     onGamepadConnect(Callback: GamepadEventCallback) {
         this.gamepadConnectListeners.push(Callback);
@@ -152,9 +158,20 @@ export class GamepadApiWrapper {
         this.gamepadButtonChangeListeners = this.gamepadButtonChangeListeners.filter((l) => l !== Callback);
     }
 
-    /** gamepadApiSupported: returns true if the gamepad api is supported by the browser context */
+    /** gamepadApiSupported: returns true if the native gamepad api is supported by the browser context */
     gamepadApiSupported() {
-        return !!navigator.getGamepads && !!navigator.getGamepads(); // firefox still exposes the gamepad api when in insecure contexts, but does not return anything, so it's not "supported".
+        const getGamepads = navigator.getNativeGamepads || navigator.getGamepads || navigator.webkitGetGamepads || navigator.mozGetGamepads || navigator.msGetGamepads;
+        if (getGamepads != null && (typeof getGamepads) === (typeof function () { })) {
+            const gpads = getGamepads.apply(navigator);// firefox still exposes the gamepad api when in insecure contexts, but does not return anything, so it's not "supported".
+            return gpads != null && gpads.length > 0;
+        } else return false;
+    }
+
+    /** returns the value of navigator.getGamepads() in a cross-browser compatible way
+     * @returns An array of gamepad objects (including any emulated gamepads if the GamepadEmulator was set up), or an empty array if the gamepad api is not supported or gampad permissions haven't been granted. */
+    getGamepads(): (null | Gamepad | EGamepad)[] {
+        const gg: (() => (null | EGamepad | Gamepad)[] | null) = navigator.getGamepads || navigator.webkitGetGamepads || navigator.mozGetGamepads || navigator.msGetGamepads;
+        return !!gg && (typeof gg) === (typeof function () { }) ? (gg.apply(navigator) || []) : [];
     }
 
     /** Returns the result of navigator.getGamepads() from the last update
@@ -177,7 +194,7 @@ export class GamepadApiWrapper {
     }
 
     protected checkForGamepadChanges() {
-        let gamepads = navigator.getGamepads();
+        let gamepads = this.getGamepads();
         for (var gi = 0; gi < gamepads.length; gi++) {
             let gamepad = gamepads[gi];
             if (!gamepad) continue;
@@ -225,7 +242,7 @@ export class GamepadApiWrapper {
 
         const lastGamepadState = this.currentStateOfGamepads[gpadIndex];
         const lastBtnsState: readonly GamepadButton[] = lastGamepadState.buttons || btnState;
-        let buttonChanges: (buttonChangeDetails | false)[] = [];
+        const buttonChanges: (buttonChangeDetails | false)[] = [];
 
         let bi, atLeastOneButtonChanged = false;
         for (bi = 0; bi < btnState.length; bi++) {

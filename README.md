@@ -4,22 +4,36 @@
   <h1 align="center">Virtual Gamepad Lib</h1>
 </p>
 
-![Licence](https://img.shields.io/github/license/kw-m/virtual-gamepad-lib) ![NPM Download Count](https://img.shields.io/npm/dt/virtual-gamepad-lib) ![Latest Version](https://img.shields.io/github/package-json/v/kw-m/virtual-gamepad-lib)
+[![Licence](https://badgen.net/npm/license/virtual-gamepad-lib?color=cyan)](./LICENCE)
+[![TypeScript](https://badgen.net/badge/icon/typescript?icon=typescript&label)](https://www.typescriptlang.org/)
+[![NPM Bundle Size](https://badgen.net/bundlephobia/minzip/virtual-gamepad-lib?color=pink)](https://bundlephobia.com/result?p=virtual-gamepad-lib)
+[![NPM Download Count](https://badgen.net/npm/dm/virtual-gamepad-lib)](https://www.npmjs.com/package/virtual-gamepad-lib)
+[![NPM Version](https://badgen.net/npm/v/virtual-gamepad-lib)](https://www.npmjs.com/package/virtual-gamepad-lib)
+
+
 
 [EXAMPLES & DEMOS](https://kw-m.github.io/virtual-gamepad-lib/) | [DOCS](https://kw-m.github.io/virtual-gamepad-lib/docs/) | [GETTING STARTED](#getting-started) | [CHANGELOG](./changes.md)
 
-All the parts needed to use and display interactive virtual gamepads in browser evironments for multi-touch, mouse or keyboard interaction. Each module can be used separately, but they work best together.
+All the parts needed to display and emulate interactive virtual gamepads on the web for multi-touch, mouse, keyboard, or simulated interaction.
+
+**Features:**
+- Compatible with any gamepad library or game engine that uses the browser Gamepad API.
+- Download our premade SVG gamepads or make your own fully unique onscreen gamepad with SVG or HTML elements.
+- Display the state of any number of gamepads onscreen.
+- Mock gamepads to test your game interactively in the browser.
+
+## Modules
+Each module can be used separately, but they work best together!
 
 ### [GamepadEmulator](https://kw-m.github.io/virtual-gamepad-lib/docs/modules/GamepadEmulator.html) - *[Source](./src/GamepadEmulator.ts)*
-    Add emulated gamepads to the browser Gamepad API using a gamepad displayed on the screen, keyboard events or any other source (eg: multiplayer game events).
+Add emulated gamepads to the browser Gamepad API. Emulated gamepads are controlled from any source - like mouse, keyboard or multiplayer game events. Use with the GamepadDisplay module for drop in multi-touch and mouse interaction.
 
-    * Compatible with any gamepad library or game engine that uses the browser Gamepad API.
 
 ### [GamepadDisplay](https://kw-m.github.io/virtual-gamepad-lib/docs/modules/GamepadDisplay.html) - *[Source](./src/GamepadDisplay.ts)*
-    Display the state of any gamepad (emulated or not) in SVG or HTML in a very customizable way.
+Display the state of any gamepad (emulated or not) in SVG or HTML in a very customizable way.
 
 ### [GamepadApiWrapper](https://kw-m.github.io/virtual-gamepad-lib/docs/modules/GamepadApiWrapper.html) - *[Source](./src/GamepadApiWrapper.ts)*
-    Receive the state of any gamepad as a series of customizable events.
+Receive the state of any gamepad as a series of customizable events.
 
 <br>
 
@@ -38,9 +52,10 @@ import {
   GamepadEmulator,
   GamepadDisplay,
   CenterTransformOrigin, CenterTransformOriginDebug, // utilities
-  gamepadButtonType, gamepadDirection, gamepadEmulationState // enums
+  gamepadButtonType, gamepadDirection, gamepadEmulationState, // ... enums
 } from "virtual-gamepad-lib";
-// typescript types can be imported just the same with import type { ... } from 'virtual-gamepad-lib';
+// typescript types can be imported just the same with
+import type { ... } from 'virtual-gamepad-lib';
 
 /* ------ OR if using common.js ------- */
 const {
@@ -79,39 +94,48 @@ import { CenterTransformOrigin, CenterTransformOriginDebug } from "virtual-gamep
 const { GamepadEmulator } = require('virtual-gamepad-lib/dist/cjs/GamepadEmulator');
 /* etc... */
 ```
-###  [examples](https://kw-m.github.io/virtual-gamepad-lib/examples) of usage.
+## Usage
+**See  the [code examples](./examples)
+which are live demos at [kw-m.github.io/virtual-gamepad-lib](https://kw-m.github.io/virtual-gamepad-lib/)**
 
 <br/>
 
-## SVG Gamepad Display Authoring Tips
-
-- Either use the vector graphics program export option to "flatten transforms" or use "absolute positioning" OR Wrap an empty group around any part of your svg that you want to apply css transforms to and make sure the element you wish to animate within the empty group is labeled with a recognizable id. Without an empty group, any css driven transforms may overwrite the transforms applied by your vector graphics program. (eg: https://stackoverflow.com/a/70823308 & https://stackoverflow.com/a/49413393)
+## SVG Authoring Tips
+**Making custom svg gamepads for display on screen can be a bit tricky, but here are some tips to make it easier:**
+- Download example vector gamepads from the [assets](assets) folder:
+  - [Affinity Suite](assets/Affinity) (original)
+  - [Adobe Creative Suite](assets/Photoshop_Converted)
+  - [SVG](assets/svg/originals)
+- Export the gamepad as an svg and copy the full contents ***inline*** into your html or add the full svg contents to the page at runtime.
+- In your vector graphics program, name your layers with this format: `svgElementId` or `svgElementId.svgElementClass` to make it easier to split the id and class attributes in the exported svg with the automated SVGO plugin below or the regex find and replace below.
+- Use the export option "flatten transforms" or "use absolute positioning" in your vector graphics program **OR** Wrap an empty group around any part of your svg that you want to apply css transforms to and make sure the element you wish to animate within the empty group is labeled with a recognizable id. Without an empty group, any css driven transforms may overwrite the transforms applied by your vector graphics program - see [this question](https://stackoverflow.com/a/70823308) and [this solution](https://stackoverflow.com/a/49413393).
 - Use the centerTransformOrigin() function in [utilities.ts](./src/utilities.ts) on all elements you wish to rotate or scale using css. This will allow you to use css transforms based on the center of the element rather than the center of the svg.
- - Alternatively set the css properties: ```transform-origin: center center; transform-box: fill-box``` on the svg elements; However, note that this won't play nice in some browsers or with all vector program exports (especially matrix transforms).
-- Make sure your tap zones (eg: around buttons or joysticks) are the only elements that are tapable / clickable, not parent elements or groups. This can be done by setting the css property ```pointer-events: all``` on the tap targets and ```pointer-events: none``` on all other SVG elements. If you don't do this, the browser default drag behaviors will not be correctly disabled on joysticks & buttons.
+  - Alternatively set the css properties: ```transform-origin: center center; transform-box: fill-box``` on these svg elements; Note that this won't play nice in some browsers or with all vector program exports (especially matrix transforms).
+- Make sure your tap zones (.e.g around buttons or joysticks) are the only elements that are tapable / clickable, not parent elements or groups. This can be done by setting the css property ```pointer-events: all``` on the tap targets and ```pointer-events: none``` on all other SVG elements. If you don't do this, the browser default drag behaviors will not be correctly disabled on joysticks & buttons.
 - If you want to use a custom cursor, make sure to set the css property ```cursor: none``` on the svg tap elements. This will prevent the browser from displaying the default cursor when hovering over the svg.
 
 
 
 
-### Exporting SVG from Adobe Illustrator: https://www.youtube.com/watch?v=bWcweY66DL8
+### Exporting SVG from Adobe Illustrator:
+See: [https://www.youtube.com/watch?v=bWcweY66DL8](https://www.youtube.com/watch?v=bWcweY66DL8)
 
-![Adobe SVG Export](./README.assets/Adobe%20SVG%20Export.png)
+![Adobe SVG Export](./README.assets/Adobe-SVG-Export.png)
 
-### Exporting SVG from Affinity designer & Affinity photo:
-![Affinity SVG Export](README.assets/Affinity%20SVG%20Export.png)
+### Exporting SVG from Affinity Designer & Affinity Photo:
+![Affinity SVG Export](./README.assets/Affinity-SVG-Export.png)
 
-### [SVGO](https://github.com/svg/svgo) / [SVGOMG](https://jakearchibald.github.io/svgomg/) options:
+### [SVGO](https://github.com/svg/svgo) / [SVGOMG](https://jakearchibald.github.io/svgomg/) Options:
 
 **Auto** (*recommened*)
 
-Use the pre-configured SVGO config in the source github repo. It will optimize the svgs while retaining compatiblity with css & js interaction.Use the config with the SVGO CLI or any other SVGO client. The config file is located at: [svgo.config.js](./svgo.config.js) which imports [svgo-IdClassSplitterPlugin.js](./svgo-IdClassSplitterPlugin.js).
+Use the pre-configured SVGO config in the source github repo. It will optimize the svgs while retaining compatiblity with css & js interaction. Use the config with the SVGO CLI. The config file is located at: [svgo.config.js](./svgo.config.js) which imports [svgo-IdClassSplitterPlugin.js](./svgo-IdClassSplitterPlugin.js).
 See the optimize:svg npm script in the [package.json](./package.json) for an example of how to use the config with the SVGO CLI.
 
 **Manual** (*not recommened*)
 
-- This method will not avoid ID collisions between svgs on a page like the SVGO config in source does)
-- **Disable** `Clean IDs` to keep the `id` attributes of the SVG elements ffrom your editor
+- This method will not avoid ID collisions between svgs on a page like the SVGO CLI config in the project source does
+- **Disable** `Clean IDs` to keep the `id` attributes of the SVG elements from your editor
 - **Disable** `Remove ViewBox` to keep the `viewBox` attribute, which makes scaling the SVG easier
 - **Disable** `Remove Unknowns & Defaults` as this can remove the `id`  and `class` attributes even if `Clean IDs` is off
 - **Disable** `Remove unneeded group attrs` and `collapse useless groups` if you used empty groups to alllow css transforms apply correctly to svg elements.
@@ -140,7 +164,7 @@ id="$1" class="$2"
 ```
 
 
-### Contributing
+## Contributing
 
 Contributions are welcome!
 This project is still in early development, so there are many ways to contribute.
@@ -157,7 +181,7 @@ This project is still in early development, so there are many ways to contribute
 NPM / PNPM / Yarn scripts:
 - build:lib - Build the library
 - build:docs - Build the documentation
-- optimize:svg - Run SVGO on the SVGs in the assets folder
+- optimize:svg - Run SVGO on the SVGs in the [assets/svg/originals](./assets/svg/originals) folder
 - precompile:examples - Precompile the TS examples to JS  for folks who don't use typescript - Run this before submitting a PR
 - dev:examples - Start a dev server for the examples
 - build:examples - Build the examples

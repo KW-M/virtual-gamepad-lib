@@ -2,8 +2,9 @@ import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "./en
 import { NormalizeClampVector } from "./utilities.js";
 
 /** Extends the browser Gamepad interface to include an emulation property that exposes how this gamepad is being emulated (or not)
- * This Gamepad API interface defines an individual gamepad or other controller, allowing access to information such as button presses, axis positions, and id. Normally Available only in secure contexts. */
-export interface EGamepad extends Gamepad {
+ * This Gamepad API interface defines an individual gamepad or other controller, allowing access to information such as button presses, axis positions, and id. Normally Available only in secure webpage contexts. */
+export interface EGamepad extends Omit<Gamepad, "vibrationActuator"> {
+    id: string;
     emulation: gamepadEmulationState | undefined;
     displayId: string;
     connected: boolean;
@@ -11,9 +12,11 @@ export interface EGamepad extends Gamepad {
     index: number;
     buttons: GamepadButton[];
     axes: number[];
+    hapticActuators?: (GamepadHapticActuator | null)[];
+    vibrationActuator?: GamepadHapticActuator;
 }
 
-interface EGamepadPrivateData {
+export interface EGamepadPrivateData {
     /** true if this e-gamepad was created in overlay mode */
     overlayMode: boolean;
     /** stores a refrence to a function to cleanup all event listeners created for controlling buttons on this egamepad */
@@ -22,8 +25,8 @@ interface EGamepadPrivateData {
     removeJoystickListenersFunc?: (() => void);
 }
 
-/** Extends the browser Gamepad Event interface to use an {@link EGamepad} instead of a Gamepad */
-export interface EGamepadEvent extends GamepadEvent {
+/** Extends the browser Gamepad Event interface to use an {@link EGamepad} type instead of a Gamepad */
+export interface EGamepadEvent extends Omit<GamepadEvent, "gamepad"> {
     gamepad: EGamepad;
 }
 
@@ -94,15 +97,16 @@ export const DEFAULT_GPAD_BUTTON_COUNT: number = 18
  * standard controls. Any extraneous axes will have larger indexes.*/
 export const DEFAULT_GPAD_AXIS_COUNT: number = 4
 
-/** Class to handle emulated gamepads and injecting them into the browser getGamepads() and event listener APIs. */
+/** Class to handle emulated gamepads and injecting them into the browser getGamepads() and event listener APIs.
+ * >  You **MUST** call `new GamepadEmulator()` before any other libraries or functions use or store the browser gamepad api for it to function! */
 export class GamepadEmulator {
 
 
     /** a static class variable to tell if any other instances of the GamepadEmulator class are active, and throw an error if a new one is created */
     protected static instanceRunning = false;
 
-    /** stores a reference to the real, unpatched navigator.getGamepads() function **/
-    getNativeGamepads: () => (Gamepad | null)[] = () => []
+    /** stores a reference to the real, unpatched navigator.getGamepads() function (if available) **/
+    getNativeGamepads?: () => (Gamepad | null)[] = undefined;
 
     /** the threshold above which a variable button is considered a "pressed" button */
     protected buttonPressThreshold: number = 0.1;
@@ -113,7 +117,7 @@ export class GamepadEmulator {
     /** A list of the indecies of all the real gamepads that have ever been conected durring this browser session, where the array index is the "gamepadIndex" returned by the native gamepad api, and the value is the index that gamepad should be exposed at in the emulated getGamepads() array */
     protected realGpadToPatchedIndexMap: number[] = []
 
-    /** the reverse mapping array of #realGpadToPatchedIndexMap */
+    /** the reverse mapping array of {@link GamepadEmulator.realGpadToPatchedIndexMap} */
     protected patchedGpadToRealIndexMap: number[] = []
 
     /** A list of all the emulated gamepads, where the index is the "gamepadIndex" passed when AddEmulatedGamepad() was called (Ie: there may be holes in the list),
@@ -121,14 +125,14 @@ export class GamepadEmulator {
      * when an emulated gamepad is "disconnected" ie: call removeEmulatedGamepad(), it is removed from this list provided index (or returns false if there is already an emulated gamepad at that index). */
     protected emulatedGamepads: (EGamepad | null)[] = []
 
-    /** A list that mirrors the structure of #emulatedGamepads, but contains data internal to this class for keeping track of their state */
+    /** A list that mirrors the structure of {@link GamepadEmulator.emulatedGamepads}, but contains data internal to this class for keeping track of their state */
     protected emulatedGamepadsMetadata: (EGamepadPrivateData | null)[] = [];
 
     /** stores the function returned by monkeyPatchGamepadEvents() to undo the gamepad event monkey patch  **/
     protected undoEventPatch: () => void = () => { }
 
     /** Creates a new GamepadEmulator object and monkey patches the browser getGamepads() API and gamepad events to report emulated gamepads
-     * You should create the GamepadEmulator object before any other libraries or function that may use the gamepad api
+     * - **MUST** be called before any other libraries or functions use or store the browser gamepad api!
      * @param buttonPressThreshold - the threshold above which a variable button is considered a "pressed" button */
     constructor(buttonPressThreshold: number) {
         this.buttonPressThreshold = buttonPressThreshold || this.buttonPressThreshold
@@ -136,6 +140,11 @@ export class GamepadEmulator {
         GamepadEmulator.instanceRunning = true;
         this.undoEventPatch = this.monkeyPatchGamepadEvents();
         this.monkeyPatchGetGamepads();
+    }
+
+    /** @returns true if the gamepad api is supported natively by the browser context */
+    gamepadApiNativelySupported() {
+        return !!this.getNativeGamepads && !!this.getNativeGamepads.apply(navigator); // firefox still exposes the gamepad api when in insecure contexts, but does not return anything, so it's not "supported".
     }
 
     /** creates a new emmulated gamepad at the given index as would be read in navigator.getGamepads
@@ -158,7 +167,7 @@ export class GamepadEmulator {
             index: gpadIndex,
             buttons: new Array(buttonCount).fill({ pressed: false, value: 0, touched: false }, 0, buttonCount),
             axes: new Array(axisCount).fill(0, 0, axisCount),
-            hapticActuators: []
+            hapticActuators: [],
         };
 
         // Add the new gamepad object to the list of emulated gamepads
@@ -538,16 +547,13 @@ export class GamepadEmulator {
                 console.log(`real gamepad connected ${eGpad!.id} (${gpadIndex}>${mappedIndex})`, this.realGpadToPatchedIndexMap, this.emulatedGamepads, this.emulatedGamepadsMetadata);
 
                 // send out the corrected event on the window object
-                e = new Event('gamepadconnected') as EGamepadEvent;
-                (e as EGamepadEvent).gamepad = eGpad!
-                window.dispatchEvent(e);
+                const newEvent = new Event('gamepadconnected') as EGamepadEvent;
+                newEvent.gamepad = eGpad!
+                window.dispatchEvent(newEvent);
             }
 
-            // call the window.ongamepadconnected event listener callback function (since it was disabled)
-            console.log("windowOngamepadconnected", windowOngamepadconnected);
+            // call the window.ongamepadconnected event listener callback function (since the native version it was disabled)
             if (windowOngamepadconnected) windowOngamepadconnected.call(window, e)
-
-
         }; window.addEventListener('gamepadconnected', gamepadConnectedHandler)
 
         // fix the gamepaddisconnected event listener:
@@ -565,8 +571,8 @@ export class GamepadEmulator {
                 // this.realGamepadCount--;
 
                 // send out the corrected event on the window object
-                e = new Event('gamepaddisconnected') as EGamepadEvent;
-                (e as EGamepadEvent).gamepad = clone!
+                const newEvent = new Event('gamepaddisconnected') as EGamepadEvent;
+                newEvent.gamepad = clone!
                 window.dispatchEvent(e);
             }
 
@@ -597,14 +603,16 @@ export class GamepadEmulator {
         // get a reference to the original getGamepads() function
         const self = this;
         let getNativeGamepads = navigator.getGamepads || navigator.webkitGetGamepads || navigator.mozGetGamepads || navigator.msGetGamepads;
-        if (getNativeGamepads) this.getNativeGamepads = getNativeGamepads;
+        this.getNativeGamepads = getNativeGamepads;
+        navigator.getNativeGamepads = getNativeGamepads;
 
         // overwrite the getGamepads() function with our own:
+        // @ts-ignore
         navigator.getGamepads = function () {
 
             // get the native gamepads from the browser and map it to
             let nativeGpads = [];
-            let nativeGpadsRaw = getNativeGamepads != undefined ? self.getNativeGamepads.apply(navigator) : [];
+            let nativeGpadsRaw = getNativeGamepads != undefined ? (getNativeGamepads.apply(navigator) || []) : [];
             for (let i = 0; i < nativeGpadsRaw.length; i++) {
                 const gpad = nativeGpadsRaw[i];
                 if (!gpad) continue;
@@ -655,9 +663,11 @@ export class GamepadEmulator {
             // return the native gamepads array with the emulated gamepad data applied
             return nativeGpads;
         }
+
+
     }
 
-    /** @destructor cleans up any event listeners made by this class and restores the normal navigator.getGamepad() function and gamepad events */
+    /** (destructor) - Cleans up any event listeners made by this class and restores the normal navigator.getGamepad() function and gamepad events */
     cleanup() {
         for (let i = 0; i < this.emulatedGamepads.length; i++) {
             this.ClearDisplayButtonEventListeners(i);
@@ -665,7 +675,9 @@ export class GamepadEmulator {
         }
         this.emulatedGamepads = [];
         this.undoEventPatch();
-        navigator.getGamepads = this.getNativeGamepads;
+        if (this.getNativeGamepads) navigator.getGamepads = this.getNativeGamepads;
+        else Object.defineProperty(navigator, "getGamepads", { value: undefined, configurable: true });
         GamepadEmulator.instanceRunning = false;
+        delete navigator.getNativeGamepads;
     }
 };

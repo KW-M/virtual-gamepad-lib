@@ -1,4 +1,12 @@
-
+/**
+ * Scales vectors to ≤ 1 unit length where vectors that started with a length greater than max
+ * are clamped to length 1, and shorter vectors are scaled between 0 - 1 based on their original
+ * fraction of their length relative to max.
+ * @param x x component of the vector
+ * @param y y component of the vector
+ * @param max the length of the vector to clamp to
+ * @returns the scaled vector as an object with x and y components.
+ */
 export function NormalizeClampVector(x: number, y: number, max: number) {
     const length = Math.sqrt(x * x + y * y);
     if (length > max) return { x: x / length, y: y / length };

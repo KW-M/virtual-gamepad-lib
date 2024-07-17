@@ -1,5 +1,5 @@
 
-import { DEFAULT_GPAD_AXIS_COUNT, DEFAULT_GPAD_BUTTON_COUNT, EGamepad, GamepadEmulator } from "../src/gamepadEmulator";
+import { DEFAULT_GPAD_AXIS_COUNT, DEFAULT_GPAD_BUTTON_COUNT, EGamepad, GamepadEmulator } from "../src/GamepadEmulator";
 import { test, expect } from "vitest";
 
 //@ts-ignore

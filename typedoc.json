@@ -1,5 +1,6 @@
 {
     "$schema": "https://typedoc.org/schema.json",
+    "cacheBust": false,
     "entryPoints": [
         "src/GamepadEmulator.ts",
         "src/GamepadDisplay.ts",
@@ -8,8 +9,20 @@
         "src/utilities.ts"
     ],
     "customCss": "./typedoc-theme.css",
-    "readme": "none",
-    "htmlLang": "en",
+    "readme": "README.md",
+    "lang": "en",
+    "highlightLanguages": [
+        "bash",
+        "css",
+        "html",
+        "javascript",
+        "json",
+        "jsonc",
+        "perl",
+        "ts",
+        "tsx",
+        "typescript"
+    ],
     "searchInComments": true,
     "out": "docs",
     "darkHighlightTheme": "dark-plus",

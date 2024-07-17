@@ -1,8 +1,8 @@
 {
   "name": "virtual-gamepad-lib",
   "private": false,
-  "description": "Emulate and display virtual + real gamepads on the web",
-  "version": "0.0.4",
+  "description": "Emulate and display virtual and real gamepads on the web",
+  "version": "0.1.0",
   "packageManager": "pnpm@9.5.0",
   "type": "module",
   "author": "Kyle Worcester-Moore",

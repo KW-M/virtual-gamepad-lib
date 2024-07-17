@@ -1,13 +1,15 @@
 /// <reference types="vitest" />
 
-import path from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config'
 
 // eslint-disable-next-line import/no-default-export -- by design
 export default defineConfig({
     test: {
-        environment: 'happy-dom',
+        browser: {
+            enabled: true,
+            name: 'chrome', // browser name is required
+            headless: false,
+        },
         include: ['**/*.test.ts'],
-        // setupFiles: [path.resolve(__dirname, 'vitest.setup.ts')],
     },
 });

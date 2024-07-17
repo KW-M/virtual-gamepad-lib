@@ -60,6 +60,15 @@ a.tsd-index-link {
     justify-content: start; */
 }
 
+.tsd-navigation a.current,
+.tsd-page-navigation a.current {
+    border-radius: 0.33em;
+}
+
+#tsd-search {
+    border-radius: 0.33em;
+}
+
 @media (prefers-color-scheme: dark) {
 
     .tsd-index-accordion,
