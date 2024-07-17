@@ -14,8 +14,8 @@ jobs:
         - name: Checkout 🛎️
           uses: actions/checkout@v3
 
-        - name: Setup pnpm
-          uses: pnpm/action-setup@v2.2.3
+        - name: Setup pnpm 📦
+          uses: pnpm/action-setup@v4.0.0
 
         - name: Install and Build 🔧 # This project is built using pnpm and outputs the result to the 'dist' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
           run: |
@@ -25,6 +25,6 @@ jobs:
             cp -r docs examples/dist
 
         - name: Deploy 🚀
-          uses: JamesIves/github-pages-deploy-action@v4.3.4
+          uses: JamesIves/github-pages-deploy-action@v4.6.3
           with:
             folder: examples/dist # The folder the action should deploy.
