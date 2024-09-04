@@ -201,7 +201,7 @@ export class GamepadEmulator {
             event.gamepad = gpad;
             window.dispatchEvent(event);
         } else {
-            console.warn("Error: removing emulated gamepad. No emulated gamepad exists at index " + gpadIndex);
+            console.warn("GamepadEmulator Error: Cannot remove emulated gamepad. No emulated gamepad exists at index " + gpadIndex);
         }
     }
 
@@ -214,7 +214,6 @@ export class GamepadEmulator {
     PressButton(gpadIndex: number, buttonIndex: number, value: number, touched: boolean) {
         if (this.emulatedGamepads[gpadIndex] === undefined) throw new Error("Error: PressButton() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
         var isPressed = value > this.buttonPressThreshold;
-        // console.debug("pressbutton", gpadIndex, buttonIndex, value, isPressed, touched);
         this.emulatedGamepads[gpadIndex]!.buttons[buttonIndex] = {
             pressed: isPressed,
             value: value || 0,
@@ -243,7 +242,7 @@ export class GamepadEmulator {
             const tapTarget: HTMLElement = btnConfig.tapTarget as HTMLElement;
 
             if (!tapTarget) {
-                console.warn("AddDisplayButtonEventListeners() - no tap target in button config " + gpadButtonIndex + ", skipping...");
+                console.warn("GamepadEmulator: No tap target in gamepad " + gpadIndex + " display config for button " + gpadButtonIndex + ", skipping...");
                 continue;
             }
 
@@ -282,7 +281,6 @@ export class GamepadEmulator {
                     this.PressButton(gpadIndex, gpadButtonIndex, 1, true);
                     if (btnConfig.lockTargetWhilePressed) tapTarget.setPointerCapture(e.pointerId);
                     else tapTarget.releasePointerCapture(e.pointerId)
-                    console.log("on/off pointer down", tapTarget.hasPointerCapture(e.pointerId));
                 }; tapTarget.addEventListener("pointerdown", pointerDownHandler);
 
                 // handle pointer up events for the button tap target
@@ -338,7 +336,10 @@ export class GamepadEmulator {
         let removeListenerFuncs: (() => void)[] = [];
         for (let i = 0; i < joystickConfigs.length; i++) {
             const config = joystickConfigs[i]
-            if (config.tapTarget == undefined) { console.warn(`AddDisplayJoystickEventListeners() - no tap target in joystick config ${i}, skipping...`); continue; }
+            if (config.tapTarget == undefined) {
+                console.warn("GamepadEmulator: No tap target in gamepad " + gpadIndex + " display config for joystick " + i + ", skipping...");
+                continue;
+            }
             const removeDragListeners = this.AddDragControlListener(config, (_: boolean, xValue: number, yValue: number) => {
                 if (config.xAxisIndex !== undefined) this.MoveAxis(gpadIndex, config.xAxisIndex, xValue);
                 if (config.yAxisIndex !== undefined) this.MoveAxis(gpadIndex, config.yAxisIndex, yValue);
@@ -401,8 +402,7 @@ export class GamepadEmulator {
             touchDetails.startY = downEvent.clientY;
             activePointerId = downEvent.pointerId;
             if (config.lockTargetWhilePressed) config.tapTarget.setPointerCapture(downEvent.pointerId);
-            else config.tapTarget.releasePointerCapture(downEvent.pointerId)
-            console.log("stick pointer down", config.tapTarget.hasPointerCapture(downEvent.pointerId));
+            else config.tapTarget.releasePointerCapture(downEvent.pointerId);
             callback(true, 0, 0);
             document.addEventListener("pointermove", pointerMoveHandler, false);
             document.addEventListener("pointerup", pointerUpHandler, false);
@@ -477,7 +477,6 @@ export class GamepadEmulator {
             const end = Math.max(this.emulatedGamepads.length, this.patchedGpadToRealIndexMap.length);
             do {
                 if (!this.emulatedGamepads[index] && this.patchedGpadToRealIndexMap[index] == undefined) break;
-                console.log("nextEmptyEGpadIndex", index, !this.emulatedGamepads[index], this.patchedGpadToRealIndexMap[index] == undefined);
                 index++;
             } while (index < end);
         }
@@ -543,8 +542,6 @@ export class GamepadEmulator {
                 Object.defineProperty(eGpad, "index", { get: () => mappedIndex });
                 Object.defineProperty(eGpad, "emulation", { get: () => gamepadEmulationState.real });
                 // this.realGamepadCount++;
-
-                console.log(`real gamepad connected ${eGpad!.id} (${gpadIndex}>${mappedIndex})`, this.realGpadToPatchedIndexMap, this.emulatedGamepads, this.emulatedGamepadsMetadata);
 
                 // send out the corrected event on the window object
                 const newEvent = new Event('gamepadconnected') as EGamepadEvent;
