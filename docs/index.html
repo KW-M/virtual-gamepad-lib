@@ -222,7 +222,7 @@ which are live demos at <a href="https://kw-m.github.io/virtual-gamepad-lib/">kw
 <a id="md:exporting-svg-from-affinity-designer--affinity-photo" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Exporting SVG from Affinity Designer &amp; Affinity Photo:<a href="#md:exporting-svg-from-affinity-designer--affinity-photo" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p><img src="media/Affinity-SVG-Export.png" alt="Affinity SVG Export"></p>
 <a id="md:svgo--svgomg-options" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><a href="https://github.com/svg/svgo">SVGO</a> / <a href="https://jakearchibald.github.io/svgomg/">SVGOMG</a> Options:<a href="#md:svgo--svgomg-options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p><strong>Auto</strong> (<em>recommened</em>)</p>
 <p>Use the pre-configured SVGO config in the source github repo. It will optimize the svgs while retaining compatiblity with css &amp; js interaction. Use the config with the SVGO CLI. The config file is located at: <a href="media/svgo.config.js">svgo.config.js</a> which imports <a href="media/svgo-IdClassSplitterPlugin.js">svgo-IdClassSplitterPlugin.js</a>.
-See the optimize:svg npm script in the <a href="media/package.json">package.json</a> for an example of how to use the config with the SVGO CLI.</p>
+See the optimize:svg npm script in the package.json for an example of how to use the config with the SVGO CLI.</p>
 <p><strong>Manual</strong> (<em>not recommened</em>)</p>
 <ul>
 <li>This method will not avoid ID collisions between svgs on a page like the SVGO CLI config in the project source does</li>

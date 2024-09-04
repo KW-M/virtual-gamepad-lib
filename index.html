@@ -4,18 +4,23 @@
 <head>
     <meta charset="UTF-8" />
     <title>Virtual Gamepad Examples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Virtual Gamepad Examples" />
+  <link rel="stylesheet" crossorigin href="/virtual-gamepad-lib/assets/main-D1Mh4sGR.css">
 </head>
 
 <body>
-    <h2>Virtual Gamepad Examples</h2>
-    <a href="./docs/index.html" id="docs">Documentation</a>
-    <a href="./full/index.html">Full Example</a>
-    <a href="./simple/index.html">Simple Example</a>
-    <a href="./keyboard/index.html">Keyboard & Direct Emulation Example</a>
-    <a href="./game_engine/index.html">Game Engine (3rd Party Library) Example (Phaser 3)</a>
-    <a href="./full/index.html"><img src="./docs/media/virtual-gamepad-logo-moshed.gif"
-            srcset="/virtual-gamepad-lib/assets/virtual-gamepad-logo-moshed-D18MUEaX.gif 1x" alt="Virtual Gamepad Banner Image" /></a>
 
+    <a href="./docs/index.html" id="corner-docs">Docs</a>
+    <main>
+        <h2>Virtual Gamepad Examples</h2>
+        <a href="./full/index.html">Full Example</a>
+        <a href="./simple/index.html">Simple Example</a>
+        <a href="./keyboard/index.html">Keyboard & Direct Emulation Example</a>
+        <a href="./game_engine/index.html">Game Engine (3rd Party Library) Example (Phaser 3)</a>
+        <a href="./full/index.html"><img src="./docs/media/virtual-gamepad-logo-moshed.gif"
+                srcset="/virtual-gamepad-lib/assets/virtual-gamepad-logo-moshed-D18MUEaX.gif 1x" alt="Virtual Gamepad Banner Image" /></a>
+    </main>
 </body>
 
 <style>
@@ -28,13 +33,8 @@
         margin: auto;
         display: block;
         padding: 1em;
-        background-color: #f3ecf0;
-        color: rgb(19, 124, 154);
     }
 
-    h2 {
-        color: rgb(179, 18, 185)
-    }
 
     img {
         display: block;
@@ -43,24 +43,17 @@
         max-width: 500px;
     }
 
-
-    #docs {
-        /* corner link */
-        position: fixed;
-        top: 1em;
-        right: -11em;
-        margin: 1em;
-        padding: 0.5em 10em;
-        background-color: rgb(179, 18, 185);
-        transform: rotate(45deg);
-        color: rgb(255, 255, 255);
-        box-shadow: 0 5px 0.5em 0.1em rgba(137, 79, 79, 0.295);
+    main {
+        border-radius: 0.5em;
+        display: block;
+        margin: auto;
+        padding: 1em 2em;
+        background-color: aliceblue;
     }
 
     a {
         display: block;
         margin: 1em auto;
-        text-decoration: dotted underline;
-        color: rgb(16, 126, 170);
+        color: rgb(32, 1, 135);
     }
 </style>
