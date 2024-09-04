@@ -8,7 +8,7 @@ import { CenterTransformOrigin } from "../../src/utilities.js";
 // the gamepad emulator MUST be created before creating the GamepadApiWrapper, a game engine or any other library that uses navigator.getGamepads()
 const gamepadEmu = new GamepadEmulator(0.1);
 const gpadApiWrapper = new GamepadApiWrapper({
-    updateDelay: 0,
+    updateDelay: 0, // update the gamepad state every frame
     axisDeadZone: 0.05, // set the deadzone for all axes to 0.05 [5%] (to avoid extra events when the joystick is near its neutral point).
 });
 // CONSTS
@@ -47,7 +47,7 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
                 buttonIndex: i,
                 type: gamepadButtonType.variable,
                 tapTarget: display_gpad.querySelector("#" + name + "_touch_target"),
-                dragDistance: 50,
+                dragDistance: 50, // pixels that the user must drag the button down to fully press it.
                 lockTargetWhilePressed: true,
                 directions: {
                     [gamepadDirection.up]: false,
@@ -70,20 +70,20 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
     /* ----- SETUP JOYSTICK INPUTS ----- */
     const emulatorStickConfigs = [{
             tapTarget: display_gpad.querySelector("#stick_button_left_touch_target"),
-            dragDistance: 30,
+            dragDistance: 30, // pixels that the user must drag the joystic to represent +/- 1.
             xAxisIndex: 0,
             yAxisIndex: 1,
             lockTargetWhilePressed: true,
             directions: {
                 [gamepadDirection.up]: true,
-                [gamepadDirection.down]: false,
+                [gamepadDirection.down]: false, // disable the down direction so that the joystick can only be dragged up (note that manual calls to moveAxis can still override this).
                 [gamepadDirection.left]: true,
                 [gamepadDirection.right]: true,
             },
         },
         {
             tapTarget: display_gpad.querySelector("#stick_button_right_touch_target"),
-            dragDistance: 30,
+            dragDistance: 30, // pixels that the user must drag the joystic to represent +/- 1.
             xAxisIndex: 2,
             yAxisIndex: 3,
             lockTargetWhilePressed: true,
@@ -113,7 +113,7 @@ function setupGamepadDisplay(gpadIndex) {
                 buttonElement: GPAD_DISPLAY_CONTAINER.querySelector("#" + name),
                 direction: gamepadDirection.down,
                 directionHighlight: GPAD_DISPLAY_CONTAINER.querySelector("#" + name + "_direction_highlight"),
-                movementRange: 10,
+                movementRange: 10, // pixels that the button can move
                 extraData: {
                     myCustomData: "variable btn name is " + name
                 }

@@ -89,7 +89,7 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
                 buttonIndex: i,
                 type: gamepadButtonType.variable,
                 tapTarget: display_gpad.querySelector("#" + name + "_touch_target"),
-                dragDistance: 50,
+                dragDistance: 50, // pixels that the user must drag the button down to fully press it.
                 lockTargetWhilePressed: true,
                 directions: {
                     [gamepadDirection.up]: false,
@@ -112,7 +112,7 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
     /* ----- SETUP JOYSTICK INPUTS ----- */
     const emulatorStickConfigs = [{
             tapTarget: display_gpad.querySelector("#stick_button_left_touch_target"),
-            dragDistance: 30,
+            dragDistance: 30, // pixels that the user must drag the joystic to represent +/- 1.
             xAxisIndex: 0,
             yAxisIndex: 1,
             lockTargetWhilePressed: true,
@@ -125,7 +125,7 @@ function setupEmulatedGamepadInput(gpadIndex, display_gpad) {
         },
         {
             tapTarget: display_gpad.querySelector("#stick_button_right_touch_target"),
-            dragDistance: 30,
+            dragDistance: 30, // pixels that the user must drag the joystic to represent +/- 1.
             xAxisIndex: 2,
             yAxisIndex: 3,
             lockTargetWhilePressed: true,
@@ -159,7 +159,7 @@ function addGamepadDisplay(gpadIndex) {
                 buttonElement: clone.querySelector("#" + name),
                 direction: gamepadDirection.down,
                 directionHighlight: clone.querySelector("#" + name + "_direction_highlight"),
-                movementRange: 10,
+                movementRange: 10, // pixels that the button can move
                 extraData: {
                     myCustomData: "variable btn name is " + name
                 }

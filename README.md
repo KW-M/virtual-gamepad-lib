@@ -130,7 +130,7 @@ See: [https://www.youtube.com/watch?v=bWcweY66DL8](https://www.youtube.com/watch
 **Auto** (*recommened*)
 
 Use the pre-configured SVGO config in the source github repo. It will optimize the svgs while retaining compatiblity with css & js interaction. Use the config with the SVGO CLI. The config file is located at: [svgo.config.js](./svgo.config.js) which imports [svgo-IdClassSplitterPlugin.js](./svgo-IdClassSplitterPlugin.js).
-See the optimize:svg npm script in the [package.json](./package.json) for an example of how to use the config with the SVGO CLI.
+See the optimize:svg npm script in the package.json for an example of how to use the config with the SVGO CLI.
 
 **Manual** (*not recommened*)
 

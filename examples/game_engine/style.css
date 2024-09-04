@@ -1,11 +1,14 @@
 @import url("../base.css");
 
 body {
-  background-color: #232323;
   color: white;
 }
 
-.phaser-example,
-.phaser-example * {
+#phaser-example canvas {
+  border-radius: 0.5em;
+}
+
+#phaser-example,
+#phaser-example * {
   max-width: 100%;
 }

@@ -157,7 +157,6 @@ function setupGamepadDisplay(gpadIndex) {
     })
     /* ----- SETUP BUTTON DISPLAY ----- */
     const buttons = BUTTON_ID_NAMES.map((name, i) => {
-        console.log(name);
         if (name.includes("trigger")) {
             // trigger buttons usually take variable pressure so can be represented by a variable button that is dragged down.
             return {

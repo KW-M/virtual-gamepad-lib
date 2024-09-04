@@ -28,8 +28,8 @@ const BUTTON_ID_NAMES = [
 // the gamepad emulator MUST be created before creating the GamepadApiWrapper, a game engine, or any other library that uses navigator.getGamepads()
 const gamepadEmu = new GamepadEmulator(0.1);
 const gpadApiWrapper = new GamepadApiWrapper({
-    updateDelay: 150,
-    axisDeadZone: 0.05,
+    updateDelay: 150, // update the gamepad state every 150ms, set to 0 to update as fast as the framerate of the browser (fastest possible).
+    axisDeadZone: 0.05, // set the deadzone for all axes to 0.05 [5%] (to avoid extra events when the joystick is near its neutral point).
     buttonConfigs: BUTTON_ID_NAMES.map((name, i) => {
         return {
             // d_pad directions and button 0-3 can be held down in this example
