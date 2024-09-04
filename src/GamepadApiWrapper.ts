@@ -182,7 +182,19 @@ export class GamepadApiWrapper {
         return this.currentStateOfGamepads;
     }
 
+    /** (destructor) - Cleans up any event listeners and stops the gamepad check loop. Do not re-use class instance after calling cleanup(). */
+    cleanup() {
+        this.updateDelay = -1;
+        this.gamepadConnectListeners.forEach(callback => window.removeEventListener("gamepadconnected", callback, true));
+        this.gamepadDisconnectListeners.forEach(callback => window.removeEventListener("gamepaddisconnected", callback, true));
+        this.gamepadConnectListeners = [];
+        this.gamepadDisconnectListeners = [];
+        this.gamepadButtonChangeListeners = [];
+        this.gamepadAxisChangeListeners = [];
+    }
+
     protected tickLoop() {
+        if (this.updateDelay < 0) return; // exit if negative delay is set (used to signal cleanup)
         this.checkForGamepadChanges();
         if (this.updateDelay == 0) {
             requestAnimationFrame(this.tickLoop.bind(this));
