@@ -19,7 +19,7 @@ test("creation & cleanup", () => {
     const gpad = new GamepadEmulator(0.1);
     expect(gpad).toBeDefined();
     expect(navigator.getGamepads).not.toEqual(ref);
-    expect(navigator.getGamepads()).toEqual([]); // .toEqual([null, null, null]) would work too
+    expect(navigator.getGamepads()).toEqual([null, null, null])
     expect(() => { new GamepadEmulator(0.1) }).toThrowError();
 
     // cleanup and restore the default getGamepads function (mocked in this case):
@@ -69,7 +69,7 @@ test("getGamepads() patch", async () => {
         addGpadFlagA = gpad.gamepad;
     });
 
-    expect(navigator.getGamepads()).toEqual([]);//.toEqual([null, null, null]);
+    expect(navigator.getGamepads()).toEqual([null, null, null]);
     expect(addGpadFlagA).toEqual(false);
     expect(addGpadFlagB).toEqual(false);
 
