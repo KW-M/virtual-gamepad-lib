@@ -20,13 +20,13 @@ test("GamepadApiWrapper w/o GamepadEmulator", () => {
         updateDelay: 0,
     }) as privateGamepadApiWrapper;
     expect(gpadApi.gamepadApiSupported()).not.toBeFalsy();
-    Object.defineProperty(window.navigator, "getGamepads", { value: undefined });
+    Object.defineProperty(window.navigator, "getGamepads", { value: undefined, configurable: true });
     expect(gpadApi.gamepadApiSupported()).toBeFalsy();
-    Object.defineProperty(window.navigator, "getGamepads", { value: () => null });
+    Object.defineProperty(window.navigator, "getGamepads", { value: () => null, configurable: true });
     expect(gpadApi.gamepadApiSupported()).toBeFalsy();
-    Object.defineProperty(window.navigator, "getGamepads", { value: () => [1] });
+    Object.defineProperty(window.navigator, "getGamepads", { value: () => [1], configurable: true });
     expect(gpadApi.gamepadApiSupported()).not.toBeFalsy();
-    Object.defineProperty(window.navigator, "getGamepads", { value: getGamepads });
+    Object.defineProperty(window.navigator, "getGamepads", { value: getGamepads, configurable: true });
 })
 
 test("GamepadApiWrapper", () => {
@@ -98,18 +98,18 @@ test("GamepadApiWrapper fireWhileHolding", async () => {
 
 
     async function listenerFunc() {
-        expect(gpadApi.getCurrentGamepadStates()[0].buttons[0]).toEqual({ pressed: false, value: 0, touched: false } as GamepadButton);
+        expect(gpadApi.getCurrentGamepadStates()[0]!.buttons[0]).toEqual({ pressed: false, value: 0, touched: false } as GamepadButton);
         const a = await getGpadButtonUpdate(gpadApi);
         expect(a.gpadIndex).toEqual(0);
-        expect(gpadApi.getCurrentGamepadStates()[0].buttons[0]).toEqual({ pressed: true, value: 1, touched: true } as GamepadButton);
+        expect(gpadApi.getCurrentGamepadStates()[0]!.buttons[0]).toEqual({ pressed: true, value: 1, touched: true } as GamepadButton);
         expect(a.changesMask[0]).toEqual({ pressed: true, heldDown: undefined, released: undefined, touchDown: true, valueChanged: true, touchUp: undefined } as buttonChangeDetails);
         const b = await getGpadButtonUpdate(gpadApi);
         expect(b.gpadIndex).toEqual(0);
-        expect(gpadApi.getCurrentGamepadStates()[0].buttons[0]).toEqual({ pressed: true, value: 1, touched: true } as GamepadButton);
+        expect(gpadApi.getCurrentGamepadStates()[0]!.buttons[0]).toEqual({ pressed: true, value: 1, touched: true } as GamepadButton);
         expect(b.changesMask[0]).toEqual({ pressed: true, heldDown: true, released: undefined, touchDown: undefined, valueChanged: undefined, touchUp: undefined } as buttonChangeDetails);
         const c = await getGpadButtonUpdate(gpadApi);
         expect(c.gpadIndex).toEqual(0);
-        expect(gpadApi.getCurrentGamepadStates()[0].buttons[0]).toEqual({ pressed: false, value: 0, touched: false } as GamepadButton);
+        expect(gpadApi.getCurrentGamepadStates()[0]!.buttons[0]).toEqual({ pressed: false, value: 0, touched: false } as GamepadButton);
         expect(c.changesMask[0]).toEqual({ pressed: undefined, heldDown: undefined, released: true, touchDown: undefined, valueChanged: undefined, touchUp: true } as buttonChangeDetails);
     }
 
@@ -144,12 +144,12 @@ test("GamepadApiWrapper cleanup", async () => {
 
 
     async function listenerFunc() {
-        expect(gpadApi.getCurrentGamepadStates()[1].buttons[2]).toEqual({ pressed: false, value: 0, touched: false } as GamepadButton);
-        expect(gpadApi.getCurrentGamepadStates()[1].buttons[5]).toEqual({ pressed: false, value: 0, touched: false } as GamepadButton);
+        expect(gpadApi.getCurrentGamepadStates()[1]!.buttons[2]).toEqual({ pressed: false, value: 0, touched: false } as GamepadButton);
+        expect(gpadApi.getCurrentGamepadStates()[1]!.buttons[5]).toEqual({ pressed: false, value: 0, touched: false } as GamepadButton);
         const a = await getGpadButtonUpdate(gpadApi);
         expect(a.gpadIndex).toEqual(1);
-        expect(gpadApi.getCurrentGamepadStates()[1].buttons[2]).toEqual({ pressed: false, value: 0, touched: false } as GamepadButton);
-        expect(gpadApi.getCurrentGamepadStates()[1].buttons[5]).toEqual({ pressed: true, value: 1, touched: true } as GamepadButton);
+        expect(gpadApi.getCurrentGamepadStates()[1]!.buttons[2]).toEqual({ pressed: false, value: 0, touched: false } as GamepadButton);
+        expect(gpadApi.getCurrentGamepadStates()[1]!.buttons[5]).toEqual({ pressed: true, value: 1, touched: true } as GamepadButton);
         expect(a.changesMask[5]).toEqual({ pressed: true, heldDown: undefined, released: undefined, touchDown: true, valueChanged: true, touchUp: undefined } as buttonChangeDetails);
         await expect(getGpadButtonUpdate(gpadApi))
             .rejects
