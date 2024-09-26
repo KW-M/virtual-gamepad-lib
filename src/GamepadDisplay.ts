@@ -1,7 +1,6 @@
 
 
-import { GamepadApiWrapper, type buttonChangeDetails } from "./GamepadApiWrapper.js";
-import type { EGamepad } from "./GamepadEmulator.js";
+import { type AxisChangeCallback, type ButtonChangeCallback, GamepadApiWrapper, type buttonChangeDetails } from "./GamepadApiWrapper.js";
 import { gamepadButtonType, gamepadDirection, type standardGpadButtonMap, type standardGpadAxesMap } from "./enums.js";
 
 export type ButtonDisplayFunction = (buttonConfig: GamepadDisplayButton | GamepadDisplayVariableButton, value: number, touched: boolean, pressed: boolean, changes: buttonChangeDetails, btnIndex: number) => void;
@@ -83,8 +82,6 @@ export interface DisplayGamepadConfig {
 export class GamepadDisplay {
     protected config: DisplayGamepadConfig;
     protected apiWrapper: GamepadApiWrapper;
-    protected btnChangeListener: (gpadIndex: number, gpadState: Gamepad | EGamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => void;
-    protected axisChangeListener: (gpadIndex: number, gpadState: Gamepad | EGamepad, axisChangesMask: (boolean)[]) => void;
 
     /** Create a new GamepadDisplay instance
     * @param config The config to use for the gamepad display
@@ -93,8 +90,8 @@ export class GamepadDisplay {
     constructor(config: DisplayGamepadConfig, apiWrapper?: GamepadApiWrapper) {
         this.config = config;
         this.apiWrapper = apiWrapper || new GamepadApiWrapper({ buttonConfigs: [], updateDelay: 0 });
-        this.btnChangeListener = this.apiWrapper.onGamepadButtonChange(this.displayButtonChanges.bind(this));
-        this.axisChangeListener = this.apiWrapper.onGamepadAxisChange(this.displayJoystickChanges.bind(this));
+        this.apiWrapper.onGamepadButtonChange(this.displayButtonChanges);
+        this.apiWrapper.onGamepadAxisChange(this.displayJoystickChanges);
     };
 
     /**
@@ -178,7 +175,7 @@ export class GamepadDisplay {
      * @param gpadState The new state of the gamepad as reported by the browser  / {@link GamepadApiWrapper.onGamepadAxisChange}
      * @param axisChangesMask An array of booleans, where each true indicates that the corresponding axis has changed since the last update
      */
-    protected displayJoystickChanges(gpadIndex: number, gpadState: Gamepad | EGamepad, axisChangesMask: (boolean)[]) {
+    protected displayJoystickChanges: AxisChangeCallback = (gpadIndex, gpadState, axisChangesMask) => {
         if (gpadIndex != this.config.gamepadIndex) return;
         const joystickConfigs = this.config.sticks;
         for (let i = 0; i < joystickConfigs.length; i++) {
@@ -214,7 +211,7 @@ export class GamepadDisplay {
      * @param buttonChangesMask An array of buttonChangeDetails or false, where each false in the array indicates that the corresponding button index has not changed since the last update.
      * @returns
      */
-    protected displayButtonChanges = (gpadIndex: number, gpadState: Gamepad | EGamepad, buttonChangesMask: (buttonChangeDetails | false)[]) => {
+    protected displayButtonChanges: ButtonChangeCallback = (gpadIndex, gpadState, buttonChangesMask) => {
         if (gpadIndex != this.config.gamepadIndex) return;
         const buttonConfigs = this.config.buttons;
         for (let i = 0; i < buttonConfigs.length; i++) {
@@ -245,8 +242,8 @@ export class GamepadDisplay {
      * the {@link GamepadDisplay} instance to prevent memory leaks
      */
     Cleanup() {
-        this.apiWrapper.offGamepadButtonChange(this.btnChangeListener)
-        this.apiWrapper.offGamepadAxisChange(this.axisChangeListener)
+        this.apiWrapper.offGamepadButtonChange(this.displayButtonChanges)
+        this.apiWrapper.offGamepadAxisChange(this.displayJoystickChanges)
     }
 
 }
