@@ -48,9 +48,9 @@ export interface buttonChangeDetails {
 }
 
 
-export type ButtonChangeCallback = (gpadIndex: number, gpad: EGamepad | Gamepad, changesMask: (buttonChangeDetails | false)[]) => void;
+export type ButtonChangeCallback = (gpadIndex: number, gpad: EGamepad | Gamepad, changesMask: readonly (buttonChangeDetails | false)[]) => void;
 
-export type AxisChangeCallback = (gpadIndex: number, gpad: EGamepad | Gamepad, changesMask: boolean[]) => void;
+export type AxisChangeCallback = (gpadIndex: number, gpad: EGamepad | Gamepad, changesMask: readonly boolean[]) => void;
 
 export type GamepadEventCallback = (e: GamepadEvent) => void;
 
@@ -60,11 +60,13 @@ export class GamepadApiWrapper {
     protected updateDelay: number;
     protected axisDeadZone: number;
     protected buttonConfigs: wrapperButtonConfig[];
-    protected currentStateOfGamepads: (Gamepad | EGamepad)[];
+    protected currentStateOfGamepads: (Gamepad | EGamepad | undefined)[];
     protected gamepadConnectListeners: GamepadEventCallback[];
     protected gamepadDisconnectListeners: GamepadEventCallback[];
     protected gamepadButtonChangeListeners: ButtonChangeCallback[];
     protected gamepadAxisChangeListeners: AxisChangeCallback[];
+    protected _requestAnimationFrame: (callback: FrameRequestCallback) => number;
+    protected _getGamepads: () => (Gamepad | null)[];
 
     /** Create a new GamepadApiWrapper
      * @param config The configuration options for this wrapper @see {@link wrapperConfig} */
@@ -79,10 +81,10 @@ export class GamepadApiWrapper {
         this.gamepadAxisChangeListeners = [];
 
         navigator.gamepadInputEmulation = "gamepad"; // Old Microsoft edge fix
-        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-        navigator.getGamepads = navigator.getGamepads || navigator.webkitGetGamepads || navigator.mozGetGamepads || navigator.msGetGamepads;
+        this._requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+        this._getGamepads = navigator.getGamepads || navigator.webkitGetGamepads || navigator.mozGetGamepads || navigator.msGetGamepads;
 
-        if (this.gamepadApiSupported()) {
+        if (this.gamepadApiSupported() || navigator.getNativeGamepads !== undefined) {
             this.tickLoop();
         }
     }
@@ -210,7 +212,7 @@ export class GamepadApiWrapper {
         for (var gi = 0; gi < gamepads.length; gi++) {
             let gamepad = gamepads[gi];
             if (!gamepad) continue;
-            if (!this.currentStateOfGamepads[gi]) this.currentStateOfGamepads[gi] = gamepad;
+            // if (!this.currentStateOfGamepads[gi]) this.currentStateOfGamepads[gi] = gamepad;
 
             this.checkForAxisChanges(gi, gamepad);
             this.checkForButtonChanges(gi, gamepad);
@@ -225,7 +227,7 @@ export class GamepadApiWrapper {
         if (axisState.length == 0) return;
 
         const lastGamepadState = this.currentStateOfGamepads[gamepadIndex];
-        let lastAxisState = lastGamepadState.axes || [];
+        let lastAxisState = lastGamepadState?.axes || [];
         let axesChangeMask: boolean[] = [];
 
         let i, somethingChanged = false;
@@ -253,11 +255,11 @@ export class GamepadApiWrapper {
         if (btnState.length == 0) return;
 
         const lastGamepadState = this.currentStateOfGamepads[gpadIndex];
-        const lastBtnsState: readonly GamepadButton[] = lastGamepadState.buttons || btnState;
-        const buttonChanges: (buttonChangeDetails | false)[] = [];
+        const lastBtnsState: readonly GamepadButton[] = lastGamepadState?.buttons || btnState;
+        const buttonChanges: (buttonChangeDetails | false)[] = new Array(btnState.length).fill(false);
 
-        let bi, atLeastOneButtonChanged = false;
-        for (bi = 0; bi < btnState.length; bi++) {
+        let atLeastOneButtonChanged = false;
+        for (let bi = 0; bi < btnState.length; bi++) {
 
             let somethingChanged = false;
             const button: GamepadButton = btnState[bi] || { pressed: false, value: 0, touched: false };
