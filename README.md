@@ -50,53 +50,19 @@ npm install virtual-gamepad-lib
 ### Importing
 
 ```typescript
-import {
-  GamepadApiWrapper, // gamepad
-  GamepadEmulator,
-  GamepadDisplay,
-  CenterTransformOrigin, CenterTransformOriginDebug, // utilities
-  gamepadButtonType, gamepadDirection, gamepadEmulationState, // ... enums
-} from "virtual-gamepad-lib";
-// typescript types can be imported just the same with
-import type { ... } from 'virtual-gamepad-lib';
+import { GamepadApiWrapper, GamepadEmulator, GamepadDisplay } from "virtual-gamepad-lib";
 
-/* ------ OR if using common.js ------- */
-const {
-  GamepadApiWrapper,
-  /* etc... */
-} = require('virtual-gamepad-lib');
+// Typescript types are included
+import type { GamepadApiWrapper, wrapperConfig /* etc. */ } from "virtual-gamepad-lib";
 
-```
-
-If using a bundler with "moduleResolution" set to "NodeNext" or "Node16" or greater in jsconfig.json or tsconfig.json, you can import the modules separately like this:
-
-```typescript
+// Individual modules can be imported like this:
 import { GamepadEmulator } from "virtual-gamepad-lib/GamepadEmulator";
-import { GamepadDisplay } from "virtual-gamepad-lib/GamepadDisplay";
-import { GamepadApiWrapper } from "virtual-gamepad-lib/GamepadApiWrapper";
-import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "virtual-gamepad-lib/enums";
-import { CenterTransformOrigin, CenterTransformOriginDebug } from "virtual-gamepad-lib/utilities";
-// typescript types can be imported just the same with import type { ... } from 'virtual-gamepad-lib/...';
 
-/* ------ OR if using common.js ------- */
-const { GamepadEmulator } = require("virtual-gamepad-lib/GamepadEmulator");
-/* etc... */
+// Common.js style also works:
+const { GamepadApiWrapper /* etc. */ } = require("virtual-gamepad-lib");
 ```
 
-Otherwise, you can import the modules separately like this:
-
-```typescript
-import { GamepadApiWrapper } from "virtual-gamepad-lib/dist/GamepadApiWrapper";
-import { GamepadEmulator } from "virtual-gamepad-lib/dist/GamepadEmulator";
-import { GamepadDisplay } from "virtual-gamepad-lib/dist/GamepadDisplay";
-import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "virtual-gamepad-lib/dist/enums";
-import { CenterTransformOrigin, CenterTransformOriginDebug } from "virtual-gamepad-lib/dist/utilities";
-// typescript types can be imported just the same with import type { ... } from 'virtual-gamepad-lib/dist/...';
-
-/* ------ OR if using common.js ------- */
-const { GamepadEmulator } = require("virtual-gamepad-lib/dist/cjs/GamepadEmulator");
-/* etc... */
-```
+See [IMPORTING_GUIDE.md](IMPORTING_GUIDE.md) for help.
 
 ## Usage
 
