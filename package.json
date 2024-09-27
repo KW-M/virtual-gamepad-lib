@@ -80,8 +80,8 @@
     "watch:examples": "pnpm run precompile:examples; vite --config examples/vite.config.js --host",
     "build:examples": "pnpm run precompile:examples; vite build --config examples/vite.config.js",
     "preview:examples": "vite preview --config examples/vite.config.js  --host",
-    "prepublish": "pnpm run test && pnpm run build:lib && pnpm run build:examples",
-    "publish": "np --no-cleanup --no-publish; npm publish"
+    "prepublish": "pnpm run build:lib && pnpm run build:examples",
+    "publish": "np --no-cleanup"
   },
   "devDependencies": {
     "@vitest/browser": "^2.1.1",
