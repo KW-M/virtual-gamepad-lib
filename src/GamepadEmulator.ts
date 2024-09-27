@@ -6,8 +6,8 @@ import { NormalizeClampVector } from "./utilities.js";
 export interface EGamepad extends Omit<Gamepad, "vibrationActuator"> {
     readonly emulation: gamepadEmulationState | undefined;
     readonly displayId: string;
-    readonly hapticActuators?: (GamepadHapticActuator | null)[];
-    readonly vibrationActuator?: GamepadHapticActuator;
+    hapticActuators?: GamepadHapticActuator[];
+    vibrationActuator?: GamepadHapticActuator;
 }
 
 export interface EGamepadPrivateData {

@@ -78,10 +78,10 @@
     "build:examples": "pnpm run precompile:examples; vite build --config examples/vite.config.js",
     "preview:examples": "vite preview --config examples/vite.config.js  --host",
     "copy-dist-pkg": "cp -r ./dist ./dist/dist && cp ./LICENSE ./dist/LICENSE && cp ./package.json ./dist/package.json && cp ./pnpm-lock.yaml ./dist/pnpm-lock.yaml",
-    "prepublish": "build:lib && pnpm run build:examples && pnpm run test && pnpm run copy-dist-pkg",
-    "publish": "np --test-script='precompile:examples' --no-publish && npm publish",
-    "postpublish": "rm -r ./dist",
-    "publish-preview": "np --test-script='precompile:examples' --preview"
+    "prepub": "rm -r ./dist && pnpm run precompile:examples && pnpm run build:lib && pnpm run build:examples && pnpm run test && pnpm run copy-dist-pkg",
+    "pub": "np --no-test --no-publish && pnpm publish ./dist",
+    "postpub": "rm -r ./dist",
+    "pub-preview": "np --preview"
   },
   "devDependencies": {
     "@vitest/browser": "^2.1.1",
