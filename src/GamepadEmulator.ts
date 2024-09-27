@@ -28,7 +28,7 @@ export interface ButtonConfig {
     type: gamepadButtonType.onOff,
     /** Taps/clicks/hovers on this element will trigger events for this button on the emulated gamepad. */
     tapTarget: (HTMLElement | SVGElement)
-    /** The index of the button this emulated button should controll in the {@link Gamepad.buttons} array */
+    /** The index of the button this emulated button should control in the {@link EGamepad.buttons} array */
     buttonIndex: number,
     /** Should this button lock the cursor once it is preseed (mouse or touch), such that NO pointer/mouse/touch events are fired with that pointer on any other elements on the page unil the finger leaves the screen or mouse lets go.
      * This option also prevents this button from reacting when a press starts on another button or page element and then the pointer/touch moves over the tap target of this button while being held down. */
@@ -40,7 +40,7 @@ export interface VariableButtonConfig {
     /** The element where a tap or mouse click must start to control this variable button.
      * The pointer does not need to remain within this element while dragging to continue controlling the variable button as long as the mouse / touch / pointer is held down */
     tapTarget: (HTMLElement | SVGElement)
-    /** The index of the button this emulated button should controll in the {@link Gamepad.buttons} array */
+    /** The index of the button this emulated button should controll in the {@link EGamepad.buttons} array */
     buttonIndex: number,
     /** The distance drag gesture must go in pixels to appear as a fully pressed button: value = 1 */
     dragDistance: number,
@@ -63,9 +63,9 @@ export interface JoystickConfig {
     tapTarget: HTMLElement | SVGElement;
     /** The distance a drag gesture must go in pixels to register as a full 1 or -1 on the x or y axis (Alternatively, the distance from the touch start posisiton that the joystick can be dragged)  */
     dragDistance: number;
-    /** What emulated gamepad axis (the index in {@link Gamepad.axes}) to drive When the virtual joystick is dragged left (-) and right (+) */
+    /** What emulated gamepad axis (the index in {@link EGamepad.axes}) to drive When the virtual joystick is dragged left (-) and right (+) */
     xAxisIndex?: number;
-    /** What emulated gamepad axis (the index in {@link Gamepad.axes}) to drive When the virtual joystick is dragged up (-) and down (+) */
+    /** What emulated gamepad axis (the index in {@link EGamepad.axes}) to drive When the virtual joystick is dragged up (-) and down (+) */
     yAxisIndex?: number;
     /** Should the joystick lock the cursor once a drag gesture has started, such that NO pointer/mouse/touch events are fired with that pointer on any other elements on the page unil the gesture is finished (finger leaves the screen or mouse lets go) */
     lockTargetWhilePressed?: boolean;

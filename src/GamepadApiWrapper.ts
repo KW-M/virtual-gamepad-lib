@@ -22,7 +22,7 @@ export interface wrapperConfig {
     /** A range in which axis values closer to zero than this are simply treated as zero
      * Used to prevent noise from analog sticks from registering as changes when they are not being used */
     axisDeadZone?: number;
-    /** An array of {@link wrapperButtonConfig} that tell the wrapper how to respond to button changes. Should be in the same order as buttons are listed in a native browser {@link Gamepad.buttons} list. */
+    /** An array of {@link wrapperButtonConfig} that tell the wrapper how to respond to button changes. Array index corresponds the the index of the button the a native browser gamepad.buttons array as returned from eg: `navigator.getGamepads()[0].buttons` */
     buttonConfigs?: wrapperButtonConfig[];
 }
 

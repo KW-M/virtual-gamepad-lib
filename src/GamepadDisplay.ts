@@ -168,11 +168,11 @@ export class GamepadDisplay {
     }
 
     /**
-     * This function is registered as the callback for {@link GamepadApiWrapper.onGamepadAxisChange}
+     * This function is registered as the callback for {@link GamepadApiWrapper.onGamepadAxisChange()}
      * it calls the {@link DisplayGamepadConfig.joystickDisplayFunction} (if specified) or the {@link GamepadDisplay.DefaultJoystickDisplayFunction} otherwise
      * for each configured joystick with axies that have changed
      * @param gpadIndex The index of the gamepad that has changed
-     * @param gpadState The new state of the gamepad as reported by the browser  / {@link GamepadApiWrapper.onGamepadAxisChange}
+     * @param gpadState The new state of the gamepad as reported by the browser
      * @param axisChangesMask An array of booleans, where each true indicates that the corresponding axis has changed since the last update
      */
     protected displayJoystickChanges: AxisChangeCallback = (gpadIndex, gpadState, axisChangesMask) => {
@@ -203,7 +203,7 @@ export class GamepadDisplay {
 
 
     /**
-     * This function is registered as the callback for {@link GamepadApiWrapper.onGamepadButtonChange}
+     * This function is registered as the callback for {@link GamepadApiWrapper.onGamepadButtonChange()}
      * it calls the {@link DisplayGamepadConfig.buttonDisplayFunction} (if specified) or the {@link GamepadDisplay.DefaultButtonDisplayFunction} otherwise
      * for every button that has changed since the last update
      * @param gpadIndex The index of the gamepad that has changed
