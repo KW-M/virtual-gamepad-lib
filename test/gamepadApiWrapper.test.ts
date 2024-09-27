@@ -1,4 +1,3 @@
-import { g } from "vitest/dist/suite-BWgaIsVn.js";
 import { GamepadApiWrapper, buttonChangeDetails, wrapperButtonConfig } from "../src/GamepadApiWrapper";
 import { EGamepad, GamepadEmulator } from "../src/GamepadEmulator";
 import { test, expect, } from "vitest";
