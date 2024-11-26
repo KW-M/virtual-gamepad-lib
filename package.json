@@ -51,7 +51,7 @@
     "docs:build": "typedoc --options typedoc.json src/*",
     "docs:watch": "typedoc --options typedoc.json src/* --watch",
     "svgs:optimize": "svgo --recursive --folder ./gamepad_asset_originals/svg/ --output ./gamepad_assets/",
-    "pub": "(pnpm i && pnpm run svgs:optimize && pnpm run build && pnpm run examples:build && pnpm run docs:build && pnpm run test && cp -r ./dist ./dist/dist && packito -d ./dist --nopublish && np --no-tests --no-publish && pnpm publish) || rm -r ./dist",
+    "pub": "(pnpm i && pnpm run svgs:optimize && pnpm run build && pnpm run examples:build && pnpm run docs:build && pnpm run test && cp -r ./dist ./dist/dist && packito -d ./dist --nopublish && np --no-tests --no-publish && pnpm publish dist) || rm -r ./dist",
     "pub-preview": "(pnpm i && pnpm run svgs:optimize && pnpm run build && pnpm run examples:build && pnpm run docs:build && pnpm run test && cp -r ./dist ./dist/dist && packito -d ./dist --nopublish && np --preview --no-tests --no-publish)"
   },
   "module": "./src/index.ts",

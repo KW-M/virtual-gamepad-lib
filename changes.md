@@ -1,17 +1,17 @@
 # 0.3.0 - Nov 21 2024
 
-- New preset functions make it easy to get started with the preset gamepad SVG and customize later.
-- Support for 8-way dpads (diagonal directions) - see custom gamepads example
-- Improved consistancy & file size for default gamepad SVGs - SVGs and necessary CSS can now be imported from the NPM library for use with bundlers & build tools.
+- New preset function makes it easy to get started with the preset gamepad SVG and customize later.
+- Support for 8-way dpads (diagonal directions) - see simple & custom gamepads examples
+- Improved consistency & file size for default gamepad SVGs - SVGs and necessary CSS can now be imported from the NPM library for use with bundlers & build tools.
 - Improved & Updated SVG Optimization script to SVGO 2
-  - This is the recomended way to create custom svg gamepads.
-  - Now supports proper global collison hash prefixes and correct layer name parsing from Adobe Suite, Afffinity Suite & Others.
+  - This is the recommended way to create custom SVG gamepads.
+  - Now supports proper global collision hash prefixes and correct layer name parsing from Adobe Suite, Afffinity Suite & Others.
   - Can be imported from the NPM library
 - Improved vector SVG authoring tips.
 
-DEPRICATED:
+DEPRECATED:
 
-- Joystick direction arrows/"highlights" have are depricated to be removed in the next release - they are fairly niche feature that can easily be re-implemented with extraData in the joystick config and a custom joystickDisplayFunction and
+- Joystick direction arrows/"highlights" have are deprecated to be removed in the next release - they are fairly niche feature that can easily be re-implemented with extraData in the joystick config and a custom joystickDisplayFunction - SEE custom gamepads example.
 
 # 0.2.0 - Sep 27 2024
 
