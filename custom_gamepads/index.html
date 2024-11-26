@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Custom Gamepads Example</title>
+  <link rel="icon" href="/virtual-gamepad-lib/assets/favicon-CQJirrUN.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Code that creates the gamepad emulator instance MUST come before any gamepad libraries are loaded -->
+  <!--  to use JS: <script type="module" src="./example.js"></script> -->
+  <script type="module" crossorigin src="/virtual-gamepad-lib/assets/custom_gamepads-DPQ0p1vn.js"></script>
+  <link rel="modulepreload" crossorigin href="/virtual-gamepad-lib/assets/GamepadEmulator-CNWoeGf3.js">
+  <link rel="modulepreload" crossorigin href="/virtual-gamepad-lib/assets/GamepadDisplay-3X_eRe0j.js">
+  <link rel="modulepreload" crossorigin href="/virtual-gamepad-lib/assets/display-gamepad-right-BmtaGMJm.js">
+  <link rel="stylesheet" crossorigin href="/virtual-gamepad-lib/assets/custom_gamepads-BMNoLoPF.css">
+</head>
+
+<body>
+  <a href="../docs/index.html" id="corner-docs">Docs</a>
+  <a href="https://github.com/KW-M/virtual-gamepad-lib/tree/main/examples/custom_gamepads" id="corner-docs-l">Source</a>
+
+  <h2>Custom Gamepads Example</h2>
+  <h3 class="text-block"> Plug in a gamepad or use the on-screen controls.</h3>
+  <hr>
+
+  <!-- CUSTOM gamepad flavors -->
+  <div id="split_gpad_display_container" class="gpad-container">
+
+    <!-- SPLIT gamepad left -->
+    <div class="gpad-display" id="gpad_display_left">
+      <!-- The whole left gamepad svg will get inseted here by the script -->
+      <!-- Importantly, the svg source is inserted straight into the html, NOT using an <img> tag -->
+    </div>
+
+    <!-- LABEL in Middle-->
+    <h2 style="padding: 40px; text-align: center; flex: 1 1 0px">Split SVG Gamepad With 8-way dpad and drag direction
+      indicators,
+      styled
+      using CSS </h2>
+
+    <!-- SPLIT gamepad right -->
+    <div class="gpad-display" id="gpad_display_right">
+      <!-- The whole left gamepad svg will get inseted here by the script -->
+      <!-- Importantly, the svg source is inserted straight into the html, NOT using an <img> tag -->
+    </div>
+
+  </div>
+
+  <!-- Custom HTML Gamepad -->
+  <div class="gpad-display" id="gpad_display_html" class="gpad-container">
+    <h2 style="grid-column-end: span 3; margin-bottom: 0;">Fully Custom HTML Gamepad</h2>
+    <p style="grid-column-end: span 3; margin:0 0 2em 0">(Connected to the same underlying emulated gamepad)</p>
+    <div class="custom-gpad-buttons">
+      <h3>Dragable Buttons</h3>
+      <div id="drag-button-0" role="button" tabindex="-1" class="gpad-custom-button gpad-custom-drag-button"
+        style="cursor: w-resize;">◄0</div>
+      <div id="drag-button-1" role="button" tabindex="-1" class="gpad-custom-button gpad-custom-drag-button"
+        style="cursor: ns-resize;">1▼</div>
+      <div id="drag-button-2" role="button" tabindex="-1" class="gpad-custom-button gpad-custom-drag-button"
+        style="cursor: e-resize;">2►</div>
+    </div>
+
+    <div class="custom-gpad-vert-axis custom-gpad-axis-bg" id="axis-1">
+      <h3>AXIS 1</h3>
+      <div role="button" tabindex="-1" class="gpad-custom-thumbstick bottom-stick"></div>
+    </div>
+    <div class="custom-gpad-vert-axis custom-gpad-axis-bg" id="axis-2">
+      <h3>AXIS 2</h3>
+      <div role="button" tabindex="-1" class="gpad-custom-thumbstick top-stick"></div>
+    </div>
+    <div class="custom-gpad-buttons">
+      <h3>Normal Buttons</h3>
+      <div id="button-3" role="button" tabindex="-1" class="gpad-custom-button">3</div>
+      <div id="button-4" role="button" tabindex="-1" class="gpad-custom-button">4</div>
+      <div id="button-5" role="button" tabindex="-1" class="gpad-custom-button">5</div>
+      <div id="button-6" role="button" tabindex="-1" class="gpad-custom-button">6</div>
+      <div id="button-7" role="button" tabindex="-1" class="gpad-custom-button">7</div>
+      <div id="button-8" role="button" tabindex="-1" class="gpad-custom-button">8</div>
+    </div>
+    <div class="custom-gpad-horiz-axis custom-gpad-axis-bg" id="axis-0">
+      <h3>AXIS 0</h3>
+      <div role="button" tabindex="-1" class="gpad-custom-thumbstick"></div>
+    </div>
+    <div class="custom-gpad-horiz-axis custom-gpad-axis-bg" id="axis-3">
+      <h3>AXIS 3</h3>
+      <div role="button" tabindex="-1" class="gpad-custom-thumbstick"></div>
+    </div>
+    <div class="custom-gpad-buttons">
+      <h3>More Normal Buttons</h3>
+      <div id="button-9" role="button" tabindex="-1" class="gpad-custom-button">9</div>
+      <div id="button-10" role="button" tabindex="-1" class="gpad-custom-button">10</div>
+      <div id="button-11" role="button" tabindex="-1" class="gpad-custom-button">11</div>
+      <div id="button-12" role="button" tabindex="-1" class="gpad-custom-button">12</div>
+      <div id="button-13" role="button" tabindex="-1" class="gpad-custom-button">13</div>
+      <div id="button-14" role="button" tabindex="-1" class="gpad-custom-button">14</div>
+    </div>
+
+    <div class="custom-gpad-buttons">
+      <h3>Even More Buttons</h3>
+      <div id="button-15" role="button" tabindex="-1" class="gpad-custom-button">15</div>
+      <div id="button-16" role="button" tabindex="-1" class="gpad-custom-button">16</div>
+      <div id="button-17" role="button" tabindex="-1" class="gpad-custom-button">17</div>
+      <div id="button-18" role="button" tabindex="-1" class="gpad-custom-button">18</div>
+      <div id="button-19" role="button" tabindex="-1" class="gpad-custom-button">19</div>
+      <div id="button-20" role="button" tabindex="-1" class="gpad-custom-button">20</div>
+    </div>
+    <div class="custom-gpad-xy-axis custom-gpad-axis-bg" id="axis-4">
+      <h3>AXIS x=4 y=5</h3>
+      <div role="button" tabindex="-1" class="gpad-custom-thumbstick"></div>
+    </div>
+
+  </div>
+
+
+
+</body>
+
+</html>
