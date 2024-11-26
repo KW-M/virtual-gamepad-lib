@@ -29,7 +29,8 @@ export default defineConfig({
                 simple: resolve(__dirname, 'simple/index.html'),
                 keyboard: resolve(__dirname, 'keyboard/index.html'),
                 game_engine: resolve(__dirname, 'game_engine/index.html'),
-                multiple_gamepads: resolve(__dirname, 'multiple_gamepads/index.html')
+                multiple_gamepads: resolve(__dirname, 'multiple_gamepads/index.html'),
+                custom_gamepads: resolve(__dirname, 'custom_gamepads/index.html'),
             }
         }
     },
