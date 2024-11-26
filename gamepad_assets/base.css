@@ -1,0 +1,33 @@
+/* Disable pointer interaction on the gamepad svg */
+.gpad-container svg,
+svg.gpad-container {
+    pointer-events: none;
+}
+
+/* Enable pointer-events on the tap targets + hide them visually */
+.gpad-tap-target {
+    visibility: hidden;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.gpad-highlight {
+    opacity: 0;
+}
+
+.gpad-highlight.touched {
+    opacity: .5;
+}
+
+.gpad-highlight.touched.pressed {
+    opacity: 1;
+}
+
+.gpad-direction-highlight {
+    opacity: 0;
+}
+
+.gpad-direction-highlight.moved,
+.gpad-direction-highlight.active {
+    opacity: 0.8;
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Virtual Gamepad Example</title>
+  <link rel="icon" type="image/svg+xml" href="/typescript.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="stylesheet" href="./style.css" />
+  <script type="module" src="./example.ts"></script>
+  <!--  to use JS: <script type="module" src="./example.js"></script> -->
+</head>
+
+<body>
+  <a href="../docs/" id="corner-docs">Docs</a>
+  <a href="https://github.com/KW-M/virtual-gamepad-lib/tree/main/examples/multiple_gamepads"
+    id="corner-docs-l">Source</a>
+
+  <section id="gamepads">
+    <!-- gamepad display containers will be inserted here by the script -->
+  </section>
+
+  <section id="bottom-controls">
+    <button id="add_emulated_gpad_btn">+ Emulated Gamepad</button>
+    <h4>Or plugin a real gamepad & press any button.</h4>
+  </section>
+
+  <!-- template for making copies of the gamepad display container and svg -->
+  <template id="gamepad_display_template">
+    <div id="gpad_display_container" class="gpad-container">
+      <b id="gpad-emulation-label">?</b>
+      <button id="gpad-emulation-btn">Add Overlay</button>
+      <div class="gpad-display" id="gpad_display_full">
+        <!-- The whole gamepad svg will get inseted here by the script -->
+        <!-- Importantly, the svg source is inserted straight into the html, NOT using an <img> tag -->
+      </div>
+    </div>
+  </template>
+
+</body>
+
+</html>

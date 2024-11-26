@@ -8,6 +8,10 @@
         "src/enums.ts",
         "src/utilities.ts"
     ],
+    "exclude": [
+        "node_modules",
+        "examples"
+    ],
     "plugin": [
         "typedoc-material-theme"
     ],

@@ -1,1 +1,0 @@
-These psd files were converted from the original Affinity Designer file. You may have mixed luck editing it outside of Photoshop. It may be easier to import one of the SVGs from the svg folder into your vector graphics program instead. The SVG and PSD retain the layer names (corresponding to the SVG element IDs), while the PDF appears to have lost them.

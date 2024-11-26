@@ -1,11 +1,13 @@
-@import url("../base.css");
+/** Required for the virtual gamepad to display correctly, feel free to override with your own styles  */
+@import url("virtual-gamepad-lib/gamepad_assets/base.css");
 
-body {
-  color: white;
-}
+/** ---- styles for the example page ---- */
+@import url("../page_styles.css");
+
 
 #phaser-example canvas {
   border-radius: 0.5em;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.39);
 }
 
 #phaser-example,

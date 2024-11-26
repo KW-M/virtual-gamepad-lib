@@ -3,7 +3,7 @@
   "private": false,
   "description": "Emulate and display virtual and real gamepads on the web",
   "version": "0.2.0",
-  "packageManager": "pnpm@9.9.0",
+  "packageManager": "pnpm@9.14.2",
   "type": "module",
   "sideEffects": false,
   "//": "Note sideEffects:false indicates compatibility with tree shaking at compilation time. This does not mean all fuctions in this package are side-effect free at runtime! E.g. Once you initilize a new GamepadEmulator() the browser Gamepad API is monkeypatched (but can be reverted)",
@@ -17,45 +17,6 @@
     "type": "git",
     "url": "git+https://github.com/KW-M/virtual-gamepad-lib.git"
   },
-  "types": "./index.d.ts",
-  "module": "./index.js",
-  "main": "./cjs/index.js",
-  "exports": {
-    ".": {
-      "types": "./index.d.ts",
-      "import": "./index.js",
-      "require": "./cjs/index.cjs",
-      "browser": {
-        "types": "./index.d.ts",
-        "default": "./index.js"
-      }
-    },
-    "./enums": {
-      "types": "./enums.d.ts",
-      "import": "./enums.js",
-      "require": "./cjs/enums.cjs"
-    },
-    "./GamepadApiWrapper": {
-      "types": "./GamepadApiWrapper.d.ts",
-      "import": "./GamepadApiWrapper.js",
-      "require": "./cjs/GamepadApiWrapper.cjs"
-    },
-    "./GamepadDisplay": {
-      "types": "./GamepadDisplay.d.ts",
-      "import": "./GamepadDisplay.js",
-      "require": "./cjs/GamepadDisplay.cjs"
-    },
-    "./GamepadEmulator": {
-      "types": "./GamepadEmulator.d.ts",
-      "import": "./GamepadEmulator.js",
-      "require": "./cjs/GamepadEmulator.cjs"
-    },
-    "./utilities": {
-      "types": "./utilities.d.ts",
-      "import": "./utilities.js",
-      "require": "./cjs/utilities.cjs"
-    }
-  },
   "keywords": [
     "gaming",
     "arcade",
@@ -66,33 +27,69 @@
     "touch",
     "accessability"
   ],
-  "scripts": {
-    "test": "vitest --run",
-    "watch:test": "vitest",
-    "build:lib": "tsc && vite build",
-    "build:docs": "typedoc --options typedoc.json",
-    "watch:docs": "typedoc --options typedoc.json --watch",
-    "optimize:svgs": "svgo --folder ./assets/svg/originals --output ./assets/svg/optimized",
-    "precompile:examples": "tsc --module esnext --target esnext examples/**/*.ts; rm src/*.js;",
-    "watch:examples": "pnpm run precompile:examples; vite --config examples/vite.config.js --host",
-    "build:examples": "pnpm run precompile:examples; vite build --config examples/vite.config.js",
-    "preview:examples": "vite preview --config examples/vite.config.js  --host",
-    "copy-dist-pkg": "cp -r ./dist ./dist/dist && cp ./LICENSE ./dist/LICENSE && cp ./package.json ./dist/package.json && cp ./pnpm-lock.yaml ./dist/pnpm-lock.yaml",
-    "prepub": "(rm -r ./dist || true) && pnpm run precompile:examples && pnpm run build:lib && pnpm run build:examples && pnpm run test",
-    "pub": "np --no-tests --no-publish && pnpm run copy-dist-pkg && pnpm publish ./dist",
-    "postpub": "rm -r ./dist",
-    "pub-preview": "np --preview"
+  "peerDependencies": {
+    "svgo": "^3.3.2"
   },
   "devDependencies": {
-    "@vitest/browser": "^2.1.1",
-    "@vitest/ui": "^2.1.1",
-    "np": "^10.0.7",
-    "svgo": "^3.3.2",
-    "typedoc": "^0.26.7",
+    "@vitest/browser": "^2.1.5",
+    "@vitest/ui": "^2.1.5",
+    "np": "^10.1.0",
+    "packito": "^0.5.0",
+    "typedoc": "^0.26.11",
     "typedoc-material-theme": "^1.1.0",
-    "typescript": "^5.6.2",
-    "vite": "^5.4.8",
-    "vite-plugin-dts": "^4.2.2",
-    "vitest": "^2.1.1"
-  }
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "vite-plugin-dts": "^4.3.0",
+    "vitest": "^2.1.5"
+  },
+  "scripts": {
+    "test": "vitest --run",
+    "build": "tsc && vite build",
+    "examples:build": "tsc --project examples; rm src/*.js; vite build --config examples/vite.config.js",
+    "examples:watch": "vite --config examples/vite.config.js --host",
+    "examples:preview": "vite preview --config examples/vite.config.js --host",
+    "docs:build": "typedoc --options typedoc.json src/*",
+    "docs:watch": "typedoc --options typedoc.json src/* --watch",
+    "svgs:optimize": "svgo --recursive --folder ./gamepad_asset_originals/svg/ --output ./gamepad_assets/",
+    "pub": "(pnpm i && pnpm run svgs:optimize && pnpm run build && pnpm run examples:build && pnpm run docs:build && pnpm run test && cp -r ./dist ./dist/dist && packito -d ./dist --nopublish && np --no-tests --no-publish && pnpm publish) || rm -r ./dist",
+    "pub-preview": "(pnpm i && pnpm run svgs:optimize && pnpm run build && pnpm run examples:build && pnpm run docs:build && pnpm run test && cp -r ./dist ./dist/dist && packito -d ./dist --nopublish && np --preview --no-tests --no-publish)"
+  },
+  "module": "./src/index.ts",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts"
+    },
+    "./enums": {
+      "import": "./src/enums.ts"
+    },
+    "./GamepadApiWrapper": {
+      "import": "./src/GamepadApiWrapper.ts"
+    },
+    "./GamepadDisplay": {
+      "import": "./src/GamepadDisplay.ts"
+    },
+    "./GamepadEmulator": {
+      "import": "./src/GamepadEmulator.ts"
+    },
+    "./utilities": {
+      "import": "./src/utilities.ts"
+    },
+    "./helpers": {
+      "import": "./src/helpers.ts"
+    },
+    "./gamepad_assets/*": {
+      "import": "./gamepad_assets/*",
+      "default": "./gamepad_assets/*"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "gamepad_assets",
+    "svgo.config.js",
+    "LICENSE",
+    "README.md"
+  ]
 }

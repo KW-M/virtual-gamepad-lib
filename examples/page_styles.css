@@ -6,10 +6,10 @@ html {
 
 
     color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+    color: #213547;
 
-    background: linear-gradient(to top right, #9d4fe6, #6c00d0);
+    background: linear-gradient(to top right, #00378a, #50cdff);
+    background-color: #ffffff;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -34,11 +34,11 @@ body {
 a {
     font-weight: 500;
     color: rgb(32, 1, 135);
-    text-decoration: dotted underline;
+    text-decoration: underline;
 }
 
 a:hover {
-    color: #535bf2;
+    color: #747bff;
 }
 
 .hidden {
@@ -72,7 +72,9 @@ button {
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
-    background-color: #1a1a1a;
+
+    background-color: #f9f9f9;
+    color: #213547;
     cursor: pointer;
     transition: border-color 0.25s;
     margin: 0.4rem;
@@ -87,19 +89,20 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
     html {
-        color: #213547;
-        background: linear-gradient(to top right, #00378a, #50cdff);
         background-color: #ffffff;
+        background: linear-gradient(to top right, #9d4fe6, #6c00d0);
+        color: #f1f1f1;
     }
 
     a:hover {
-        color: #747bff;
+        color: #535bf2;
     }
 
     button {
-        background-color: #f9f9f9;
+        background-color: #1a1a1a;
+        color: #f9f9f9;
     }
 }
 
@@ -112,6 +115,19 @@ button:focus-visible {
     right: 0;
     padding: 0.5em 3em;
     transform: rotate(45deg) translate(2em, -1em);
+    margin: 0;
+    z-index: 1000;
+}
+
+#corner-docs-l {
+    background-color: #feb943;
+    display: block;
+    position: fixed;
+    font-size: x-large;
+    top: 0;
+    left: 0;
+    padding: 0.5em 3em;
+    transform: rotate(-45deg) translate(-2.5em, -1em);
     margin: 0;
     z-index: 1000;
 }
@@ -197,7 +213,6 @@ kbd {
 }
 
 /* *********  Gamepad Display Related ********* */
-
 .gpad-display {
     display: contents;
 }
@@ -211,12 +226,12 @@ kbd {
     pointer-events: none;
 }
 
-.gpad-display-left svg {
+#gpad_display_left svg {
     left: 0;
     transform: translateX(-20%);
 }
 
-.gpad-display-right svg {
+#gpad_display_right svg {
     right: 0;
     transform: translateX(20%);
 }
@@ -226,33 +241,4 @@ kbd {
     width: 100%;
     max-width: 100vw;
     transform: translateX(-50%);
-}
-
-.gpad-highlight {
-    opacity: 0;
-}
-
-.gpad-highlight.pressed.touched {
-    opacity: 1;
-}
-
-.gpad-highlight.touched {
-    opacity: .5;
-}
-
-.direction_highlight {
-    opacity: 0;
-}
-
-.direction_highlight.moved {
-    opacity: 0.8;
-}
-
-#l_touch_targets>*,
-#r_touch_targets>* {
-    visibility: hidden;
-
-    /* cursor: none; */
-    cursor: pointer;
-    pointer-events: all;
 }

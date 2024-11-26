@@ -31,21 +31,21 @@ test("creation & cleanup", () => {
 
 test("add/remove emulated gamepads", () => {
     // @ts-ignore
-    const gamepadEmu = new GamepadEmulator(0.1) as privateGamepadEmulator;
-    expect(gamepadEmu.emulatedGamepads).toEqual([]);
-    gamepadEmu.AddEmulatedGamepad(0, false);
-    expect(gamepadEmu.emulatedGamepads.length).toEqual(1);
-    gamepadEmu.AddEmulatedGamepad(2, false, DEFAULT_GPAD_BUTTON_COUNT + 1, DEFAULT_GPAD_AXIS_COUNT + 3);
-    expect(gamepadEmu.emulatedGamepads.length).toEqual(3);
-    expect(gamepadEmu.emulatedGamepads[1]).toBeUndefined();
-    expect(gamepadEmu.emulatedGamepads[2]).not.toBeUndefined();
-    const gpad = gamepadEmu.emulatedGamepads[2]
+    const gpadEmulator = new GamepadEmulator(0.1) as privateGamepadEmulator;
+    expect(gpadEmulator.emulatedGamepads).toEqual([]);
+    gpadEmulator.AddEmulatedGamepad(0, false);
+    expect(gpadEmulator.emulatedGamepads.length).toEqual(1);
+    gpadEmulator.AddEmulatedGamepad(2, false, DEFAULT_GPAD_BUTTON_COUNT + 1, DEFAULT_GPAD_AXIS_COUNT + 3);
+    expect(gpadEmulator.emulatedGamepads.length).toEqual(3);
+    expect(gpadEmulator.emulatedGamepads[1]).toBeUndefined();
+    expect(gpadEmulator.emulatedGamepads[2]).not.toBeUndefined();
+    const gpad = gpadEmulator.emulatedGamepads[2]
     expect(gpad.buttons.length).toEqual(DEFAULT_GPAD_BUTTON_COUNT + 1);
     expect(gpad.axes.length).toEqual(DEFAULT_GPAD_AXIS_COUNT + 3);
-    gamepadEmu.RemoveEmulatedGamepad(0);
-    gamepadEmu.RemoveEmulatedGamepad(2);
-    // expect(gamepadEmu.emulatedGamepads.length).toEqual(0);
-    gamepadEmu.cleanup();
+    gpadEmulator.RemoveEmulatedGamepad(0);
+    gpadEmulator.RemoveEmulatedGamepad(2);
+    // expect(gpadEmulator.emulatedGamepads.length).toEqual(0);
+    gpadEmulator.cleanup();
 });
 
 
@@ -56,7 +56,7 @@ test("getGamepads() patch", async () => {
 
     Object.defineProperty(window, "ongamepadconnected", { get: () => { return null; }, set: (v) => { }, configurable: true });
 
-    const gamepadEmu = new GamepadEmulator(0.1);
+    const gpadEmulator = new GamepadEmulator(0.1);
 
     let addGpadFlagA: any = false;
     let addGpadFlagB: any = false;
@@ -73,7 +73,7 @@ test("getGamepads() patch", async () => {
     expect(addGpadFlagA).toEqual(false);
     expect(addGpadFlagB).toEqual(false);
 
-    let e_gpad = gamepadEmu.AddEmulatedGamepad(1, true);
+    let e_gpad = gpadEmulator.AddEmulatedGamepad(1, true);
     expect(navigator.getGamepads()).not.toEqual([]); //not.toEqual([null, null, null]);
     await new Promise(resolve => setTimeout(resolve, 5));
     expect(addGpadFlagA).toEqual(e_gpad)
@@ -81,27 +81,27 @@ test("getGamepads() patch", async () => {
 
     // test axes:
     expect(navigator.getGamepads()[1]?.axes).toEqual([0, 0, 0, 0]);
-    gamepadEmu.MoveAxis(1, 0, 0.59);
-    gamepadEmu.MoveAxis(1, 2, 1);
-    gamepadEmu.MoveAxis(1, 3, 0.001);
+    gpadEmulator.MoveAxis(1, 0, 0.59);
+    gpadEmulator.MoveAxis(1, 2, 1);
+    gpadEmulator.MoveAxis(1, 3, 0.001);
     expect(navigator.getGamepads()[1]?.axes).toEqual([0.59, 0, 1, 0.001]);
-    gamepadEmu.MoveAxis(1, 0, 0);
+    gpadEmulator.MoveAxis(1, 0, 0);
     expect(navigator.getGamepads()[1]?.axes).toEqual([0, 0, 1, 0.001]);
-    expect(() => { gamepadEmu.MoveAxis(50, 0, 0.0001) }).toThrowError();
+    expect(() => { gpadEmulator.MoveAxis(50, 0, 0.0001) }).toThrowError();
     expect(navigator.getGamepads()[2]?.axes).toBeUndefined();
 
     // test buttons:
     expect(navigator.getGamepads()[1]?.buttons[17]).toEqual({ pressed: false, touched: false, value: 0 });
-    gamepadEmu.PressButton(1, 17, 0.0001, false);
+    gpadEmulator.PressButton(1, 17, 0.0001, false);
     expect(navigator.getGamepads()[1]?.buttons[17]).toEqual({ pressed: false, touched: false, value: 0.0001 });
-    gamepadEmu.PressButton(1, 17, 0.0001, true);
+    gpadEmulator.PressButton(1, 17, 0.0001, true);
     expect(navigator.getGamepads()[1]?.buttons[17]).toEqual({ pressed: false, touched: true, value: 0.0001 });
-    gamepadEmu.PressButton(1, 17, 1, false);
+    gpadEmulator.PressButton(1, 17, 1, false);
     expect(navigator.getGamepads()[1]?.buttons[17]).toEqual({ pressed: true, touched: true, value: 1.0 });
-    gamepadEmu.PressButton(1, 17, 0, false);
+    gpadEmulator.PressButton(1, 17, 0, false);
     expect(navigator.getGamepads()[1]?.buttons[17]).toEqual({ pressed: false, touched: false, value: 0 });
-    gamepadEmu.PressButton(1, 17, 0.0001, false);
-    expect(() => { gamepadEmu.PressButton(0, 0, 0.0001, false) }).toThrowError();
+    gpadEmulator.PressButton(1, 17, 0.0001, false);
+    expect(() => { gpadEmulator.PressButton(0, 0, 0.0001, false) }).toThrowError();
     expect(navigator.getGamepads()[0]?.buttons).toBeUndefined();
     expect(navigator.getGamepads()[1]?.buttons[0]).toEqual({ pressed: false, touched: false, value: 0 });
 });

@@ -1,4 +1,8 @@
-@import url("../base.css");
+/** Required for the virtual gamepad to display correctly, feel free to override with your own styles  */
+@import url("virtual-gamepad-lib/gamepad_assets/base.css");
+
+/** ---- styles for the example page ---- */
+@import url("../page_styles.css");
 
 #bottom-controls {
   display: flex;
@@ -13,13 +17,22 @@
 
 /* *********  Gamepad Display Related ********* */
 
+#gamepads {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 2rem;
+}
+
 #gpad-emulation-label {
   text-align: center;
   color: white;
   padding: 1em;
 }
 
-.gpad-display-container {
+#gpad_display_container {
   position: relative;
   padding: 20px 0;
   display: flex;
@@ -32,8 +45,8 @@
   width: max-content;
   height: max-content;
   border-radius: 20px;
-  margin: 2rem auto;
   padding: 2vmin 1vmin;
+  margin: 3rem;
 }
 
 .gpad-display svg {

@@ -1,17 +1,17 @@
-@import url("../base.css");
+/** Required for the virtual gamepad to display correctly, feel free to override with your own styles  */
+@import url("virtual-gamepad-lib/gamepad_assets/base.css");
 
-#button-table tr td:nth-child(2) {
-  text-align: left;
-}
-
-#l_touch_targets>*,
-#r_touch_targets>* {
-  visibility: hidden;
-
-  cursor: none;
-  pointer-events: all;
-}
+/** ---- styles for the example page ---- */
+@import url("../page_styles.css");
 
 body {
   margin-bottom: 50vh;
+}
+
+#button-table tr td:nth-child(1) {
+  text-align: right;
+}
+
+#button-table tr td:nth-child(2) {
+  text-align: left;
 }

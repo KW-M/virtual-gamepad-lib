@@ -2,21 +2,21 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "module": "Node16",
+    "module": "NodeNext",
     "declaration": true,
     "lib": [
       "ESNext",
       "DOM"
     ],
-    "moduleResolution": "Node16",
+    "moduleResolution": "NodeNext",
     "strict": true,
     "allowJs": true,
     "checkJs": true,
     "sourceMap": true,
+    "noEmit": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noEmit": true,
     "removeComments": false,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
@@ -34,6 +34,10 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "src"
-  ]
+    "src/*.ts",
+    "vite-env.d.ts",
+  ],
+  "exclude": [
+    "node_modules"
+  ],
 }

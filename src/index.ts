@@ -1,14 +1,66 @@
-import { gamepadButtonType, gamepadDirection, gamepadEmulationState, playStationAxesMap, standardGpadAxesMap, standardGpadButtonMap, xboxAxesMap, playStationButtonMap, xboxButtonMap } from "./enums.js";
-import { GamepadEmulator, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT } from "./GamepadEmulator.js";
-import { GamepadApiWrapper } from "./GamepadApiWrapper.js";
-import { GamepadDisplay } from "./GamepadDisplay.js";
-import { CenterTransformOrigin, CenterTransformOriginDebug, NormalizeClampVector } from "./utilities.js";
+export {
+    setupPresetInteractiveGamepad,
+    type interactiveGamepadPresetConfig
+} from "./helpers.js"
 
-// import types
-import type { GamepadDisplayJoystick, GamepadDisplayVariableButton, GamepadDisplayButton, ButtonDisplayFunction, JoystickDisplayFunction, DisplayGamepadConfig } from "./GamepadDisplay.js";
-import type { ButtonConfig, VariableButtonConfig, JoystickConfig, EGamepad, EGamepadEvent } from "./GamepadEmulator.js";
-import type { AxisChangeCallback, ButtonChangeCallback, buttonChangeDetails, wrapperConfig, wrapperButtonConfig, GamepadEventCallback } from "./GamepadApiWrapper.js";
+export {
+    GamepadApiWrapper,
+    type AxisChangeCallback,
+    type ButtonChangeCallback,
+    type buttonChangeDetails,
+    type wrapperConfig,
+    type wrapperButtonConfig,
+    type GamepadEventCallback
+} from "./GamepadApiWrapper.js";
 
-// export everything
-export { GamepadApiWrapper, GamepadDisplay, GamepadEmulator, gamepadButtonType, gamepadDirection, gamepadEmulationState, CenterTransformOrigin, CenterTransformOriginDebug, NormalizeClampVector, DEFAULT_GPAD_BUTTON_COUNT, DEFAULT_GPAD_AXIS_COUNT, playStationAxesMap, standardGpadAxesMap, standardGpadButtonMap, xboxAxesMap, playStationButtonMap, xboxButtonMap };
-export type { GamepadDisplayJoystick, GamepadDisplayVariableButton, GamepadDisplayButton, ButtonDisplayFunction, JoystickDisplayFunction, ButtonConfig, VariableButtonConfig, JoystickConfig, EGamepad, EGamepadEvent, GamepadEventCallback, AxisChangeCallback, ButtonChangeCallback, buttonChangeDetails, wrapperConfig, wrapperButtonConfig, DisplayGamepadConfig }
+export {
+    GamepadDisplay,
+    type GamepadDisplayJoystick,
+    type GamepadDisplayOnOffButton,
+    type GamepadDisplayVariableButton,
+    type GamepadDisplayButton,
+    type ButtonDisplayFunction,
+    type JoystickDisplayFunction,
+    type DisplayGamepadConfig,
+} from "./GamepadDisplay.js";
+
+export {
+    GamepadEmulator,
+    DEFAULT_GPAD_BUTTON_COUNT,
+    DEFAULT_GPAD_AXIS_COUNT,
+    type ButtonTouchConfig,
+    type OnOffButtonTouchConfig,
+    type VariableButtonTouchConfig,
+    type JoystickTouchConfig,
+    type EGamepad,
+    type EGamepadEvent,
+    type JoystickConfig,
+    // DEPRECATED EXPORTS
+    type ButtonConfig,
+    type OnOffButtonConfig,
+    type VariableButtonConfig,
+} from "./GamepadEmulator.js";
+
+export {
+    CenterTransformOrigin,
+    CenterTransformOriginDebug,
+    NormalizeClampVector
+} from "./utilities.js";
+
+export {
+    gamepadButtonType,
+    gamepadDirection,
+    gamepadEmulationState,
+    standardGpadAxesMap,
+    xboxAxesMap,
+    playStationAxesMap,
+    standardGpadButtonMap,
+    playStationButtonMap,
+    xboxButtonMap,
+    PRESET_SVG_GPAD_BTN_IDS,
+    PRESET_SVG_GPAD_BTN_TAP_TARGET_IDS,
+    PRESET_SVG_GPAD_CLASS,
+    PRESET_SVG_GPAD_DPAD_DIAGONAL_TAP_TARGET_IDS_TO_BTN_INDEXES,
+    type gpadAxesMapType,
+    type gpadButtonMapType
+} from "./enums.js";

@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <title>Virtual Gamepad Example</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="../favicon.ico" />
   <link rel="stylesheet" href="./style.css" />
   <!-- Code that creates the gamepad emulator instance MUST come before any gamepad libraries are loaded -->
   <script type="module" src="./example.ts"></script>
@@ -13,120 +14,124 @@
 
 <body>
   <a href="../docs/" id="corner-docs">Docs</a>
+  <main>
+    <section class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Button Number</th>
+            <th>Gamepad Button Name</th>
+          </tr>
+        </thead>
+        <tbody id="button-table">
+          <tr>
+            <td><kbd>0</kbd></td>
+            <td>0</td>
+            <td>A / ×</td>
+          </tr>
+          <tr>
+            <td><kbd>1</kbd></td>
+            <td>1</td>
+            <td>B / ◯</td>
+          </tr>
+          <tr>
+            <td><kbd>2</kbd></td>
+            <td>2</td>
+            <td>X / ▢</td>
+          </tr>
+          <tr>
+            <td><kbd>3</kbd></td>
+            <td>3</td>
+            <td>Y / △</td>
+          </tr>
+          <tr>
+            <td><kbd>4</kbd></td>
+            <td>4</td>
+            <td>Front Left Shoulder</td>
+          </tr>
+          <tr>
+            <td><kbd>5</kbd></td>
+            <td>5</td>
+            <td>Front Right Shoulder </td>
+          </tr>
+          <tr>
+            <td><kbd>6</kbd></td>
+            <td>6</td>
+            <td>Back Left Trigger</td>
+          </tr>
+          <tr>
+            <td><kbd>7</kbd></td>
+            <td>7</td>
+            <td>Back Right Trigger</td>
+          </tr>
+          <tr>
+            <td><kbd>8</kbd></td>
+            <td>8</td>
+            <td>Select</td>
+          </tr>
+          <tr>
+            <td><kbd>9</kbd></td>
+            <td>9</td>
+            <td>Start</td>
+          </tr>
+          <tr>
+            <td><kbd>a</kbd></td>
+            <td>10</td>
+            <td>Joystick Click Left</td>
+          </tr>
+          <tr>
+            <td><kbd>b</kbd></td>
+            <td>11</td>
+            <td>Joystick Click Right</td>
+          </tr>
+          <tr>
+            <td><kbd>c</kbd></td>
+            <td>12</td>
+            <td>D-Pad up</td>
+          </tr>
+          <tr>
+            <td><kbd>d</kbd></td>
+            <td>13</td>
+            <td>D-Pad down</td>
+          </tr>
+          <tr>
+            <td><kbd>e</kbd></td>
+            <td>14</td>
+            <td>D-Pad left</td>
+          </tr>
+          <tr>
+            <td><kbd>f</kbd></td>
+            <td>15</td>
+            <td>D-Pad right</td>
+          </tr>
+          <tr>
+            <td><kbd>g</kbd></td>
+            <td>16</td>
+            <td>Vendor</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="gamepad-event-area">
+      <div style="position: absolute; left:0; top:0; height: 100%;">
+        <a href="https://github.com/KW-M/virtual-gamepad-lib/tree/main/examples/keyboard" id="corner-docs-l"
+          style="left:unset;">Source</a>
+      </div>
 
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Key</th>
-          <th>Button Number</th>
-          <th>Gamepad Button Name</th>
-        </tr>
-      </thead>
-      <tbody id="button-table">
-        <tr>
-          <td><kbd>0</kbd></td>
-          <td>0</td>
-          <td>A / ×</td>
-        </tr>
-        <tr>
-          <td><kbd>1</kbd></td>
-          <td>1</td>
-          <td>B / ◯</td>
-        </tr>
-        <tr>
-          <td><kbd>2</kbd></td>
-          <td>2</td>
-          <td>X / ▢</td>
-        </tr>
-        <tr>
-          <td><kbd>3</kbd></td>
-          <td>3</td>
-          <td>Y / △</td>
-        </tr>
-        <tr>
-          <td><kbd>4</kbd></td>
-          <td>4</td>
-          <td>Front Left Shoulder</td>
-        </tr>
-        <tr>
-          <td><kbd>5</kbd></td>
-          <td>5</td>
-          <td>Front Right Shoulder </td>
-        </tr>
-        <tr>
-          <td><kbd>6</kbd></td>
-          <td>6</td>
-          <td>Back Left Shoulder</td>
-        </tr>
-        <tr>
-          <td><kbd>7</kbd></td>
-          <td>7</td>
-          <td>Back Right Shoulder</td>
-        </tr>
-        <tr>
-          <td><kbd>8</kbd></td>
-          <td>8</td>
-          <td>Select</td>
-        </tr>
-        <tr>
-          <td><kbd>9</kbd></td>
-          <td>9</td>
-          <td>Start</td>
-        </tr>
-        <tr>
-          <td><kbd>a</kbd></td>
-          <td>10</td>
-          <td>Joystick Click Left</td>
-        </tr>
-        <tr>
-          <td><kbd>b</kbd></td>
-          <td>11</td>
-          <td>Joystick Click Right</td>
-        </tr>
-        <tr>
-          <td><kbd>c</kbd></td>
-          <td>12</td>
-          <td>D-Pad up</td>
-        </tr>
-        <tr>
-          <td><kbd>d</kbd></td>
-          <td>13</td>
-          <td>D-Pad down</td>
-        </tr>
-        <tr>
-          <td><kbd>e</kbd></td>
-          <td>14</td>
-          <td>D-Pad left</td>
-        </tr>
-        <tr>
-          <td><kbd>f</kbd></td>
-          <td>15</td>
-          <td>D-Pad right</td>
-        </tr>
-        <tr>
-          <td><kbd>g</kbd></td>
-          <td>16</td>
-          <td>Vendor</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <section id="gamepad-event-area">
+      <h2 style="z-index: -2;">Keyboard Gamepad Emulation & Gamepad API Wrapper Lib Example</h2>
+      <h3 class="text-block">
+        D-Pad buttons &amp; button 0-3 can be held down in this example configuration.<br />
+        Hold <kbd>CTRL</kbd> to <em>touch</em> rather than <em>press</em> a button<br />
+        <kbd>[</kbd><kbd>]</kbd><kbd>-</kbd><kbd>+</kbd> are mapped to the left joystick.<br>
+        <kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd> are mapped to the right joystick.<br />
+      </h3>
 
+      <h2>------ EVENTS ------</h2>
 
-    <h2>Keyboard Gamepad Emulation & Gamepad API Wrapper Lib Example</h2>
-    <h3 class="text-block">
-      D-Pad buttons &amp; button 0-3 can be held down in this example configuration.<br />
-      Hold <kbd>CTRL</kbd> to <em>touch</em> rather than <em>press</em> a button<br />
-      <kbd>[</kbd><kbd>]</kbd><kbd>-</kbd><kbd>+</kbd> are mapped to the left joystick.<br>
-      <kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd> are mapped to the right joystick.<br />
-    </h3>
-
-    <h2>------ EVENTS ------</h2>
-
-    <pre class="text-block" id="gamepad-event-display"></pre>
-  </section>
+      <pre class="text-block" id="gamepad-event-display"></pre>
+    </section>
+  </main>
 </body>
 
 </html>

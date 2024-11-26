@@ -1,11 +1,22 @@
-@import url("../base.css");
+/** Required for the virtual gamepad to display correctly, feel free to override with your own styles  */
+@import url("virtual-gamepad-lib/gamepad_assets/base.css");
 
-body {
+/** ---- styles for the example page ---- */
+@import url("../page_styles.css");
+
+main {
   display: flex;
   flex-direction: row;
   height: 100vh;
+  width: 100%;
   overflow: hidden;
+  transform: translate3d(0, 0, 0);
+}
 
+
+
+.table-container {
+  z-index: 10;
 }
 
 table {
@@ -23,6 +34,9 @@ table {
   text-align: center;
   padding: 0.5rem;
   box-sizing: border-box;
+  position: relative;
+  z-index: -1;
+  transform: translate3d(0, 0, 0);
 }
 
 #gamepad-event-area #gamepad-event-display {

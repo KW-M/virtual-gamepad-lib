@@ -13,6 +13,7 @@ export default defineConfig({
             entry: {
                 'index': resolve(__dirname, 'src/index.ts'),
                 'enums': resolve(__dirname, 'src/enums.ts'),
+                'helpers': resolve(__dirname, 'src/helpers.ts'),
                 'utilities': resolve(__dirname, 'src/utilities.ts'),
                 'GamepadApiWrapper': resolve(__dirname, 'src/GamepadApiWrapper.ts'),
                 'GamepadDisplay': resolve(__dirname, 'src/GamepadDisplay.ts'),

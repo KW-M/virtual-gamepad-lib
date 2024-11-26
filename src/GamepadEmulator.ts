@@ -1,4 +1,4 @@
-import { gamepadButtonType, gamepadDirection, gamepadEmulationState } from "./enums.js";
+import { gamepadButtonType, gamepadDirection, gamepadEmulationState, gpadButtonMapType, standardGpadButtonMap, xboxButtonMap } from "./enums.js";
 import { NormalizeClampVector } from "./utilities.js";
 
 /** Extends the browser Gamepad interface to include an emulation property that exposes how this gamepad is being emulated (or not)
@@ -24,31 +24,43 @@ export interface EGamepadEvent extends Omit<GamepadEvent, "gamepad"> {
     gamepad: EGamepad;
 }
 
-export interface ButtonConfig {
+export interface OnOffButtonTouchConfig {
     type: gamepadButtonType.onOff,
     /** Taps/clicks/hovers on this element will trigger events for this button on the emulated gamepad. */
     tapTarget: (HTMLElement | SVGElement)
-    /** The index of the button this emulated button should control in the {@link EGamepad.buttons} array */
-    buttonIndex: number,
+    /** The index of the gamepad button this tap target should control
+     * corresponds to the button index as found in the {@link EGamepad.buttons} array
+     * Can also pass a value from the {@link standardGpadButtonMap}, {@link xboxButtonMap}, etc...  */
+    buttonIndex: number | gpadButtonMapType,
+    /** Allows this tap target to control multiple gamepad buttons at once
+     * useful for e.g. allowing diagonal directions of a dpad.
+     * Overrides buttonIndex - Each number in the array is the index corresponding to a button in the {@link EGamepad.buttons} array that this tap target will control */
+    buttonIndexes?: (number | gpadButtonMapType)[],
     /** Should this button lock the cursor once it is preseed (mouse or touch), such that NO pointer/mouse/touch events are fired with that pointer on any other elements on the page unil the finger leaves the screen or mouse lets go.
      * This option also prevents this button from reacting when a press starts on another button or page element and then the pointer/touch moves over the tap target of this button while being held down. */
     lockTargetWhilePressed?: boolean;
 }
 
-export interface VariableButtonConfig {
+export interface VariableButtonTouchConfig {
     type: gamepadButtonType.variable,
     /** The element where a tap or mouse click must start to control this variable button.
-     * The pointer does not need to remain within this element while dragging to continue controlling the variable button as long as the mouse / touch / pointer is held down */
+     * The pointer does not need to remain within this element while dragging to continue controlling the variable button as long as the mouse / touch / pointer is held down and lockTargetWhilePressed is true */
     tapTarget: (HTMLElement | SVGElement)
-    /** The index of the button this emulated button should controll in the {@link EGamepad.buttons} array */
-    buttonIndex: number,
+    /** The index of the gamepad button this tap target should control
+     * corresponds to the button index as found in the {@link EGamepad.buttons} array
+     * Can also pass a value from the {@link standardGpadButtonMap}, {@link xboxButtonMap}, etc...  */
+    buttonIndex: number | gpadButtonMapType,
+    /** Allows this tap target to control multiple gamepad buttons at once
+     * useful for e.g. allowing diagonal directions of a dpad.
+     * Overrides buttonIndex - Each number in the array is the index corresponding to a button in the {@link EGamepad.buttons} array that this tap target will control */
+    buttonIndexes?: (number | gpadButtonMapType)[],
     /** The distance drag gesture must go in pixels to appear as a fully pressed button: value = 1 */
     dragDistance: number,
     /** Should this variable button lock the cursor once a drag gesture has started, such that NO pointer/mouse/touch events are fired with that pointer on any other elements on the page unil the gesture is finished (finger leaves the screen or mouse lets go)
      * This option also prevents this button from reacting when a press starts on another button or page element and then the pointer/touch moves over the tap target of this button while being held down. */
     lockTargetWhilePressed?: boolean;
     /** What drag/movement gesture directions should result in the button value of this varaible button increasing
-     * Typically only one direction will be set to true, but you can set multiple to true if you want to */
+     * Typically only one direction will be set to true, but you can set multiple to true if you want to. See: {@link gamepadDirection} */
     directions: {
         [gamepadDirection.up]?: boolean;
         [gamepadDirection.down]?: boolean;
@@ -57,7 +69,9 @@ export interface VariableButtonConfig {
     }
 }
 
-export interface JoystickConfig {
+export type ButtonTouchConfig = OnOffButtonTouchConfig | VariableButtonTouchConfig;
+
+export interface JoystickTouchConfig {
     /** The element where a tap or mouse click must start to control this joystick
      * The pointer does not need to remain within this element while dragging to continue controlling the joystick as long as the mouse / touch / pointer is held down */
     tapTarget: HTMLElement | SVGElement;
@@ -69,7 +83,7 @@ export interface JoystickConfig {
     yAxisIndex?: number;
     /** Should the joystick lock the cursor once a drag gesture has started, such that NO pointer/mouse/touch events are fired with that pointer on any other elements on the page unil the gesture is finished (finger leaves the screen or mouse lets go) */
     lockTargetWhilePressed?: boolean;
-    /** What drag/movement directions does this joystick support */
+    /** What drag/movement directions does this joystick support. See: {@link gamepadDirection} */
     directions: {
         [gamepadDirection.up]?: boolean;
         [gamepadDirection.down]?: boolean;
@@ -178,8 +192,8 @@ export class GamepadEmulator {
     /** removes the emmulated gamepad at the passed index as would be read from the list in navigator.getGamepads
      * @param {number} gpadIndex - the index of the gamepad to remove */
     RemoveEmulatedGamepad(gpadIndex: number) {
-        this.ClearDisplayButtonEventListeners(gpadIndex);
-        this.ClearDisplayJoystickEventListeners(gpadIndex);
+        this.ClearButtonTouchEventListeners(gpadIndex);
+        this.ClearJoystickTouchEventListeners(gpadIndex);
         var e_gpad = this.emulatedGamepads[gpadIndex];
         if (e_gpad) {
             delete this.emulatedGamepads[gpadIndex];
@@ -201,20 +215,42 @@ export class GamepadEmulator {
 
     /** emulates pressing a button on an emulated gamepad at the given gamepad button index
      * @param {number} gpadIndex - the index of the emulated gamepad (as returned by navigator.getGamepads()) to press the button on
-     * @param {number} buttonIndex - the index of the button to press on the gamepad
+     * @param {number} buttonIndex - the index of the button to press on the gamepad - pass an array of indexes to control multiple buttons at once
      * @param {number} value - the value to set the button to between 0 and 1 (0 = not pressed, 1 = fully pressed, 0.5 = half pressed) if this value is greater than the pressedThreshold from the constructor, the button will be considered pressed
      * @param {boolean} touched - whether the button is considered "touched" or not, a "pressed" button is always considered "touched"
     */
-    PressButton(gpadIndex: number, buttonIndex: number, value: number, touched: boolean) {
+    PressButton(gpadIndex: number, buttonIndex: number | number[], value: number, touched?: boolean) {
         if (this.emulatedGamepads[gpadIndex] == undefined) throw new Error("Error: PressButton() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
-        var isPressed = value > this.buttonPressThreshold;
-        const buttons = [...(this.emulatedGamepads[gpadIndex]?.buttons || [])]
-        buttons[buttonIndex] = {
-            pressed: isPressed,
-            value: value || 0,
-            touched: isPressed || touched || false
-        };
-        Object.defineProperty(this.emulatedGamepads[gpadIndex], "buttons", { value: buttons, enumerable: true, configurable: true })
+        const buttonState = [...(this.emulatedGamepads[gpadIndex]?.buttons || [])]
+        const isPressed = value > this.buttonPressThreshold;
+
+        if (Array.isArray(buttonIndex)) {
+            const isTouched = isPressed || (touched ?? buttonState[buttonIndex[0]]?.touched) || false;
+            for (var i = 0; i < buttonIndex.length; i++) {
+                const btnIndex = buttonIndex[i];
+                if (btnIndex < 0 || btnIndex >= this.emulatedGamepads[gpadIndex].buttons.length) {
+                    console.error("Error: PressButton() - button index " + btnIndex + " out of range, pass a valid index between 0 and " + (this.emulatedGamepads[gpadIndex].buttons.length - 1));
+                    continue;
+                }
+                buttonState[btnIndex] = {
+                    pressed: isPressed,
+                    value: value || 0,
+                    touched: isTouched
+                };
+            }
+        } else {
+            const isTouched = isPressed || (touched ?? buttonState[buttonIndex]?.touched) || false;
+            if (buttonIndex < 0 || buttonIndex >= this.emulatedGamepads[gpadIndex].buttons.length) {
+                console.error("Error: PressButton() - button index " + buttonIndex + " out of range, pass a valid index between 0 and " + (this.emulatedGamepads[gpadIndex].buttons.length - 1));
+                return
+            }
+            buttonState[buttonIndex] = {
+                pressed: isPressed,
+                value: value || 0,
+                touched: isTouched
+            };
+        }
+        Object.defineProperty(this.emulatedGamepads[gpadIndex], "buttons", { value: buttonState, enumerable: true, configurable: true })
     }
 
     /** emulates moving an axis on the gamepad at the given axis index
@@ -231,42 +267,46 @@ export class GamepadEmulator {
     /** add event listeners to the html/svg button elements of an onscreen gamepad to emulate gamepad input  when touched, clicked or dragged
     * @param gpadIndex - the index of the emulated gamepad to register events for
     * @param buttonConfigs - an array of config objects that set how each of the buttons on the onscreen gamepad should behave, and how they map to the emulated gamepad buttons. */
-    AddDisplayButtonEventListeners(gpadIndex: number, buttonConfigs: (ButtonConfig | VariableButtonConfig)[]) {
-        if (!this.emulatedGamepads[gpadIndex]) throw new Error("Error: AddDisplayJoystickEventListeners() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
+    AddButtonTouchEventListeners(gpadIndex: number, buttonConfigs: (ButtonTouchConfig)[]) {
+        if (!this.emulatedGamepads[gpadIndex]) throw new Error("Error: AddJoystickTouchEventListeners() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
         let removeListenerFuncs: (() => void)[] = [];
         for (var i = 0; i < buttonConfigs.length; i++) {
             const btnConfig = buttonConfigs[i];
-            const gpadButtonIndex = btnConfig.buttonIndex;
+            if (!btnConfig) continue;
+            const gpadButtonIndexes = btnConfig.buttonIndexes ?? btnConfig.buttonIndex;
             const tapTarget: HTMLElement = btnConfig.tapTarget as HTMLElement;
 
             if (!tapTarget) {
-                console.warn("GamepadEmulator: No tap target in gamepad " + gpadIndex + " display config for button " + gpadButtonIndex + ", skipping...");
+                console.warn("GamepadEmulator: No tap target in gamepad " + gpadIndex + " display config for button " + gpadButtonIndexes + ", skipping...");
                 continue;
             }
 
             // disable browser default actions like pan & zoom once a pointer is down on the joystick (only works with touchstart)
             const touchStartHandler = (event: TouchEvent) => {
-                if (event.changedTouches[0].target == tapTarget) event.preventDefault();
+                const touchTarget = event.changedTouches[0].target as HTMLElement;
+                if (touchTarget == tapTarget) event.preventDefault();
+                else if (touchTarget.parentElement == tapTarget) event.preventDefault();
+                // two levels up should be enough to catch most cases...
             }; window.addEventListener("touchstart", touchStartHandler, { passive: false });
 
             // handle hover events for the button tap target
             const pointerEnterHandler = (e: PointerEvent) => {
                 // tell the emulator this button is being "touched", ie: hovered over
-                const pressAmt = (e.buttons == 1 ? 1 : 0); // if the pointer is down or l mouse button is clicked, press the button
-                if (!btnConfig.lockTargetWhilePressed || pressAmt == 0) this.PressButton(gpadIndex, gpadButtonIndex, pressAmt, true);
+                const pressAmt = (e.buttons == 1 ? 1 : 0); // if the pointer is down  (left mouse button is clicked), press the button
+                if (!btnConfig.lockTargetWhilePressed || pressAmt == 0) this.PressButton(gpadIndex, gpadButtonIndexes, pressAmt, true);
             }; tapTarget.addEventListener("pointerenter", pointerEnterHandler);
 
             // handle hover exit events for the button tap target
             const pointerExitHandler = (e: PointerEvent) => {
                 // tell the emulator this button is no longer being "touched", ie: not hovered over anymore
-                const pressAmt = (e.buttons == 1 ? 1 : 0); // if the pointer is down or l mouse button is clicked
-                if (!btnConfig.lockTargetWhilePressed || pressAmt == 0) this.PressButton(gpadIndex, gpadButtonIndex, 0, false);
+                const pressAmt = (e.buttons == 1 ? 1 : 0); // if the pointer is down (left mouse button is clicked)
+                if (!btnConfig.lockTargetWhilePressed || pressAmt == 0) this.PressButton(gpadIndex, gpadButtonIndexes, 0, false);
             }; tapTarget.addEventListener("pointerleave", pointerExitHandler);
 
-            // // handle pointer cancel events for the button tap target
+            // handle pointer cancel events for the button tap target
             const pointerCancelHandler = (e: PointerEvent) => {
                 // tell the emulator this button is no longer being "touched", ie: not hovered over anymore
-                // this.PressButton(gpadIndex, gpadButtonIndex, 0, false);
+                this.PressButton(gpadIndex, gpadButtonIndexes, 0, false);
             }; tapTarget.addEventListener("pointercancel", pointerCancelHandler);
 
             // Handle the simple ON / OFF button
@@ -274,9 +314,9 @@ export class GamepadEmulator {
 
                 // handle pointer down events for the button tap target
                 const pointerDownHandler = (e: PointerEvent) => {
-                    // tell the emulator this button is being pressed, ie: clicked / tapped
                     e.preventDefault();
-                    this.PressButton(gpadIndex, gpadButtonIndex, 1, true);
+                    // tell the emulator this button is being pressed, ie: clicked / tapped
+                    this.PressButton(gpadIndex, gpadButtonIndexes, 1, true);
                     if (btnConfig.lockTargetWhilePressed) tapTarget.setPointerCapture(e.pointerId);
                     else tapTarget.releasePointerCapture(e.pointerId)
                 }; tapTarget.addEventListener("pointerdown", pointerDownHandler);
@@ -284,7 +324,7 @@ export class GamepadEmulator {
                 // handle pointer up events for the button tap target
                 const pointerUpHandler = () => {
                     // tell the emulator this button is no longer being pressed
-                    this.PressButton(gpadIndex, gpadButtonIndex, 0, true);
+                    this.PressButton(gpadIndex, gpadButtonIndexes, 0);
                 }; tapTarget.addEventListener("pointerup", pointerUpHandler);
 
                 // add a listener removal function to the list of functions to call when removing the event listeners
@@ -300,12 +340,12 @@ export class GamepadEmulator {
             } else if (btnConfig.type == gamepadButtonType.variable) {
 
                 // Handle the variable (dragged) button
-                const removeDragListeners = this.AddDragControlListener(btnConfig as JoystickConfig, (pointerDown: boolean, xValue: number, yValue: number) => {
+                const removeDragListeners = this.AddDragControlListener(btnConfig as JoystickTouchConfig, (pointerDown: boolean, xValue: number, yValue: number) => {
                     let value = pointerDown ? this.buttonPressThreshold + 0.00001 : 0;
                     value += (btnConfig.directions[gamepadDirection.left] || btnConfig.directions[gamepadDirection.right]) ? Math.abs(xValue) : 0
                     value += (btnConfig.directions[gamepadDirection.up] || btnConfig.directions[gamepadDirection.down]) ? Math.abs(yValue) : 0;
                     // tell the emulator how much this button is being pressed
-                    this.PressButton(gpadIndex, gpadButtonIndex, Math.min(value, 1), pointerDown);
+                    this.PressButton(gpadIndex, gpadButtonIndexes, Math.min(value, 1));
                 });
 
                 // add a listener removal function to the list of functions to call when removing the event listeners
@@ -328,11 +368,12 @@ export class GamepadEmulator {
     /** add event listeners to the html/svg joystick elements of an onscreen gamepad to emulate gamepad input when dragged with a mouse, touch or pen.
     * @param gpadIndex - the index of the emulated gamepad to register events for
     * @param joystickConfigs - an array of config objects that set how each of the joysticks on the onscreen gamepad should behave, and how they map to the emulated gamepad axes. */
-    AddDisplayJoystickEventListeners(gpadIndex: number, joystickConfigs: JoystickConfig[]) {
-        if (!this.emulatedGamepads[gpadIndex]) throw new Error("Error: AddDisplayJoystickEventListeners() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
+    AddJoystickTouchEventListeners(gpadIndex: number, joystickConfigs: JoystickTouchConfig[]) {
+        if (!this.emulatedGamepads[gpadIndex]) throw new Error("Error: AddJoystickTouchEventListeners() - no emulated gamepad at index " + gpadIndex + ", pass a valid index, or call AddEmulatedGamepad() first to create an emulated gamepad at that index");
         let removeListenerFuncs: (() => void)[] = [];
         for (let i = 0; i < joystickConfigs.length; i++) {
             const config = joystickConfigs[i]
+            if (!config) continue;
             if (config.tapTarget == undefined) {
                 console.warn("GamepadEmulator: No tap target in gamepad " + gpadIndex + " display config for joystick " + i + ", skipping...");
                 continue;
@@ -349,19 +390,19 @@ export class GamepadEmulator {
         }
     }
 
-    /** removes event listeners added with AddDisplayButtonEventListeners()
+    /** removes event listeners added with AddButtonTouchEventListeners()
     * @param gpadIndex - the index of the emulated gamepad to un-register events for */
-    ClearDisplayButtonEventListeners(gpadIndex: number) {
+    ClearButtonTouchEventListeners(gpadIndex: number) {
         if (this.emulatedGamepadsMetadata[gpadIndex] && this.emulatedGamepadsMetadata[gpadIndex]?.removeButtonListenersFunc) this.emulatedGamepadsMetadata[gpadIndex]!.removeButtonListenersFunc!();
     }
 
-    /** removes event listeners added with AddDisplayJoystickEventListeners()
+    /** removes event listeners added with AddJoystickTouchEventListeners()
      * @param gpadIndex - the index of the emulated gamepad to un-register events for */
-    ClearDisplayJoystickEventListeners(gpadIndex: number) {
+    ClearJoystickTouchEventListeners(gpadIndex: number) {
         if (this.emulatedGamepadsMetadata[gpadIndex] && this.emulatedGamepadsMetadata[gpadIndex]?.removeJoystickListenersFunc) this.emulatedGamepadsMetadata[gpadIndex]!.removeJoystickListenersFunc!();
     }
 
-    protected AddDragControlListener(config: JoystickConfig, callback: (touched: boolean, xValue: number, yValue: number) => void) {
+    protected AddDragControlListener(config: JoystickTouchConfig, callback: (touched: boolean, xValue: number, yValue: number) => void) {
         let touchDetails: TouchDetails = {
             startX: 0,
             startY: 0,
@@ -387,7 +428,6 @@ export class GamepadEmulator {
                 document.removeEventListener("pointermove", pointerMoveHandler, false);
                 document.removeEventListener("pointerup", pointerUpHandler, false);
                 activePointerId = -1;
-
                 callback(false, 0, 0);
             }
         }
@@ -675,8 +715,8 @@ export class GamepadEmulator {
     /** (destructor) - Cleans up any event listeners made by this class and restores the normal navigator.getGamepad() function and gamepad events */
     cleanup() {
         for (let i = 0; i < this.emulatedGamepads.length; i++) {
-            this.ClearDisplayButtonEventListeners(i);
-            this.ClearDisplayJoystickEventListeners(i);
+            this.ClearButtonTouchEventListeners(i);
+            this.ClearJoystickTouchEventListeners(i);
         }
         this.emulatedGamepads = [];
         this.undoEventPatch();
@@ -689,4 +729,33 @@ export class GamepadEmulator {
         GamepadEmulator.instanceRunning = false;
         delete navigator.getNativeGamepads;
     }
+
+
+    // Renamed functions for backwards compatibility
+
+    /** @deprecated AddDisplayButtonEventListeners is now called AddButtonTouchEventListeners */
+    AddDisplayButtonEventListeners = this.AddButtonTouchEventListeners
+
+    /** @deprecated AddDisplayJoystickEventListeners is now called AddJoystickTouchEventListeners */
+    AddDisplayJoystickEventListeners = this.AddJoystickTouchEventListeners
+
+    /** @deprecated ClearDisplayButtonEventListeners is now called ClearButtonTouchEventListeners */
+    ClearDisplayButtonEventListeners = this.ClearButtonTouchEventListeners
+
+    /** @deprecated ClearDisplayJoystickEventListeners is now called ClearJoystickTouchEventListeners */
+    ClearDisplayJoystickEventListeners = this.ClearJoystickTouchEventListeners
+
 };
+
+
+/** @deprecated ButtonConfig is now called ButtonTouchConfig */
+export type ButtonConfig = ButtonTouchConfig;
+
+/** @deprecated JoystickConfig is now called JoystickTouchConfig */
+export type JoystickConfig = JoystickTouchConfig;
+
+/** @deprecated OnOffButtonConfig is now called OnOffButtonTouchConfig */
+export type OnOffButtonConfig = OnOffButtonTouchConfig;
+
+/** @deprecated VariableButtonConfig is now called VariableButtonTouchConfig */
+export type VariableButtonConfig = VariableButtonTouchConfig;
