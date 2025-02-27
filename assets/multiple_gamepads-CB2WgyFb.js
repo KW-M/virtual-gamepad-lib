@@ -1,7 +1,7 @@
-import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h as C}from"./GamepadEmulator-CNWoeGf3.js";import{G as U}from"./GamepadDisplay-3X_eRe0j.js";const R=`<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 276 232">
+import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as s,P as r,C as G,h as C}from"./GamepadEmulator-CNWoeGf3.js";import{G as U}from"./GamepadDisplay-3X_eRe0j.js";const R=`<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 276 232">
     <g>
         <path id="gpad_base_right" class="gpad-base" d="M163 140.769c6 29.375 13.537 33.424 35.28 43.583 35.355 16.519 33.138 57.105 56.59 45.51 14.36-7.1 21.13-19.23 21.13-38.4 0-24.92-11.42-65.99-32.4-119.1-10.625-22.199-25.844-16.641-42.794-16.641-7.93 0-15.744-1.226-22.454 2.224-14.564 7.511-21.031 55.022-15.352 82.824"/>
-        <g id="stick_right" class>
+        <g id="stick_right">
             <text x="169.251" y="222.47" style="font-family:&quot;ArialRoundedMTBold&quot;,&quot;Arial Rounded MT Bold&quot;,sans-serif;font-size:11px">Forward</text>
             <circle class="gpad-shadow" cx="194.79" cy="176.272" r="26.46" style="fill-opacity:.5"/>
             <circle id="stick_right_base" class="gpad-stick-base" cx="193.55" cy="175.022" r="25.21" style="fill:#6180b0;stroke:#000;stroke-width:2.49px"/>
@@ -35,7 +35,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
             </g>
         </g>
         <g>
-            <g id="start_button" class>
+            <g id="start_button">
                 <path class="gpad-shadow" d="M182.219 132.023a8.69 8.69 0 0 1 2.89 6.477 8.69 8.69 0 0 1-2.89 6.477h-11.638a8.69 8.69 0 0 1-2.89-6.477 8.69 8.69 0 0 1 2.89-6.477z" style="fill:#9a9a9a;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="46" height="41" x="664" y="373" transform="matrix(1.02273,0,0,1.02273,-527.352,-264.931)" href="#fzb_b"/>
                 <path class="gpad-btn-bg" d="M181.245 131.064a8.7 8.7 0 0 1 2.889 6.478 8.7 8.7 0 0 1-2.889 6.477h-11.639a8.69 8.69 0 0 1-2.89-6.477 8.69 8.69 0 0 1 2.89-6.478z" style="fill:#fff"/>
@@ -44,7 +44,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
             </g>
         </g>
         <g>
-            <g id="button_1" class>
+            <g id="button_1">
                 <circle class="gpad-shadow" cx="198.1" cy="121.855" r="11.806" style="fill:#00ff04;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="52" height="52" x="171" y="95" transform="matrix(1,0,0,1,0.25,-7.10543e-15)" href="#fzb_c"/>
                 <circle class="gpad-btn-bg" cx="197.24" cy="121.007" r="11.8" style="fill:#00ff04"/>
@@ -56,7 +56,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
             </g>
         </g>
         <g>
-            <g id="button_2" class>
+            <g id="button_2">
                 <circle class="gpad-shadow" cx="218.95" cy="101.005" r="11.806" style="fill:#ff0009;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="52" height="52" x="192" y="74" transform="matrix(1,0,0,1,0.25,-3.55271e-15)" href="#fzb_d"/>
                 <circle class="gpad-btn-bg" cx="218.101" cy="100.145" r="11.8" style="fill:#ff0009"/>
@@ -65,7 +65,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
             </g>
         </g>
         <g>
-            <g id="button_3" class>
+            <g id="button_3">
                 <circle class="gpad-shadow" cx="177.25" cy="101.005" r="11.806" style="fill:#48c0fb;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="52" height="52" x="150" y="74" transform="matrix(1,0,0,1,0.25,-3.55271e-15)" href="#fzb_e"/>
                 <circle class="gpad-btn-bg" cx="176.39" cy="100.145" r="11.8" style="fill:#48c0fb"/>
@@ -74,7 +74,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
             </g>
         </g>
         <g>
-            <g id="button_4" class>
+            <g id="button_4">
                 <circle class="gpad-shadow" cx="198.1" cy="80.155" r="11.806" style="fill:#fff000;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="48" height="47" x="173" y="56" transform="matrix(1,0,0,1,0.25,0)" href="#fzb_f"/>
                 <circle class="gpad-btn-bg" cx="197.24" cy="79.295" r="11.8" style="fill:#fff000"/>
@@ -83,7 +83,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
             </g>
         </g>
         <g>
-            <g id="shoulder_trigger_back_right" class>
+            <g id="shoulder_trigger_back_right">
                 <path class="gpad-direction-highlight" d="M161.085 30.441h-5.073a1.7 1.7 0 0 0-1.471 2.551l9.322 16.121a1.7 1.7 0 0 0 2.944 0l9.298-16.08a1.726 1.726 0 0 0-1.496-2.592h-5.024V10.957h-.002a8.5 8.5 0 0 0-8.498 8.498z" style="fill:#ff00bf"/>
                 <path class="gpad-shadow" d="M226 40.321a1.7 1.7 0 0 0 1.7-1.7V18.479a6 6 0 0 0-6-6h-18.295a9 9 0 0 0-8.172 5.23l-9.32 20.199a1.7 1.7 0 0 0 1.544 2.413z" style="fill-opacity:.5"/>
                 <use class="gpad-highlight" width="76" height="55" x="544" y="255" transform="matrix(-1,0,0,1,788,-256)" href="#fzb_g"/>
@@ -92,7 +92,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
             </g>
         </g>
         <g>
-            <g id="shoulder_button_front_right" class>
+            <g id="shoulder_button_front_right">
                 <path class="gpad-shadow" d="M185.1 44.7a6 6 0 0 0-4.243 1.757A6 6 0 0 0 179.1 50.7v7.6a1.7 1.7 0 0 0 1.7 1.7h46.4a1.7 1.7 0 0 0 1.7-1.7v-7.585a6.015 6.015 0 0 0-6.015-6.015z" style="fill:#9a9a9a;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="80" height="46" x="163" y="28" href="#fzb_h"/>
                 <path class="gpad-btn-bg" d="M184.069 43.65a6 6 0 0 0-6 6v7.6a1.7 1.7 0 0 0 1.7 1.7h46.4a1.7 1.7 0 0 0 1.7-1.7v-7.585a6.015 6.015 0 0 0-6.015-6.015z" style="fill:#fff"/>
@@ -110,7 +110,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
     </g>
     <g>
         <path id="gpad_base_left" class="gpad-base" d="M113 140.769c-6 29.375-13.537 33.424-35.28 43.583-35.355 16.519-33.138 57.105-56.59 45.51-14.36-7.1-21.13-19.23-21.13-38.4 0-24.92 11.42-65.99 32.4-119.1 10.625-22.199 25.844-16.641 42.794-16.641 7.93 0 15.744-1.226 22.454 2.224 14.564 7.511 21.031 55.022 15.352 82.824"/>
-        <g id="stick_left" class>
+        <g id="stick_left">
             <text x="58.772" y="222.614" style="font-family:&quot;ArialRoundedMTBold&quot;,&quot;Arial Rounded MT Bold&quot;,sans-serif;font-size:11px">Forward</text>
             <circle class="gpad-shadow" cx="82.237" cy="176.33" r="26.46" style="fill-opacity:.5"/>
             <circle id="stick_left_base" class="gpad-stick-base" cx="80.987" cy="175.09" r="25.21" style="fill:#6180b0;stroke:#000;stroke-width:2.49px"/>
@@ -144,7 +144,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
             </g>
         </g>
         <g>
-            <g id="select_button" class>
+            <g id="select_button">
                 <path class="gpad-shadow" d="M106.075 132.272a8.62 8.62 0 0 1 2.867 6.428 8.62 8.62 0 0 1-2.867 6.428h-11.55a8.62 8.62 0 0 1-2.867-6.428 8.62 8.62 0 0 1 2.867-6.428z" style="fill:#9a9a9a;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="43" height="39" x="78" y="118" transform="matrix(1.14878,0,0,1.14878,-14.5926,-20.5599)" href="#fzb_j"/>
                 <path class="gpad-btn-bg" d="M105.066 131.238a8.62 8.62 0 0 1 2.868 6.428 8.62 8.62 0 0 1-2.868 6.427H93.517a8.62 8.62 0 0 1-2.868-6.427 8.62 8.62 0 0 1 2.868-6.428z" style="fill:#fff"/>
@@ -154,16 +154,16 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
         </g>
         <g>
             <path class="gpad-shadow" d="M68.911 109.039a.853.853 0 0 0-.85-.85H50.322a1.67 1.67 0 0 1-1.671-1.671V91.282a1.67 1.67 0 0 1 1.671-1.671h17.739a.853.853 0 0 0 .85-.85v-17.71a1.7 1.7 0 0 1 1.7-1.7h15.207a1.67 1.67 0 0 1 1.671 1.671v17.739a.853.853 0 0 0 .85.85h17.739a1.67 1.67 0 0 1 1.671 1.671v15.236a1.67 1.67 0 0 1-1.671 1.671H88.339a.853.853 0 0 0-.85.85v17.739a1.67 1.67 0 0 1-1.671 1.671H70.582a1.67 1.67 0 0 1-1.671-1.671z" style="fill:#9a9a9a;fill-opacity:.05"/>
-            <g id="dpad_up" class>
+            <g id="dpad_up">
                 <use class="gpad-highlight" width="48" height="53" x="53" y="54" transform="matrix(1.01954,0,0,1.01954,-1.61437,-3.02471)" href="#fzb_k"/>
             </g>
-            <g id="dpad_down" class>
+            <g id="dpad_down">
                 <use id="dpad_down_highlight" class="gpad-highlight" width="48" height="52" x="53" y="91" transform="matrix(1.01954,0,0,1.01954,-1.61437,-3.02471)" href="#fzb_l"/>
             </g>
-            <g id="dpad_right" class>
+            <g id="dpad_right">
                 <use class="gpad-highlight" width="52" height="48" x="70" y="75" transform="matrix(1.01954,0,0,1.01954,-1.61437,-3.02471)" href="#fzb_m"/>
             </g>
-            <g id="dpad_left" class>
+            <g id="dpad_left">
                 <use class="gpad-highlight" width="52" height="48" x="33" y="75" transform="matrix(1.01954,0,0,1.01954,-1.61437,-3.02471)" href="#fzb_n"/>
             </g>
             <path class="gpad-btn-bg" d="M67.903 108.022a.85.85 0 0 0-.85-.85H49.314a1.67 1.67 0 0 1-1.67-1.671V90.264a1.67 1.67 0 0 1 1.67-1.671h17.739a.85.85 0 0 0 .85-.85V70.034a1.7 1.7 0 0 1 1.7-1.7h15.208a1.67 1.67 0 0 1 1.67 1.671v17.738a.85.85 0 0 0 .85.85h17.739c.443 0 .868.176 1.181.49.314.313.49.738.49 1.181v15.237a1.671 1.671 0 0 1-1.671 1.671H87.331a.85.85 0 0 0-.85.85v17.738a1.67 1.67 0 0 1-1.67 1.671H69.574c-.443 0-.868-.176-1.182-.489a1.68 1.68 0 0 1-.489-1.182z" style="fill:#fff"/>
@@ -182,7 +182,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
             </g>
         </g>
         <g>
-            <g id="shoulder_trigger_back_left" class>
+            <g id="shoulder_trigger_back_left">
                 <path class="gpad-direction-highlight" d="M114.915 30.441h5.073a1.7 1.7 0 0 1 1.471 2.551l-9.322 16.121a1.7 1.7 0 0 1-2.944 0l-9.298-16.08a1.726 1.726 0 0 1 1.496-2.592h5.024V10.957h.002a8.5 8.5 0 0 1 8.498 8.498z" style="fill:#ff00bf"/>
                 <path class="gpad-shadow" d="M53.55 40.321a1.7 1.7 0 0 1-1.7-1.7V18.479a6 6 0 0 1 6-6h18.295a9 9 0 0 1 8.172 5.23l9.32 20.199a1.7 1.7 0 0 1-1.544 2.413z" style="fill-opacity:.5"/>
                 <use class="gpad-highlight" width="76" height="54" x="32" href="#fzb_o"/>
@@ -191,7 +191,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
             </g>
         </g>
         <g>
-            <g id="shoulder_button_front_left" class>
+            <g id="shoulder_button_front_left">
                 <path class="gpad-shadow" d="M92.9 44.65c1.591 0 3.117.632 4.243 1.757A6 6 0 0 1 98.9 50.65v7.6a1.7 1.7 0 0 1-1.7 1.7H50.8a1.7 1.7 0 0 1-1.7-1.7v-7.585a6.015 6.015 0 0 1 6.015-6.015z" style="fill:#9a9a9a;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="80" height="46" x="33" y="28" href="#fzb_p"/>
                 <path class="gpad-btn-bg" d="M91.931 43.65a6 6 0 0 1 6 6v7.6a1.7 1.7 0 0 1-1.7 1.7h-46.4a1.7 1.7 0 0 1-1.7-1.7v-7.585a6.015 6.015 0 0 1 6.015-6.015z" style="fill:#fff"/>
@@ -200,7 +200,7 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
         </g>
         <path id="stick_button_left_tap_target" class="gpad-tap-target" d="M103.913 149.248c7.13 6.332 11.626 15.566 11.626 25.842 0 19.07-15.482 34.552-34.552 34.552-19.069 0-34.551-15.482-34.551-34.552s15.482-34.552 34.551-34.552c2.159 0 4.271.199 6.32.578 1.498 5.206 6.3 9.018 11.985 9.018a12.4 12.4 0 0 0 4.621-.886" style="fill:#419bf3;fill-opacity:.25"/>
         <path id="select_button_tap_target" class="gpad-tap-target" d="M97.301 125.355a12.6 12.6 0 0 1 1.991-.158c6.881 0 12.468 5.587 12.468 12.469s-5.587 12.468-12.468 12.468-12.469-5.587-12.469-12.468c0-3.13 1.155-5.992 3.063-8.182a34 34 0 0 0 7.415-4.129" style="fill:#f37f41;fill-opacity:.25"/>
-        <g id="dpad_tap_targets" class>
+        <g id="dpad_tap_targets">
             <path id="dpad_up_left_tap_target" class="gpad-tap-target" d="M45.065 86.582a34.18 34.18 0 0 1 20.827-20.827v20.827z" style="fill:#497d7f;fill-opacity:.25"/>
             <path id="dpad_down_left_tap_target" class="gpad-tap-target" d="M65.892 130.009a34.18 34.18 0 0 1-20.827-20.827h20.827z" style="fill:#617333;fill-opacity:.25"/>
             <path id="dpad_down_right_tap_target" class="gpad-tap-target" d="M109.319 109.182a34.18 34.18 0 0 1-20.827 20.827v-20.827z" style="fill:#552525;fill-opacity:.25"/>
@@ -232,4 +232,4 @@ import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as d,P as r,C as G,h
         <image id="fzb_p" width="80" height="46" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAuCAYAAAC/OZ4cAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAFCElEQVRoge2b3XLaQAyFjxOanybpVV6uT9iXy10baEiAXuCDzx6ktWnTeJmJZjRrwKy9H9JqpTXAp/yTdO/Z2ffd07v297/kR/e4e6++Th5wBdJZwBMJIZ4Kd9KgA2hdcBz11QrUCMou+Kw4bwrM6gANnIPqKseT+v9AiSBpu0veB1AHmQ4wgJfpBXKY1Wt8kDg8B7dFCdEVQA4xHJzAY6uQLkS74Diy1Dklsqxt0KqGICOIR4MzeG5pl0HLYwep/c8FMYOnupF2E3xehbhILuzgFNZC2oW8jkACx/D+N0y3kgwegb316seUbaXvcjBmfQqDkL4kqiCnQPwoidzWwb0G+ibq1lhYYWSBkdsusAd11eu1tQpSIWpfc4jPYw5vLfrSq/7w6M/byXuFFR5OFOtjB3RLwrnu9QbAbd/eyPtXOLbEFgACpRWp1b0A+B0oYa5RujUt+WCFboEKUa2P1nYL4KvoLQaY1yjduQWAQDn3bVDCewGwArBEec9ACf0CgwV3ECusuXAN4H2vdxhA3mBwZw0qLQQRtz667ArDD3+JEl4UkQt4QGyBHnnpwnTdOwAPogpRrdDnwTnE5z8CpOsusf/RCY+wdZ586z8PIY5ZIN1RLfAOe+v71ishEiDnwtYsUAFyrrvG/l4JRc9ZY3D31BAWwCGARNG35sIPGCDeo3TjKJDMIZquOcAVjuGpe1PDVcX33RN+dI+7qXOgRmFCdFf+ihzgnOIA1xjmaoVHcLRMX5blFigSZSAESIicCxmJ70TPBSDnaAaWF+zHxDmRgEeXZGOpnLqxLqS5Brw1bR3gBsN97TAAXWFYikXwPLM6iALMylQRRFoj58ZoQc2La/8fKRpMFCDvQ92ZLusZVeS+PA4X0npCVEhQkOraUW7sAOcULoZ1QewpqIPz4AFMmAMpUUlLTVlhLux1dvG5xJc1bgw+hmjOS1cSbiFRJTlyaz+u6dwy5R7H7j/iAiC3QD95Koi0JD6z/M09TRr7GMBo4yUrTFJpmS0BzO7Vq9AR6OoYHGC2e+XgPFdkynMpN8w5sAWJqjEsnG6kjWACMRcAuQVGwCJoWpBkQr5BWUxoQRwga33UqAqdwSwkAhi5a1TFZdrDagZvlKWhFgFuMdz/qlctoCpIAqzOnwow2j9V69NEm8k4F82dnOMF1RZEx8JxsJy1RAlSLZJjd3hpOSuzPC+BL1EWIZmMt5bGUXQ6coC/ADyjBKml/HB7k1JzYU/AWcHlCp7uSXhM42rV6LnEq9I6nmcAPzFAVEuMXLmQzAI92rKGpukOMPyinAsJsJUshOK7crRC7ocoRLXCV5TRedQCoy1AXsznNv6av7EvJjCvbKGQ6jLmVYRIK/QdudSFDwPsq9K+G+c1QK0D6tZmtpnUKkAPiivRJY4jNGPAYWmTbWtmQWSNAYaWv911W9rOVKkFR11Z6D6xR+OTggh3n3ihzj4j1Kh+RksG2gLIVoNJ9ISCqgaRLSYGEb0QcAxPV/PqtlnxsQXxtDRKSV9RLtkmLWOKASa7c9mTWVnhsSXXdcnyek1V9VhTusN3xx4u8lK4vr/FHtgbBrBRbRBoD+JYZWljbfqMoMrRIEcesKy1+p2Wxass0dOq2hbw/AHLcLDBI76nVG3PAaC3NT2cO+kRX8oJT+h7P+cCMDqO4AI48SFzlZH/iEzqo3FxMMXrsf+KnDT4c/kr17/Ke/4V7FNG5A9o2xQCBInzyQAAAABJRU5ErkJggg=="/>
     </defs>
 </svg>
-`,s=new X(.1),O=new F({buttonConfigs:[],updateDelay:0,axisDeadZone:.05});let m=[];window.addEventListener("DOMContentLoaded",()=>{const w=document.getElementById("gamepads"),h=document.getElementById("gamepad_display_template"),f=document.getElementById("add_emulated_gpad_btn");if(!w||!h||!f)throw Error("gamepadDisplaySection or gamepadDisplayTemplate elements not found in DOM");h.content.querySelector("#gpad_display_full").innerHTML=R,f==null||f.addEventListener("click",()=>{D(!1,-1)}),window.addEventListener("gamepadconnected",A=>{const t=A.gamepad,a=t.index,l=t.emulation;console.info(`Gamepad ${a} connected (${l}): ${t.id}`),E()}),window.addEventListener("gamepaddisconnected",A=>{const t=A.gamepad,a=t.index,l=t.emulation;console.info(`Gamepad ${a} disconnected (${l}): ${t.id}`),E()});function z(){for(let A=0;A<m.length;A++){const t=m[A];s.ClearButtonTouchEventListeners(t.index),s.ClearJoystickTouchEventListeners(t.index),t.container.remove(),t.display.Cleanup()}m=[]}function E(){z();const A=navigator.getGamepads();for(let t=0;t<A.length;t++){const a=A[t];if(!a)continue;const{display:l,container:c}=Q(a.index);m.push({display:l,index:a.index,container:c});const o=a.emulation;(o===g.emulated||o===g.overlay)&&V(a.index,c)}}function D(A,t){A?s.AddEmulatedGamepad(t,!0,q,M):s.AddEmulatedGamepad(-1,!1,q,M)}function V(A,t){s.AddButtonTouchEventListeners(A,b.map((a,l)=>{const c=a.includes("trigger"),o=a.includes("stick");return c?{buttonIndex:l,type:u.variable,tapTarget:t.querySelector("#"+a),dragDistance:50,lockTargetWhilePressed:!0,directions:{[e.up]:!1,[e.down]:!0,[e.left]:!1,[e.right]:!1}}:{buttonIndex:l,type:u.onOff,lockTargetWhilePressed:o===!0,tapTarget:t.querySelector("#"+a)}})),s.AddJoystickTouchEventListeners(A,[{tapTarget:t.querySelector("#"+b[d.LStick]),dragDistance:30,xAxisIndex:0,yAxisIndex:1,lockTargetWhilePressed:!0,directions:{[e.up]:!0,[e.down]:!0,[e.left]:!0,[e.right]:!0}},{tapTarget:t.querySelector("#"+b[d.RStick]),dragDistance:30,xAxisIndex:2,yAxisIndex:3,lockTargetWhilePressed:!0,directions:{[e.up]:!0,[e.down]:!0,[e.left]:!0,[e.right]:!0}}])}function Q(A){if(!h||!w||!h.content.firstElementChild)throw Error("gamepadDisplayTemplate or gamepadDisplaySection elements not found in DOM");const t=h.content.firstElementChild.cloneNode(!0),a=w.appendChild(t),l=document.querySelector(`#${r[d.LStick]}`),c=document.querySelector(`#${r[d.RStick]}`);G(l),G(c);const o=r.map(i=>i.includes("trigger")?{type:u.variable,direction:e.down,buttonElement:a.querySelector(`#${i}`),highlight:a.querySelector(`#${i} .${C.ButtonHighlight}`),directionHighlight:a.querySelector(`#${i} .${C.DirectionHighlight}`),movementRange:10,extraData:{myCustomData:"variable btn name is "+i}}:{type:u.onOff,highlight:a.querySelector(`#${i} .${C.ButtonHighlight}`),extraData:{myCustomData:"onOff btn name is "+i}});console.log("buttons",a.querySelector(`#${r[d.LStick]}`));const v=[{joystickElement:a.querySelector(`#${r[d.LStick]}`),xAxisIndex:0,yAxisIndex:1,movementRange:10},{joystickElement:a.querySelector(`#${r[d.RStick]}`),xAxisIndex:2,yAxisIndex:3,movementRange:10}],x=new U({gamepadIndex:A,buttons:o,sticks:v,joystickDisplayFunction:function(i,B,y){if(x.DefaultJoystickDisplayFunction(i,B,y),i.xAxisIndex===0){const p=a.querySelector("#l_stick_action_help_label");p&&(p.innerHTML="("+B.toFixed(1)+", "+y.toFixed(1)+")")}else if(i.xAxisIndex===2){const p=a.querySelector("#r_stick_action_help_label");p&&(p.innerHTML="("+B.toFixed(1)+", "+y.toFixed(1)+")")}}},O),n=navigator.getGamepads()[A];return n.emulation===g.emulated?(a.querySelector("#gpad-emulation-label").innerHTML=`gpad #${n.index} | Emulated | ${n.id}`,a.querySelector("#gpad-emulation-btn").innerHTML="REMOVE Emulated Gamepad"):n.emulation===g.overlay?(a.querySelector("#gpad-emulation-label").innerHTML=`gpad #${n.index} | Overlay (real + emulated input) | ${n.id}`,a.querySelector("#gpad-emulation-btn").innerHTML="REMOVE Emulated Gamepad Overlay"):n.emulation===g.real&&(a.querySelector("#gpad-emulation-label").innerHTML=`gpad #${n.index} | Real (no emulated input) | ${n.id} `,a.querySelector("#gpad-emulation-btn").innerHTML="ADD Emulated Gamepad Overlay"),a.querySelector("#gpad-emulation-btn").addEventListener("click",()=>{k(A)}),{container:t,display:x}}function k(A){const t=navigator.getGamepads()[A].emulation;t===g.emulated||t===g.overlay?s.RemoveEmulatedGamepad(A):t===g.real&&D(!0,A)}});
+`,d=new X(.1),O=new F({buttonConfigs:[],updateDelay:0,axisDeadZone:.05});let m=[];window.addEventListener("DOMContentLoaded",()=>{const w=document.getElementById("gamepads"),h=document.getElementById("gamepad_display_template"),f=document.getElementById("add_emulated_gpad_btn");if(!w||!h||!f)throw Error("gamepadDisplaySection or gamepadDisplayTemplate elements not found in DOM");h.content.querySelector("#gpad_display_full").innerHTML=R,f==null||f.addEventListener("click",()=>{D(!1,-1)}),window.addEventListener("gamepadconnected",A=>{const t=A.gamepad,a=t.index,l=t.emulation;console.info(`Gamepad ${a} connected (${l}): ${t.id}`),E()}),window.addEventListener("gamepaddisconnected",A=>{const t=A.gamepad,a=t.index,l=t.emulation;console.info(`Gamepad ${a} disconnected (${l}): ${t.id}`),E()});function z(){for(let A=0;A<m.length;A++){const t=m[A];d.ClearButtonTouchEventListeners(t.index),d.ClearJoystickTouchEventListeners(t.index),t.container.remove(),t.display.Cleanup()}m=[]}function E(){z();const A=navigator.getGamepads();for(let t=0;t<A.length;t++){const a=A[t];if(!a)continue;const{display:l,container:c}=Q(a.index);m.push({display:l,index:a.index,container:c});const o=a.emulation;(o===g.emulated||o===g.overlay)&&V(a.index,c)}}function D(A,t){A?d.AddEmulatedGamepad(t,!0,q,M):d.AddEmulatedGamepad(-1,!1,q,M)}function V(A,t){d.AddButtonTouchEventListeners(A,b.map((a,l)=>{const c=a.includes("trigger"),o=a.includes("stick");return c?{buttonIndex:l,type:u.variable,tapTarget:t.querySelector("#"+a),dragDistance:50,lockTargetWhilePressed:!0,directions:{[e.up]:!1,[e.down]:!0,[e.left]:!1,[e.right]:!1}}:{buttonIndex:l,type:u.onOff,lockTargetWhilePressed:o===!0,tapTarget:t.querySelector("#"+a)}})),d.AddJoystickTouchEventListeners(A,[{tapTarget:t.querySelector("#"+b[s.LStick]),dragDistance:30,xAxisIndex:0,yAxisIndex:1,lockTargetWhilePressed:!0,directions:{[e.up]:!0,[e.down]:!0,[e.left]:!0,[e.right]:!0}},{tapTarget:t.querySelector("#"+b[s.RStick]),dragDistance:30,xAxisIndex:2,yAxisIndex:3,lockTargetWhilePressed:!0,directions:{[e.up]:!0,[e.down]:!0,[e.left]:!0,[e.right]:!0}}])}function Q(A){if(!h||!w||!h.content.firstElementChild)throw Error("gamepadDisplayTemplate or gamepadDisplaySection elements not found in DOM");const t=h.content.firstElementChild.cloneNode(!0),a=w.appendChild(t),l=document.querySelector(`#${r[s.LStick]}`),c=document.querySelector(`#${r[s.RStick]}`);G(l),G(c);const o=r.map(i=>i.includes("trigger")?{type:u.variable,direction:e.down,buttonElement:a.querySelector(`#${i}`),highlight:a.querySelector(`#${i} .${C.ButtonHighlight}`),directionHighlight:a.querySelector(`#${i} .${C.DirectionHighlight}`),movementRange:10,extraData:{myCustomData:"variable btn name is "+i}}:{type:u.onOff,highlight:a.querySelector(`#${i} .${C.ButtonHighlight}`),extraData:{myCustomData:"onOff btn name is "+i}});console.log("buttons",a.querySelector(`#${r[s.LStick]}`));const v=[{joystickElement:a.querySelector(`#${r[s.LStick]}`),xAxisIndex:0,yAxisIndex:1,movementRange:10},{joystickElement:a.querySelector(`#${r[s.RStick]}`),xAxisIndex:2,yAxisIndex:3,movementRange:10}],x=new U({gamepadIndex:A,buttons:o,sticks:v,joystickDisplayFunction:function(i,B,y){if(x.DefaultJoystickDisplayFunction(i,B,y),i.xAxisIndex===0){const p=a.querySelector("#l_stick_action_help_label");p&&(p.innerHTML="("+B.toFixed(1)+", "+y.toFixed(1)+")")}else if(i.xAxisIndex===2){const p=a.querySelector("#r_stick_action_help_label");p&&(p.innerHTML="("+B.toFixed(1)+", "+y.toFixed(1)+")")}}},O),n=navigator.getGamepads()[A];return n.emulation===g.emulated?(a.querySelector("#gpad-emulation-label").innerHTML=`gpad #${n.index} | Emulated | ${n.id}`,a.querySelector("#gpad-emulation-btn").innerHTML="REMOVE Emulated Gamepad"):n.emulation===g.overlay?(a.querySelector("#gpad-emulation-label").innerHTML=`gpad #${n.index} | Overlay (real + emulated input) | ${n.id}`,a.querySelector("#gpad-emulation-btn").innerHTML="REMOVE Emulated Gamepad Overlay"):n.emulation===g.real&&(a.querySelector("#gpad-emulation-label").innerHTML=`gpad #${n.index} | Real (no emulated input) | ${n.id} `,a.querySelector("#gpad-emulation-btn").innerHTML="ADD Emulated Gamepad Overlay"),a.querySelector("#gpad-emulation-btn").addEventListener("click",()=>{k(A)}),{container:t,display:x}}function k(A){const t=navigator.getGamepads()[A].emulation;t===g.emulated||t===g.overlay?d.RemoveEmulatedGamepad(A):t===g.real&&D(!0,A)}});
