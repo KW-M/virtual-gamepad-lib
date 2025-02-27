@@ -175,15 +175,36 @@ See: [https://www.youtube.com/watch?v=bWcweY66DL8](https://www.youtube.com/watch
 
 ![Affinity SVG Export](./README.assets/Affinity-SVG-Export.png)
 
-### [SVGO](https://github.com/svg/svgo) / [SVGOMG](https://jakearchibald.github.io/svgomg/) Options:
+### Process with [SVGO](https://github.com/svg/svgo) (REQUIRED):
 
 **Auto** (_recommened_)
 
-Use the pre-configured SVGO config in the source github repo. It will optimize the svgs while retaining compatiblity with css & js interaction and avoid id collisions. Use the config with the SVGO CLI. The config file is located at: [svgo.config.js](./svgo.config.js) See the optimize:svg npm script in the package.json for an example of how to use the config with the SVGO CLI.
+Use the pre-configured SVGO config included in this package. It will optimize the svgs while retaining compatiblity with css & js interaction and avoid id collisions. Use the config with the SVGO CLI. The config file is located at: [svgo.config.js](./svgo.config.js)
 
-**Manual** (_not recommened_)
+1. Install SVGO `npm install svgo`
+2. Create a `svgo.config.js` file in the root of your project with the contents:
 
-- This method will not avoid ID collisions between svgs on a page like the SVGO CLI config in the project source does
+   ```js
+   import svgoConfig from "virtual-gamepad-lib/svgo.config.js";
+   // modify svgoConfig here if desired
+   export default svgoConfig;
+   ```
+
+3. Add an NPM script to your package.json:
+
+   ```json
+   {
+     "scripts": {
+       "optimize_svgs": "svgo --recursive --folder ./path/to/your/original/svgs/ --output ./folder/to/put/optimized/svgs/"
+     }
+   }
+   ```
+
+4. run it `npm run optimize_svgs`
+
+**Manual** (_NOT recommened_)
+
+- This method will not avoid ID collisions between SVGs on a page like the automatic method above does
 - **Disable** `Clean IDs` to keep the `id` attributes of the SVG elements from your editor
 - **Disable** `Remove ViewBox` to keep the `viewBox` attribute, which makes scaling the SVG easier
 - **Disable** `Remove Unknowns & Defaults` as this can remove the `id` and `class` attributes even if `Clean IDs` is off

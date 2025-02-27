@@ -233,25 +233,22 @@ export default {
                             id = trimChar(trimChar(trimChar(id, "_"), "-"), "#").trim();
                             let classes = idAndClasses.map(c => trimChar(trimChar(c, "_"), "-").trim())
                             classes = classes.concat(minifiedClasses).filter(c => c != "");
+                            let combinedClasses = classes.join(" ").trim();
 
-                            // Add back the trimmed ID
-                            if (id != '') node.attributes.id = id;
-                            else delete node.attributes.id;
+                            // add the new id and class attributes first for easier reading in the output svg
+                            node.attributes = { id: id, class: combinedClasses, ...node.attributes };
 
-                            // Add back the classes
-                            if (classes.length != 0) node.attributes.class = classes.join(" ");
-                            else delete node.attributes.class;
-
-                            // Save that we replaced the minifiedId with the parsed id, so we can also replace references to it in the next step
-                            if (minifiedId) parsedIdByMinId.set(minifiedId, id);
+                            // remove the id and class attributes if they are empty
+                            if (node.attributes.id == "") delete node.attributes.id;
+                            if (node.attributes.class == "") delete node.attributes.class;
 
                             // remove redundant attributes that were added by vector graphics editors
                             delete node.attributes["data-name"];
                             delete node.attributes["serif:id"];
                             delete node.attributes["savedId"];
 
-                            // make SVGO put the id and class attributes first for easier reading in the output svg
-                            node.attributes = { id: node.attributes.id, class: node.attributes.class, ...node.attributes };
+                            // Save that we replaced the minifiedId with the parsed id, so we can also replace references to it in the next step
+                            if (minifiedId) parsedIdByMinId.set(minifiedId, id);
                         }
                     },
 

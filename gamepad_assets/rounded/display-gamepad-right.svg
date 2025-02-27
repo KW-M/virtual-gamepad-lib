@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 123 232">
     <g>
         <path id="gpad_base_right" class="gpad-base" d="M10 140.769c6 29.375 13.537 33.424 35.28 43.583 35.355 16.519 33.138 57.105 56.59 45.51 14.36-7.1 21.13-19.23 21.13-38.4 0-24.92-11.42-65.99-32.4-119.1-10.625-22.199-25.844-16.641-42.794-16.641-7.93 0-15.744-1.226-22.454 2.224C10.788 65.456 4.321 112.967 10 140.769"/>
-        <g id="stick_right" class>
+        <g id="stick_right">
             <text x="16.251" y="222.47" style="font-family:&quot;ArialRoundedMTBold&quot;,&quot;Arial Rounded MT Bold&quot;,sans-serif;font-size:11px">Forward</text>
             <circle class="gpad-shadow" cx="41.79" cy="176.272" r="26.46" style="fill-opacity:.5"/>
             <circle id="stick_right_base" class="gpad-stick-base" cx="40.55" cy="175.022" r="25.21" style="fill:#6180b0;stroke:#000;stroke-width:2.49px"/>
@@ -35,7 +35,7 @@
             </g>
         </g>
         <g>
-            <g id="start_button" class>
+            <g id="start_button">
                 <path class="gpad-shadow" d="M29.219 132.023a8.69 8.69 0 0 1 2.89 6.477 8.69 8.69 0 0 1-2.89 6.477H17.581a8.69 8.69 0 0 1-2.89-6.477 8.69 8.69 0 0 1 2.89-6.477z" style="fill:#9a9a9a;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="46" height="41" x="664" y="373" transform="matrix(1.02273,0,0,1.02273,-680.352,-264.931)" href="#plz_b"/>
                 <path class="gpad-btn-bg" d="M28.245 131.064a8.7 8.7 0 0 1 2.889 6.478 8.7 8.7 0 0 1-2.889 6.477H16.606a8.69 8.69 0 0 1-2.89-6.477 8.69 8.69 0 0 1 2.89-6.478z" style="fill:#fff"/>
@@ -44,7 +44,7 @@
             </g>
         </g>
         <g>
-            <g id="button_1" class>
+            <g id="button_1">
                 <circle class="gpad-shadow" cx="45.1" cy="121.855" r="11.806" style="fill:#00ff04;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="52" height="52" x="171" y="95" transform="matrix(1,0,0,1,-152.75,-7.10543e-15)" href="#plz_c"/>
                 <circle class="gpad-btn-bg" cx="44.24" cy="121.007" r="11.8" style="fill:#00ff04"/>
@@ -56,7 +56,7 @@
             </g>
         </g>
         <g>
-            <g id="button_2" class>
+            <g id="button_2">
                 <circle class="gpad-shadow" cx="65.95" cy="101.005" r="11.806" style="fill:#ff0009;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="52" height="52" x="192" y="74" transform="matrix(1,0,0,1,-152.75,-3.55271e-15)" href="#plz_d"/>
                 <circle class="gpad-btn-bg" cx="65.101" cy="100.145" r="11.8" style="fill:#ff0009"/>
@@ -65,7 +65,7 @@
             </g>
         </g>
         <g>
-            <g id="button_3" class>
+            <g id="button_3">
                 <circle class="gpad-shadow" cx="24.25" cy="101.005" r="11.806" style="fill:#48c0fb;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="51" height="52" x="151" y="74" transform="matrix(1,0,0,1,-152.75,-3.55271e-15)" href="#plz_e"/>
                 <circle class="gpad-btn-bg" cx="23.39" cy="100.145" r="11.8" style="fill:#48c0fb"/>
@@ -74,7 +74,7 @@
             </g>
         </g>
         <g>
-            <g id="button_4" class>
+            <g id="button_4">
                 <circle class="gpad-shadow" cx="45.1" cy="80.155" r="11.806" style="fill:#fff000;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="48" height="47" x="173" y="56" transform="matrix(1,0,0,1,-152.75,0)" href="#plz_f"/>
                 <circle class="gpad-btn-bg" cx="44.24" cy="79.295" r="11.8" style="fill:#fff000"/>
@@ -83,7 +83,7 @@
             </g>
         </g>
         <g>
-            <g id="shoulder_trigger_back_right" class>
+            <g id="shoulder_trigger_back_right">
                 <path class="gpad-direction-highlight" d="M8.085 30.441H3.012a1.7 1.7 0 0 0-1.471 2.551l9.322 16.121a1.7 1.7 0 0 0 2.944 0l9.298-16.08a1.726 1.726 0 0 0-1.496-2.592h-5.024V10.957h-.002a8.5 8.5 0 0 0-8.498 8.498z" style="fill:#ff00bf"/>
                 <path class="gpad-shadow" d="M73 40.321a1.7 1.7 0 0 0 1.7-1.7V18.479a6 6 0 0 0-6-6H50.405a9 9 0 0 0-8.172 5.23l-9.32 20.199a1.7 1.7 0 0 0 1.544 2.413z" style="fill-opacity:.5"/>
                 <use class="gpad-highlight" width="76" height="55" x="544" y="255" transform="matrix(-1,0,0,1,635,-256)" href="#plz_g"/>
@@ -92,7 +92,7 @@
             </g>
         </g>
         <g>
-            <g id="shoulder_button_front_right" class>
+            <g id="shoulder_button_front_right">
                 <path class="gpad-shadow" d="M32.1 44.7a6 6 0 0 0-4.243 1.757A6 6 0 0 0 26.1 50.7v7.6a1.7 1.7 0 0 0 1.7 1.7h46.4a1.7 1.7 0 0 0 1.7-1.7v-7.585a6.015 6.015 0 0 0-6.015-6.015z" style="fill:#9a9a9a;fill-opacity:.5"/>
                 <use class="gpad-highlight" width="80" height="46" x="163" y="28" transform="matrix(1,0,0,1,-153,0)" href="#plz_h"/>
                 <path class="gpad-btn-bg" d="M31.069 43.65a6 6 0 0 0-6 6v7.6a1.7 1.7 0 0 0 1.7 1.7h46.4a1.7 1.7 0 0 0 1.7-1.7v-7.585a6.015 6.015 0 0 0-6.015-6.015z" style="fill:#fff"/>
