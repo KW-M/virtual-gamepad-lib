@@ -2,7 +2,7 @@
   "name": "virtual-gamepad-lib",
   "private": false,
   "description": "Emulate and display virtual and real gamepads on the web",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "packageManager": "pnpm@9.14.2",
   "type": "module",
   "sideEffects": false,
