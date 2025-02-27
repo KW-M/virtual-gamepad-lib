@@ -82,14 +82,9 @@
     "./gamepad_assets/*": {
       "import": "./gamepad_assets/*",
       "default": "./gamepad_assets/*"
+    },
+    "./svgo.config.js": {
+      "import": "./svgo.config.js"
     }
-  },
-  "files": [
-    "dist",
-    "src",
-    "gamepad_assets",
-    "svgo.config.js",
-    "LICENSE",
-    "README.md"
-  ]
+  }
 }

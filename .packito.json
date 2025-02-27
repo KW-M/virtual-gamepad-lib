@@ -58,6 +58,13 @@
                 "types": "./helpers.d.ts",
                 "import": "./helpers.js",
                 "require": "./cjs/helpers.cjs"
+            },
+            "./gamepad_assets/*": {
+                "import": "./gamepad_assets/*",
+                "default": "./gamepad_assets/*"
+            },
+            "./svgo.config.js": {
+                "import": "./svgo.config.js"
             }
         }
     }
