@@ -164,8 +164,14 @@ export class GamepadApiWrapper {
     gamepadApiSupported() {
         const getGamepads = navigator.getNativeGamepads || navigator.getGamepads || navigator.webkitGetGamepads || navigator.mozGetGamepads || navigator.msGetGamepads;
         if (getGamepads != null && (typeof getGamepads) === (typeof function () { })) {
-            const gpads = getGamepads.apply(navigator);// firefox still exposes the gamepad api when in insecure contexts, but does not return anything, so it's not "supported".
-            return gpads != null && gpads.length > 0;
+            try {
+                // Firefox still exposes the gamepad api when in insecure contexts, but always returns nothing or an empty array, so it's not actually supported.
+                // Additionally, strict browser permissions may cause getGamepads() to throw the SecurityError DOMException.
+                const gpads = getGamepads.apply(navigator);
+                return gpads != null && (gpads[0] !== undefined || gpads.length !== 0 || window.isSecureContext);
+            } catch (e) {
+                return false;
+            }
         } else return false;
     }
 
