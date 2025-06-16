@@ -1,4 +1,4 @@
-import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as s,P as r,C as G,h as C}from"./GamepadEmulator-CNWoeGf3.js";import{G as U}from"./GamepadDisplay-3X_eRe0j.js";const R=`<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 276 232">
+import{G as X,a as F,i as g,D as q,b as M,d as b,g as u,e,c as s,P as r,C as G,h as C}from"./GamepadEmulator-Bigwq-R0.js";import{G as U}from"./GamepadDisplay-BMj8gUV8.js";const R=`<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 276 232">
     <g>
         <path id="gpad_base_right" class="gpad-base" d="M163 140.769c6 29.375 13.537 33.424 35.28 43.583 35.355 16.519 33.138 57.105 56.59 45.51 14.36-7.1 21.13-19.23 21.13-38.4 0-24.92-11.42-65.99-32.4-119.1-10.625-22.199-25.844-16.641-42.794-16.641-7.93 0-15.744-1.226-22.454 2.224-14.564 7.511-21.031 55.022-15.352 82.824"/>
         <g id="stick_right">
